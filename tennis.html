@@ -1,0 +1,36 @@
+<html>
+  <head>
+
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #background-image {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        transform: scale(1.1); /* hide blurred edged */
+        z-index: -10;
+        object-fit: cover;
+        -webkit-filter: blur(14px) brightness(90%);
+        filter: blur(14px) brightness(90%);
+      }
+      #center-box {
+        background-color: aqua;
+        width: 800px;
+        height: 300px;
+      }
+    </style>
+
+  </head>
+  <body>
+    <img id="background-image" src="background.png" />
+    <div id="center-box">
+
+    </div>
+  </body>
+</html>
