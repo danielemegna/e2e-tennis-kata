@@ -4,6 +4,7 @@ import freemarker.cache.ClassTemplateLoader
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.freemarker.*
+import io.ktor.server.http.content.*
 import io.ktor.server.jetty.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -16,6 +17,7 @@ fun main() {
             get("/") {
                 call.respond(FreeMarkerContent("index.ftl", null))
             }
+            staticResources("/assets", "assets")
         }
     }.start(wait = true)
 }

@@ -61,7 +61,7 @@
 
   </head>
   <body>
-    <img id="background-image" src="background.png" />
+    <img id="background-image" src="assets/background.png" />
     <div id="center-box">
       <table id="scoreboard">
         <tr>
