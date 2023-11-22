@@ -11,6 +11,12 @@ import io.ktor.server.routing.*
 fun main() {
     embeddedServer(Jetty, port = 8080) {
         freeMarkerPlugin()
+
+        routing {
+            get("/") {
+                call.respond(FreeMarkerContent("index.ftl", null))
+            }
+        }
     }.start(wait = true)
 }
 
