@@ -9,6 +9,10 @@ plugins {
 group = "it.danielemegna"
 version = "1.0-SNAPSHOT"
 
+application {
+    mainClass.set("it.danielemegna.tennis.web.MainKt")
+}
+
 repositories {
     mavenCentral()
 }
