@@ -65,16 +65,16 @@
     <div id="center-box">
       <table id="scoreboard">
         <tr>
-          <td class="ball-hitter">&centerdot;</td>
-          <td class="player-name">sinner</td>
-          <td class="current-set">3</td>
-          <td class="current-game">15</td>
+          <td class="ball-hitter"><#if isFirstPlayerServing()>&centerdot;</#if></td>
+          <td class="player-name">${firstPlayerName}</td>
+          <td class="current-set">${firstPlayerCurrentSetScore}</td>
+          <td class="current-game">${firstPlayerCurrentGameScore}</td>
         </tr>
         <tr>
-          <td class="ball-hitter"></td>
-          <td class="player-name">djokovic</td>
-          <td class="current-set">2</td>
-          <td class="current-game">40</td>
+          <td class="ball-hitter"><#if !isFirstPlayerServing()>&centerdot;</#if></td>
+          <td class="player-name">${secondPlayerName}</td>
+          <td class="current-set">${secondPlayerCurrentSetScore}</td>
+          <td class="current-game">${secondPlayerCurrentGameScore}</td>
         </tr>
       </table>
     </div>
