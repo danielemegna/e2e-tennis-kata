@@ -20,10 +20,10 @@ fun main() {
                     firstPlayerName = "Sinner",
                     secondPlayerName = "Djokovic",
                     isFirstPlayerServing = true,
-                    firstPlayerCurrentGameScore = 40,
-                    secondPlayerCurrentGameScore = 15,
-                    firstPlayerCurrentSetScore = 3,
-                    secondPlayerCurrentSetScore = 2
+                    firstPlayerCurrentGameScore = 0,
+                    secondPlayerCurrentGameScore = 0,
+                    firstPlayerCurrentSetScore = 0,
+                    secondPlayerCurrentSetScore = 0
                 )
                 call.respond(FreeMarkerContent("index.ftl", scoreBoardView))
             }

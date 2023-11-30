@@ -24,6 +24,7 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages")
     testImplementation(kotlin("test"))
     testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.jsoup:jsoup:1.17.1")
 }
 
 tasks.test {
