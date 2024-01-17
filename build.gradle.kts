@@ -11,6 +11,11 @@ version = "1.0-SNAPSHOT"
 
 application {
     mainClass.set("it.danielemegna.tennis.web.MainKt")
+
+    val developmentModeFlag = System.getenv("KTOR_DEVELOPMENT_MODE")?.toBoolean() ?: false
+    applicationDefaultJvmArgs = listOf(
+        "-Dio.ktor.development=$developmentModeFlag"
+    )
 }
 
 repositories {

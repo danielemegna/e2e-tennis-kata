@@ -23,3 +23,17 @@ and run the dist executable
 ```
 $ ./build/install/EndToEndTennisKata/bin/EndToEndTennisKata
 ```
+
+## Dev
+
+To use auto-reload, build with auto-watch
+
+```
+$ ./gradlew -t build
+```
+
+and run the application in another tab with
+
+```
+$ KTOR_DEVELOPMENT_MODE=true ./gradlew run
+```
