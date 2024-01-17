@@ -27,6 +27,18 @@ fun main() {
                 )
                 call.respond(FreeMarkerContent("index.ftl", scoreBoardView))
             }
+            post("/player/1/point") {
+                val scoreBoardView = ScoreBoardView(
+                    firstPlayerName = "Sinner",
+                    secondPlayerName = "Djokovic",
+                    isFirstPlayerServing = true,
+                    firstPlayerCurrentGameScore = 15,
+                    secondPlayerCurrentGameScore = 0,
+                    firstPlayerCurrentSetScore = 0,
+                    secondPlayerCurrentSetScore = 0
+                )
+                call.respond(FreeMarkerContent("scoreboard.ftl", scoreBoardView))
+            }
             staticResources("/assets", "assets")
         }
     }.start(wait = true)
