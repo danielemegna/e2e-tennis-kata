@@ -61,9 +61,7 @@
   <body>
     <img id="background-image" src="assets/background.png" />
     <div id="center-box">
-      <table id="scoreboard">
-        <#include "scoreboard.ftl">
-      </table>
+      <#include "scoreboard.ftl">
     </div>
   </body>
 </html>
