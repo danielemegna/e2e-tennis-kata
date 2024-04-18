@@ -4,17 +4,14 @@ import it.danielemegna.tennis.domain.repository.MatchRepository
 import it.danielemegna.tennis.domain.MatchState
 import it.danielemegna.tennis.domain.MatchState.Game
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore
-import it.danielemegna.tennis.domain.MatchState.Serving
 
 class PlayerPoint(private val matchRepository: MatchRepository) {
 
-    fun run(player: Player): MatchState {
+    fun run(pointAuthor: Player): MatchState {
         val currentMatchState = matchRepository.getOngoingMatch()
 
         val newMatchState = currentMatchState.copy(
-            currentGame = currentMatchState.currentGame.copy(
-                firstPlayerScore = GameScore.FIFTEEN
-            )
+            currentGame = currentMatchState.currentGame.updateWith(pointAuthor)
         )
 
         matchRepository.updateOngoingMatch(newMatchState);
@@ -23,4 +20,10 @@ class PlayerPoint(private val matchRepository: MatchRepository) {
 
     enum class Player { FIRST, SECOND }
 
+    private fun Game.updateWith(pointAuthor: Player): Game {
+        return when(pointAuthor) {
+            Player.FIRST -> this.copy(firstPlayerScore = GameScore.FIFTEEN)
+            Player.SECOND -> this.copy(secondPlayerScore = GameScore.FIFTEEN)
+        }
+    }
 }
