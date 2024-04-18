@@ -11,17 +11,14 @@ data class MatchState(
         firstPlayerName = firstPlayerName,
         secondPlayerName = secondPlayerName,
         serving = Serving.FIRST_PLAYER,
-        currentGame = Game(
-            firstPlayerScore = Game.GameScore.ZERO,
-            secondPlayerScore = Game.GameScore.ZERO
-        )
+        currentGame = Game()
     )
 
     enum class Serving { FIRST_PLAYER, SECOND_PLAYER }
 
     data class Game(
-        val firstPlayerScore: GameScore,
-        val secondPlayerScore: GameScore,
+        val firstPlayerScore: GameScore = GameScore.ZERO,
+        val secondPlayerScore: GameScore = GameScore.ZERO,
     ) {
         enum class GameScore {
             ZERO, FIFTEEN, THIRTY, FORTY, ADVANTAGE;
