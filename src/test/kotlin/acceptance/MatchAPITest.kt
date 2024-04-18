@@ -11,7 +11,7 @@ class MatchAPITest {
 
     @Test
     fun `init new match on root path`(): Unit = runBlocking {
-        val response = Jsoup.connect("http://localhost:8080").method(Method.GET).execute()
+        val response = Jsoup.connect("${HOST_UNDER_TEST}/").method(Method.GET).execute()
 
         assertThat(response.statusCode()).isEqualTo(200)
         val htmlPage = response.parse()
@@ -26,7 +26,7 @@ class MatchAPITest {
     fun `register first player point`(): Unit = runBlocking {
         initNewMatch()
 
-        val response = Jsoup.connect("http://localhost:8080/player/1/point").method(Method.POST).execute()
+        val response = Jsoup.connect("${HOST_UNDER_TEST}/player/1/point").method(Method.POST).execute()
 
         assertThat(response.statusCode()).isEqualTo(200)
         val htmlPage = response.parse()
@@ -42,10 +42,10 @@ class MatchAPITest {
     fun `register some points in first game`(): Unit = runBlocking {
         initNewMatch()
 
-        Jsoup.connect("http://localhost:8080/player/1/point").method(Method.POST).execute()
-        Jsoup.connect("http://localhost:8080/player/1/point").method(Method.POST).execute()
-        Jsoup.connect("http://localhost:8080/player/2/point").method(Method.POST).execute()
-        Jsoup.connect("http://localhost:8080/player/1/point").method(Method.POST).execute().let { response ->
+        Jsoup.connect("${HOST_UNDER_TEST}/player/1/point").method(Method.POST).execute()
+        Jsoup.connect("${HOST_UNDER_TEST}/player/1/point").method(Method.POST).execute()
+        Jsoup.connect("${HOST_UNDER_TEST}/player/2/point").method(Method.POST).execute()
+        Jsoup.connect("${HOST_UNDER_TEST}/player/1/point").method(Method.POST).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(200)
             val htmlPage = response.parse()
             val playersScoreboardRows = htmlPage.select("#scoreboard tr")
@@ -57,6 +57,10 @@ class MatchAPITest {
     }
 
     private fun initNewMatch() {
-        Jsoup.connect("http://localhost:8080").method(Method.GET).execute()
+        Jsoup.connect("${HOST_UNDER_TEST}/").method(Method.GET).execute()
+    }
+
+    companion object {
+        private const val HOST_UNDER_TEST = "http://localhost:8080"
     }
 }
