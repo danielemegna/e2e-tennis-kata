@@ -5,13 +5,15 @@ data class MatchState(
     val secondPlayerName: String,
     val serving: Serving,
     val currentGame: Game,
+    val currentSet: Set
     // list of past sets
 ) {
     constructor(firstPlayerName: String, secondPlayerName: String) : this(
         firstPlayerName = firstPlayerName,
         secondPlayerName = secondPlayerName,
         serving = Serving.FIRST_PLAYER,
-        currentGame = Game()
+        currentGame = Game(),
+        currentSet = Set(),
     )
 
     enum class Serving { FIRST_PLAYER, SECOND_PLAYER }
@@ -26,4 +28,9 @@ data class MatchState(
             fun next() = GameScore.entries[this.ordinal + 1]
         }
     }
+
+    data class Set(
+        val firstPlayerScore: Int = 0,
+        val secondPlayerScore: Int = 0
+    )
 }
