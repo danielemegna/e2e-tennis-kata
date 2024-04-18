@@ -1,6 +1,7 @@
 package it.danielemegna.tennis.web
 
 import freemarker.cache.ClassTemplateLoader
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.freemarker.*
@@ -26,13 +27,13 @@ fun main() {
                 val usecase = InitNewGame(matchRepository)
                 val matchState = usecase.run()
                 val scoreBoardView = scoreBoardViewFrom(matchState)
-                call.respond(FreeMarkerContent("index.ftl", scoreBoardView))
+                call.respond(message = FreeMarkerContent("index.ftl", scoreBoardView), status = HttpStatusCode.Created)
             }
             post("/player/1/point") {
                 val usecase = PlayerPoint(matchRepository)
                 val matchState = usecase.run(PlayerPoint.Player.FIRST)
                 val scoreBoardView = scoreBoardViewFrom(matchState)
-                call.respond(FreeMarkerContent("scoreboard.ftl", scoreBoardView))
+                call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
             }
             staticResources("/assets", "assets")
         }

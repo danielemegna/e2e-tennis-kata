@@ -13,7 +13,7 @@ class MatchAPITest {
     fun `init new match on root path`(): Unit = runBlocking {
         val response = Jsoup.connect("${HOST_UNDER_TEST}/").method(Method.GET).execute()
 
-        assertThat(response.statusCode()).isEqualTo(200)
+        assertThat(response.statusCode()).isEqualTo(201)
         val htmlPage = response.parse()
         val playersScoreboardRows = htmlPage.select("#scoreboard tr")
         assertThat(playersScoreboardRows[0].select("td.current-game").text()).isEqualTo("0")
