@@ -69,8 +69,8 @@ private fun scoreBoardViewFrom(matchState: MatchState) = ScoreBoardView(
     isFirstPlayerServing = matchState.serving == Serving.FIRST_PLAYER,
     firstPlayerCurrentGameScore = toInt(matchState.currentGame.firstPlayerScore),
     secondPlayerCurrentGameScore = toInt(matchState.currentGame.secondPlayerScore),
-    firstPlayerCurrentSetScore = 0,
-    secondPlayerCurrentSetScore = 0
+    firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
+    secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore
 )
 
 private fun toInt(gameScore: GameScore) = when (gameScore) {
