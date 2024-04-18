@@ -35,6 +35,12 @@ fun main() {
                 val scoreBoardView = scoreBoardViewFrom(matchState)
                 call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
             }
+            post("/player/2/point") {
+                val usecase = PlayerPoint(matchRepository)
+                val matchState = usecase.run(PlayerPoint.Player.SECOND)
+                val scoreBoardView = scoreBoardViewFrom(matchState)
+                call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
+            }
             staticResources("/assets", "assets")
         }
     }.start(wait = true)

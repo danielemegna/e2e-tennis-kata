@@ -37,7 +37,6 @@ class MatchAPITest {
         assertThat(playersScoreboardRows[1].select("td.current-set").text()).isEqualTo("0")
     }
 
-    @Disabled("WIP more complete scenario")
     @Test
     fun `register some points in first game`(): Unit = runBlocking {
         initNewMatch()
