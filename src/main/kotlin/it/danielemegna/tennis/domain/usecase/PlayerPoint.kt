@@ -22,8 +22,8 @@ class PlayerPoint(private val matchRepository: MatchRepository) {
 
     private fun Game.updateWith(pointAuthor: Player): Game {
         return when(pointAuthor) {
-            Player.FIRST -> this.copy(firstPlayerScore = GameScore.FIFTEEN)
-            Player.SECOND -> this.copy(secondPlayerScore = GameScore.FIFTEEN)
+            Player.FIRST -> this.copy(firstPlayerScore = firstPlayerScore.next())
+            Player.SECOND -> this.copy(secondPlayerScore = secondPlayerScore.next())
         }
     }
 }

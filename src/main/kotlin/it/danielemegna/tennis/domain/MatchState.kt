@@ -23,6 +23,10 @@ data class MatchState(
         val firstPlayerScore: GameScore,
         val secondPlayerScore: GameScore,
     ) {
-        enum class GameScore { ZERO, FIFTEEN, THIRTY, FORTY, ADVANTAGE }
+        enum class GameScore {
+            ZERO, FIFTEEN, THIRTY, FORTY, ADVANTAGE;
+
+            fun next() = GameScore.entries[this.ordinal + 1]
+        }
     }
 }
