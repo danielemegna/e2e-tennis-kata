@@ -12,11 +12,6 @@ class InitNewGame(private val matchRepository: MatchRepository) {
         val newMatchState = MatchState(
             firstPlayerName = "Sinner",
             secondPlayerName = "Djokovic",
-            serving = Serving.FIRST_PLAYER,
-            currentGame = Game(
-                firstPlayerScore = GameScore.ZERO,
-                secondPlayerScore = GameScore.ZERO
-            )
         )
 
         matchRepository.storeNewMatch(newMatchState)
