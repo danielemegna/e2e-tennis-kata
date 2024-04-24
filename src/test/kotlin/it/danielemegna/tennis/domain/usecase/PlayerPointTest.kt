@@ -31,11 +31,11 @@ class PlayerPointTest {
 
     @Test
     fun `first player point on progress game`() {
-        val newMatchState = MatchState("p1", "p2").copy(
+        val matchState = MatchState("p1", "p2").copy(
             currentGame = MatchState.Game(THIRTY, FIFTEEN)
         )
 
-        val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.FIRST)
+        val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
 
         assertEquals(FORTY, updatedMatchState.currentGame.firstPlayerScore)
         assertEquals(FIFTEEN, updatedMatchState.currentGame.secondPlayerScore)
@@ -43,11 +43,11 @@ class PlayerPointTest {
 
     @Test
     fun `second player point on progress game`() {
-        val newMatchState = MatchState("p1", "p2").copy(
+        val matchState = MatchState("p1", "p2").copy(
             currentGame = MatchState.Game(THIRTY, FIFTEEN)
         )
 
-        val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.SECOND)
+        val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
 
         assertEquals(THIRTY, updatedMatchState.currentGame.secondPlayerScore)
         assertEquals(THIRTY, updatedMatchState.currentGame.firstPlayerScore)
@@ -55,11 +55,11 @@ class PlayerPointTest {
 
     @Test
     fun `game won by first player`() {
-        val newMatchState = MatchState("p1", "p2").copy(
+        val matchState = MatchState("p1", "p2").copy(
             currentGame = MatchState.Game(FORTY, FIFTEEN)
         )
 
-        val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.FIRST)
+        val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
 
         assertEquals(1, updatedMatchState.currentSet.firstPlayerScore)
         assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
@@ -68,11 +68,11 @@ class PlayerPointTest {
 
     @Test
     fun `game won by second player`() {
-        val newMatchState = MatchState("p1", "p2").copy(
+        val matchState = MatchState("p1", "p2").copy(
             currentGame = MatchState.Game(THIRTY, FORTY)
         )
 
-        val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.SECOND)
+        val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
 
         assertEquals(1, updatedMatchState.currentSet.secondPlayerScore)
         assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
