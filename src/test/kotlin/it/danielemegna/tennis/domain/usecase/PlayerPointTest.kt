@@ -91,6 +91,30 @@ class PlayerPointTest {
         assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
     }
 
+    @Test
+    fun `second player serve when a game served by first player is completed`() {
+        val matchState = MatchState("p1", "p2").copy(
+            serving = Serving.FIRST_PLAYER,
+            currentGame = MatchState.Game(FORTY, ZERO)
+        )
+
+        val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+
+        assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
+    }
+
+    @Test
+    fun `first player serve when a game served by second player is completed`() {
+        val matchState = MatchState("p1", "p2").copy(
+            serving = Serving.SECOND_PLAYER,
+            currentGame = MatchState.Game(FORTY, ZERO)
+        )
+
+        val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+
+        assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
+    }
+
     private fun updatedMatchStateFor(matchState: MatchState, pointAuthor: PlayerPoint.Player): MatchState {
         val stubMatchRepository = StubMatchRepository(matchState)
         val usecase = PlayerPoint(stubMatchRepository)

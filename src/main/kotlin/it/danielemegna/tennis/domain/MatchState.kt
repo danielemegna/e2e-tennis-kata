@@ -16,7 +16,9 @@ data class MatchState(
         currentSet = Set(),
     )
 
-    enum class Serving { FIRST_PLAYER, SECOND_PLAYER }
+    enum class Serving { FIRST_PLAYER, SECOND_PLAYER;
+        fun next() = entries[(this.ordinal + 1) % entries.size]
+    }
 
     data class Game(
         val firstPlayerScore: GameScore = GameScore.ZERO,
