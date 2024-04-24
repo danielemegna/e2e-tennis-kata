@@ -92,6 +92,37 @@ class PlayerPointTest {
     }
 
     @Nested
+    inner class AdvantagePoints {
+
+        @Test
+        fun `first player goes to advantage on point when forty-forty`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(FORTY, FORTY)
+            )
+
+            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+
+            assertEquals(MatchState.Game(ADVANTAGE, FORTY), updatedMatchState.currentGame)
+            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
+        }
+
+        @Test
+        fun `second player goes to advantage on point when forty-forty`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(FORTY, FORTY)
+            )
+
+            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+
+            assertEquals(MatchState.Game(FORTY, ADVANTAGE), updatedMatchState.currentGame)
+            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
+        }
+
+    }
+
+    @Nested
     inner class ServingPlayerUpdate {
 
         @Test
