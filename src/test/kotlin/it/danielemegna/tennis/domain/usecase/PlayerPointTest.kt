@@ -2,6 +2,7 @@ package it.danielemegna.tennis.domain.usecase
 
 import it.danielemegna.tennis.domain.MatchState
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore
+import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
 import it.danielemegna.tennis.domain.repository.StubMatchRepository
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -14,8 +15,8 @@ class PlayerPointTest {
 
         val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.FIRST)
 
-        assertEquals(GameScore.FIFTEEN, updatedMatchState.currentGame.firstPlayerScore)
-        assertEquals(GameScore.ZERO, updatedMatchState.currentGame.secondPlayerScore)
+        assertEquals(FIFTEEN, updatedMatchState.currentGame.firstPlayerScore)
+        assertEquals(ZERO, updatedMatchState.currentGame.secondPlayerScore)
     }
 
     @Test
@@ -24,58 +25,58 @@ class PlayerPointTest {
 
         val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.SECOND)
 
-        assertEquals(GameScore.FIFTEEN, updatedMatchState.currentGame.secondPlayerScore)
-        assertEquals(GameScore.ZERO, updatedMatchState.currentGame.firstPlayerScore)
+        assertEquals(FIFTEEN, updatedMatchState.currentGame.secondPlayerScore)
+        assertEquals(ZERO, updatedMatchState.currentGame.firstPlayerScore)
     }
 
     @Test
     fun `first player point on progress game`() {
         val newMatchState = MatchState("p1", "p2").copy(
-            currentGame = MatchState.Game(GameScore.THIRTY, GameScore.FIFTEEN)
+            currentGame = MatchState.Game(THIRTY, FIFTEEN)
         )
 
         val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.FIRST)
 
-        assertEquals(GameScore.FORTY, updatedMatchState.currentGame.firstPlayerScore)
-        assertEquals(GameScore.FIFTEEN, updatedMatchState.currentGame.secondPlayerScore)
+        assertEquals(FORTY, updatedMatchState.currentGame.firstPlayerScore)
+        assertEquals(FIFTEEN, updatedMatchState.currentGame.secondPlayerScore)
     }
 
     @Test
     fun `second player point on progress game`() {
         val newMatchState = MatchState("p1", "p2").copy(
-            currentGame = MatchState.Game(GameScore.THIRTY, GameScore.FIFTEEN)
+            currentGame = MatchState.Game(THIRTY, FIFTEEN)
         )
 
         val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.SECOND)
 
-        assertEquals(GameScore.THIRTY, updatedMatchState.currentGame.secondPlayerScore)
-        assertEquals(GameScore.THIRTY, updatedMatchState.currentGame.firstPlayerScore)
+        assertEquals(THIRTY, updatedMatchState.currentGame.secondPlayerScore)
+        assertEquals(THIRTY, updatedMatchState.currentGame.firstPlayerScore)
     }
 
     @Test
     fun `game won by first player`() {
         val newMatchState = MatchState("p1", "p2").copy(
-            currentGame = MatchState.Game(GameScore.FORTY, GameScore.FIFTEEN)
+            currentGame = MatchState.Game(FORTY, FIFTEEN)
         )
 
         val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.FIRST)
 
         assertEquals(1, updatedMatchState.currentSet.firstPlayerScore)
         assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
-        assertEquals(MatchState.Game(GameScore.ZERO, GameScore.ZERO), updatedMatchState.currentGame)
+        assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
     }
 
     @Test
     fun `game won by second player`() {
         val newMatchState = MatchState("p1", "p2").copy(
-            currentGame = MatchState.Game(GameScore.THIRTY, GameScore.FORTY)
+            currentGame = MatchState.Game(THIRTY, FORTY)
         )
 
         val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.SECOND)
 
         assertEquals(1, updatedMatchState.currentSet.secondPlayerScore)
         assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
-        assertEquals(MatchState.Game(GameScore.ZERO, GameScore.ZERO), updatedMatchState.currentGame)
+        assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
     }
 
     private fun updatedMatchStateFor(matchState: MatchState, pointAuthor: PlayerPoint.Player): MatchState {
