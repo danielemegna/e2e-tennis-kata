@@ -19,13 +19,23 @@ class PlayerPoint(private val matchRepository: MatchRepository) {
         val currentGame = matchState.currentGame
         if (
             currentGame.firstPlayerScore == Game.GameScore.FORTY &&
-            currentGame.secondPlayerScore != Game.GameScore.FORTY &&
             pointAuthor == Player.FIRST
         ) {
             val currentSet = matchState.currentSet
             return matchState.copy(
                 currentGame = Game(),
                 currentSet = currentSet.copy(firstPlayerScore = currentSet.firstPlayerScore + 1)
+            )
+        }
+
+        if (
+            currentGame.secondPlayerScore == Game.GameScore.FORTY &&
+            pointAuthor == Player.SECOND
+        ) {
+            val currentSet = matchState.currentSet
+            return matchState.copy(
+                currentGame = Game(),
+                currentSet = currentSet.copy(secondPlayerScore = currentSet.secondPlayerScore + 1)
             )
         }
 

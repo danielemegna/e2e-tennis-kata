@@ -63,7 +63,19 @@ class PlayerPointTest {
         assertEquals(1, updatedMatchState.currentSet.firstPlayerScore)
         assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
         assertEquals(MatchState.Game(GameScore.ZERO, GameScore.ZERO), updatedMatchState.currentGame)
+    }
 
+    @Test
+    fun `game won by second player`() {
+        val newMatchState = MatchState("p1", "p2").copy(
+            currentGame = MatchState.Game(GameScore.THIRTY, GameScore.FORTY)
+        )
+
+        val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.SECOND)
+
+        assertEquals(1, updatedMatchState.currentSet.secondPlayerScore)
+        assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
+        assertEquals(MatchState.Game(GameScore.ZERO, GameScore.ZERO), updatedMatchState.currentGame)
     }
 
     private fun updatedMatchStateFor(matchState: MatchState, pointAuthor: PlayerPoint.Player): MatchState {
