@@ -36,7 +36,8 @@ class PlayerPoint(private val matchRepository: MatchRepository) {
             val currentSet = matchState.currentSet
             return matchState.copy(
                 currentGame = Game(),
-                currentSet = currentSet.copy(secondPlayerScore = currentSet.secondPlayerScore + 1)
+                currentSet = currentSet.copy(secondPlayerScore = currentSet.secondPlayerScore + 1),
+                serving = matchState.serving.next()
             )
         }
 

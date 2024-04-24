@@ -107,6 +107,18 @@ class PlayerPointTest {
     fun `first player serve when a game served by second player is completed`() {
         val matchState = MatchState("p1", "p2").copy(
             serving = Serving.SECOND_PLAYER,
+            currentGame = MatchState.Game(FIFTEEN, FORTY)
+        )
+
+        val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+
+        assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
+    }
+
+    @Test
+    fun `first player serve also when a game served by second player is won by first player`() {
+        val matchState = MatchState("p1", "p2").copy(
+            serving = Serving.SECOND_PLAYER,
             currentGame = MatchState.Game(FORTY, ZERO)
         )
 
