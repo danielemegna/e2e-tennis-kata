@@ -3,6 +3,7 @@ package it.danielemegna.tennis.domain.usecase
 import it.danielemegna.tennis.domain.MatchState
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
+import it.danielemegna.tennis.domain.MatchState.Serving
 import it.danielemegna.tennis.domain.repository.StubMatchRepository
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -77,6 +78,17 @@ class PlayerPointTest {
         assertEquals(1, updatedMatchState.currentSet.secondPlayerScore)
         assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
         assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
+    }
+
+    @Test
+    fun `first player still serving in ongoing first game`() {
+        val matchState = MatchState("p1", "p2").copy(
+            serving = Serving.FIRST_PLAYER
+        )
+
+        val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+
+        assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
     }
 
     private fun updatedMatchStateFor(matchState: MatchState, pointAuthor: PlayerPoint.Player): MatchState {
