@@ -9,46 +9,36 @@ class MatchStateUpdater {
 
     fun updatedMatch(matchState: MatchState, pointAuthor: Player): MatchState {
         val currentGame = matchState.currentGame
-        val currentSet = matchState.currentSet
 
         if (untappedAdvantagePoint(pointAuthor, currentGame))
             return matchState.setCurrentGameFortyForty()
 
-        if (
-            pointAuthor == Player.FIRST &&
-            (currentGame.firstPlayerScore == ADVANTAGE ||
-                (currentGame.firstPlayerScore == FORTY && currentGame.secondPlayerScore < FORTY))
-        ) {
-            return matchState.copy(
-                currentGame = Game(),
-                currentSet = currentSet.copy(firstPlayerScore = currentSet.firstPlayerScore + 1),
-                serving = matchState.serving.next()
-            )
-        }
-
-        if (
-            pointAuthor == Player.SECOND &&
-            (currentGame.secondPlayerScore == ADVANTAGE ||
-                (currentGame.secondPlayerScore == FORTY && currentGame.firstPlayerScore < FORTY))
-        ) {
-            return matchState.copy(
-                currentGame = Game(),
-                currentSet = currentSet.copy(secondPlayerScore = currentSet.secondPlayerScore + 1),
-                serving = matchState.serving.next()
-            )
-        }
+        if (gameWon(pointAuthor, currentGame))
+            return matchState.gameWonByPlayer(pointAuthor)
 
         return matchState.copy(
             currentGame = currentGame.updateWith(pointAuthor)
         )
     }
 
-
     private fun untappedAdvantagePoint(pointAuthor: Player, currentGame: Game): Boolean {
         if (currentGame.firstPlayerScore == ADVANTAGE)
             return pointAuthor == Player.SECOND
         if (currentGame.secondPlayerScore == ADVANTAGE)
             return pointAuthor == Player.FIRST
+
+        return false
+    }
+
+    private fun gameWon(pointAuthor: Player, currentGame: Game): Boolean {
+        if (pointAuthor == Player.FIRST) {
+            if (currentGame.firstPlayerScore == ADVANTAGE) return true
+            if (currentGame.firstPlayerScore == FORTY && currentGame.secondPlayerScore < FORTY) return true
+        }
+        if (pointAuthor == Player.SECOND) {
+            if (currentGame.secondPlayerScore == ADVANTAGE) return true
+            if (currentGame.secondPlayerScore == FORTY && currentGame.firstPlayerScore < FORTY) return true
+        }
 
         return false
     }
@@ -67,4 +57,17 @@ class MatchStateUpdater {
                 secondPlayerScore = FORTY
             )
         )
+
+    private fun MatchState.gameWonByPlayer(pointAuthor: Player): MatchState {
+        val updatedSet = when (pointAuthor) {
+            Player.FIRST -> currentSet.copy(firstPlayerScore = currentSet.firstPlayerScore + 1)
+            Player.SECOND -> currentSet.copy(secondPlayerScore = currentSet.secondPlayerScore + 1)
+        }
+        return this.copy(
+            currentGame = Game(),
+            currentSet = updatedSet,
+            serving = serving.next()
+        )
+    }
+
 }
