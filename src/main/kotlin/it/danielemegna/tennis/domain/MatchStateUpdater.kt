@@ -59,13 +59,9 @@ class MatchStateUpdater {
         )
 
     private fun MatchState.gameWonByPlayer(pointAuthor: Player): MatchState {
-        val updatedSet = when (pointAuthor) {
-            Player.FIRST -> currentSet.copy(firstPlayerScore = currentSet.firstPlayerScore + 1)
-            Player.SECOND -> currentSet.copy(secondPlayerScore = currentSet.secondPlayerScore + 1)
-        }
         return this.copy(
             currentGame = Game(),
-            currentSet = updatedSet,
+            currentSet = currentSet.increaseScore(pointAuthor),
             serving = serving.next()
         )
     }

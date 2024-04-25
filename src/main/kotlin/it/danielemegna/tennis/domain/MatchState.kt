@@ -1,5 +1,7 @@
 package it.danielemegna.tennis.domain
 
+import it.danielemegna.tennis.domain.usecase.PlayerPoint
+
 data class MatchState(
     val firstPlayerName: String,
     val secondPlayerName: String,
@@ -16,7 +18,8 @@ data class MatchState(
         currentSet = Set(),
     )
 
-    enum class Serving { FIRST_PLAYER, SECOND_PLAYER;
+    enum class Serving {
+        FIRST_PLAYER, SECOND_PLAYER;
         fun next() = entries[(this.ordinal + 1) % entries.size]
     }
 
@@ -26,7 +29,6 @@ data class MatchState(
     ) {
         enum class GameScore {
             ZERO, FIFTEEN, THIRTY, FORTY, ADVANTAGE;
-
             fun next() = GameScore.entries[this.ordinal + 1]
         }
     }
@@ -34,5 +36,12 @@ data class MatchState(
     data class Set(
         val firstPlayerScore: Int = 0,
         val secondPlayerScore: Int = 0
-    )
+    ) {
+        fun increaseScore(pointAuthor: PlayerPoint.Player): Set {
+            return when (pointAuthor) {
+                PlayerPoint.Player.FIRST -> this.copy(firstPlayerScore = firstPlayerScore + 1)
+                PlayerPoint.Player.SECOND -> this.copy(secondPlayerScore = secondPlayerScore + 1)
+            }
+        }
+    }
 }
