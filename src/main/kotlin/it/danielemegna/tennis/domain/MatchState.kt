@@ -36,7 +36,16 @@ data class MatchState(
 
         enum class GameScore {
             ZERO, FIFTEEN, THIRTY, FORTY, ADVANTAGE;
+
             fun increase() = entries[this.ordinal + 1]
+
+            override fun toString() = when (this) {
+                ZERO -> "0"
+                FIFTEEN -> "15"
+                THIRTY -> "30"
+                FORTY -> "40"
+                ADVANTAGE -> "A"
+            }
         }
     }
 

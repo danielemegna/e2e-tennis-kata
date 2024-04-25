@@ -4,8 +4,8 @@ data class ScoreBoardView(
     val firstPlayerName: String,
     val secondPlayerName: String,
     val isFirstPlayerServing: Boolean,
-    val firstPlayerCurrentGameScore: Int,
-    val secondPlayerCurrentGameScore: Int,
+    val firstPlayerCurrentGameScore: String,
+    val secondPlayerCurrentGameScore: String,
     val firstPlayerCurrentSetScore: Int,
     val secondPlayerCurrentSetScore: Int,
 )

@@ -67,19 +67,11 @@ private fun scoreBoardViewFrom(matchState: MatchState) = ScoreBoardView(
     firstPlayerName = matchState.firstPlayerName,
     secondPlayerName = matchState.secondPlayerName,
     isFirstPlayerServing = matchState.serving == Serving.FIRST_PLAYER,
-    firstPlayerCurrentGameScore = toInt(matchState.currentGame.firstPlayerScore),
-    secondPlayerCurrentGameScore = toInt(matchState.currentGame.secondPlayerScore),
+    firstPlayerCurrentGameScore = matchState.currentGame.firstPlayerScore.toString(),
+    secondPlayerCurrentGameScore = matchState.currentGame.secondPlayerScore.toString(),
     firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
     secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore
 )
-
-private fun toInt(gameScore: GameScore) = when (gameScore) {
-    GameScore.ZERO -> 0
-    GameScore.FIFTEEN -> 15
-    GameScore.THIRTY -> 30
-    GameScore.FORTY -> 40
-    GameScore.ADVANTAGE -> TODO("integer could not be the right choice :-)")
-}
 
 private fun Application.freeMarkerPlugin() {
     install(FreeMarker) {
