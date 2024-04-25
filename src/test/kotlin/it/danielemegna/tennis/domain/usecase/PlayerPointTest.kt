@@ -120,6 +120,32 @@ class PlayerPointTest {
             assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
         }
 
+        @Test
+        fun `players come back forty-forty on first player untapped advantage`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(ADVANTAGE, FORTY)
+            )
+
+            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+
+            assertEquals(MatchState.Game(FORTY, FORTY), updatedMatchState.currentGame)
+            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
+        }
+
+        @Test
+        fun `players come back forty-forty on second player untapped advantage`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(FORTY, ADVANTAGE)
+            )
+
+            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+
+            assertEquals(MatchState.Game(FORTY, FORTY), updatedMatchState.currentGame)
+            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
+        }
+
     }
 
     @Nested
