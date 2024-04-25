@@ -3,12 +3,14 @@ package it.danielemegna.tennis.domain.usecase
 import it.danielemegna.tennis.domain.MatchState
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
 import it.danielemegna.tennis.domain.MatchState.Serving
-import it.danielemegna.tennis.domain.repository.StubMatchRepository
+import it.danielemegna.tennis.domain.MatchStateUpdater
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class PlayerPointTest {
+class MatchStateUpdaterTest {
+
+    private val updater = MatchStateUpdater()
 
     @Nested
     inner class GameNormalPoint {
@@ -17,7 +19,7 @@ class PlayerPointTest {
         fun `first player point on new game`() {
             val newMatchState = MatchState("p1", "p2")
 
-            val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.FIRST)
+            val updatedMatchState = updater.updatedMatch(newMatchState, PlayerPoint.Player.FIRST)
 
             assertEquals(FIFTEEN, updatedMatchState.currentGame.firstPlayerScore)
             assertEquals(ZERO, updatedMatchState.currentGame.secondPlayerScore)
@@ -27,7 +29,7 @@ class PlayerPointTest {
         fun `second player point on new game`() {
             val newMatchState = MatchState("p1", "p2")
 
-            val updatedMatchState = updatedMatchStateFor(newMatchState, PlayerPoint.Player.SECOND)
+            val updatedMatchState = updater.updatedMatch(newMatchState, PlayerPoint.Player.SECOND)
 
             assertEquals(FIFTEEN, updatedMatchState.currentGame.secondPlayerScore)
             assertEquals(ZERO, updatedMatchState.currentGame.firstPlayerScore)
@@ -39,7 +41,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(THIRTY, FIFTEEN)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertEquals(FORTY, updatedMatchState.currentGame.firstPlayerScore)
             assertEquals(FIFTEEN, updatedMatchState.currentGame.secondPlayerScore)
@@ -51,7 +53,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(THIRTY, FIFTEEN)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
             assertEquals(THIRTY, updatedMatchState.currentGame.secondPlayerScore)
             assertEquals(THIRTY, updatedMatchState.currentGame.firstPlayerScore)
@@ -68,7 +70,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(FORTY, FIFTEEN)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertEquals(1, updatedMatchState.currentSet.firstPlayerScore)
             assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
@@ -81,7 +83,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(THIRTY, FORTY)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
             assertEquals(1, updatedMatchState.currentSet.secondPlayerScore)
             assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
@@ -99,7 +101,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(FORTY, FORTY)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertEquals(MatchState.Game(ADVANTAGE, FORTY), updatedMatchState.currentGame)
             assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
@@ -112,7 +114,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(FORTY, FORTY)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
             assertEquals(MatchState.Game(FORTY, ADVANTAGE), updatedMatchState.currentGame)
             assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
@@ -125,7 +127,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(ADVANTAGE, FORTY)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
             assertEquals(MatchState.Game(FORTY, FORTY), updatedMatchState.currentGame)
             assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
@@ -138,7 +140,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(FORTY, ADVANTAGE)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertEquals(MatchState.Game(FORTY, FORTY), updatedMatchState.currentGame)
             assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
@@ -151,7 +153,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(ADVANTAGE, FORTY)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertEquals(1, updatedMatchState.currentSet.firstPlayerScore)
             assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
@@ -164,7 +166,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(FORTY, ADVANTAGE)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
             assertEquals(1, updatedMatchState.currentSet.secondPlayerScore)
             assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
@@ -182,7 +184,7 @@ class PlayerPointTest {
                 serving = Serving.FIRST_PLAYER
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
             assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
         }
@@ -194,7 +196,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(FORTY, ZERO)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
         }
@@ -206,7 +208,7 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(FIFTEEN, FORTY)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
             assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
         }
@@ -218,16 +220,11 @@ class PlayerPointTest {
                 currentGame = MatchState.Game(FORTY, ZERO)
             )
 
-            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
         }
 
     }
 
-    private fun updatedMatchStateFor(matchState: MatchState, pointAuthor: PlayerPoint.Player): MatchState {
-        val stubMatchRepository = StubMatchRepository(matchState)
-        val usecase = PlayerPoint(stubMatchRepository)
-        return usecase.run(pointAuthor)
-    }
 }
