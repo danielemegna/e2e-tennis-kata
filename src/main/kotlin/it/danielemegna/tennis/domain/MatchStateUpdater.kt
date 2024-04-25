@@ -16,9 +16,7 @@ class MatchStateUpdater {
         if (gameWon(pointAuthor, currentGame))
             return matchState.gameWonByPlayer(pointAuthor)
 
-        return matchState.copy(
-            currentGame = currentGame.updateWith(pointAuthor)
-        )
+        return matchState.increaseCurrentGamePlayerScore(pointAuthor)
     }
 
     private fun untappedAdvantagePoint(pointAuthor: Player, currentGame: Game): Boolean {
@@ -43,13 +41,6 @@ class MatchStateUpdater {
         return false
     }
 
-    private fun Game.updateWith(pointAuthor: Player): Game {
-        return when (pointAuthor) {
-            Player.FIRST -> this.copy(firstPlayerScore = firstPlayerScore.next())
-            Player.SECOND -> this.copy(secondPlayerScore = secondPlayerScore.next())
-        }
-    }
-
     private fun MatchState.setCurrentGameFortyForty() =
         this.copy(
             currentGame = currentGame.copy(
@@ -65,5 +56,8 @@ class MatchStateUpdater {
             serving = serving.next()
         )
     }
+
+    private fun MatchState.increaseCurrentGamePlayerScore(pointAuthor: Player) =
+        this.copy(currentGame = currentGame.increaseScore(pointAuthor))
 
 }

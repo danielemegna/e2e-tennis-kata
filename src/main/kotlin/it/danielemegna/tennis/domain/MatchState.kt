@@ -27,9 +27,16 @@ data class MatchState(
         val firstPlayerScore: GameScore = GameScore.ZERO,
         val secondPlayerScore: GameScore = GameScore.ZERO,
     ) {
+        fun increaseScore(pointAuthor: PlayerPoint.Player): Game {
+            return when (pointAuthor) {
+                PlayerPoint.Player.FIRST -> this.copy(firstPlayerScore = firstPlayerScore.increase())
+                PlayerPoint.Player.SECOND -> this.copy(secondPlayerScore = secondPlayerScore.increase())
+            }
+        }
+
         enum class GameScore {
             ZERO, FIFTEEN, THIRTY, FORTY, ADVANTAGE;
-            fun next() = GameScore.entries[this.ordinal + 1]
+            fun increase() = entries[this.ordinal + 1]
         }
     }
 
