@@ -1,7 +1,6 @@
 package it.danielemegna.tennis.domain.usecase
 
 import it.danielemegna.tennis.domain.MatchState
-import it.danielemegna.tennis.domain.MatchState.Game.GameScore
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
 import it.danielemegna.tennis.domain.MatchState.Serving
 import it.danielemegna.tennis.domain.repository.StubMatchRepository
@@ -144,6 +143,32 @@ class PlayerPointTest {
             assertEquals(MatchState.Game(FORTY, FORTY), updatedMatchState.currentGame)
             assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
             assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
+        }
+
+        @Test
+        fun `first player win game after advantage point`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(ADVANTAGE, FORTY)
+            )
+
+            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.FIRST)
+
+            assertEquals(1, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
+            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
+        }
+
+        @Test
+        fun `second player win game after advantage point`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(FORTY, ADVANTAGE)
+            )
+
+            val updatedMatchState = updatedMatchStateFor(matchState, PlayerPoint.Player.SECOND)
+
+            assertEquals(1, updatedMatchState.currentSet.secondPlayerScore)
+            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
         }
 
     }
