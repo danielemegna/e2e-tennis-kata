@@ -1,6 +1,15 @@
 <html>
   <head>
     <style>
+      @font-face {
+        font-family: 'HighVoltage';
+        src:  url('assets/fonts/HighVoltage.ttf.woff') format('woff'),
+        url('assets/fonts/HighVoltage.ttf.svg#HighVoltage') format('svg'),
+        url('assets/fonts/HighVoltage.ttf.eot'),
+        url('assets/fonts/HighVoltage.eot?#iefix') format('embedded-opentype');
+        font-weight: normal;
+        font-style: normal;
+      }
       body {
         padding: 0;
         margin: 0;
@@ -30,9 +39,8 @@
         border-collapse: collapse;
         color: lightgray;
         text-transform: uppercase;
-        font-family: system-ui;
-        font-size: 60px;
-        font-weight: bold;
+        font-family: 'HighVoltage';
+        font-size: 4em;
       }
       #scoreboard td {
         vertical-align: middle;
@@ -44,9 +52,11 @@
         font-size: 120px;
         line-height: 60px;
         color: rgb(14 164 150);
+        font-family: system-ui;
       }
       #scoreboard td.player-name {
         text-align: left;
+        padding-left: 30px;
       }
       #scoreboard td.current-set {
         background-color: rgb(14 164 150);
