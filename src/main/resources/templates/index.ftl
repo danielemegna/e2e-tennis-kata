@@ -46,7 +46,6 @@
       #scoreboard td {
         vertical-align: middle;
         text-align: center;
-        border: 4px solid gray;
       }
       #scoreboard td.ball-hitter {
         width: 80px;
@@ -63,6 +62,7 @@
       #scoreboard td.current-set {
         background-color: rgb(14 164 150);
         width: 110px;
+        border: 4px solid rgb(11 23 42);
       }
       #scoreboard td.current-game {
         background-color: rgb(37 59 80);
