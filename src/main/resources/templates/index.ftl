@@ -40,7 +40,7 @@
         color: lightgray;
         text-transform: uppercase;
         font-family: 'GrowlyGrin';
-        font-size: 80px;
+        font-size: 5.5rem;
         letter-spacing: 6px;
       }
       #scoreboard td {
@@ -50,7 +50,7 @@
       }
       #scoreboard td.ball-hitter {
         width: 80px;
-        font-size: 200px;
+        font-size: 12rem;
         line-height: 0;
         color: rgb(14 164 150);
         font-family: system-ui;
