@@ -40,7 +40,8 @@
         color: lightgray;
         text-transform: uppercase;
         font-family: 'HighVoltage';
-        font-size: 4em;
+        font-size: 80px;
+        letter-spacing: 3px;
       }
       #scoreboard td {
         vertical-align: middle;
