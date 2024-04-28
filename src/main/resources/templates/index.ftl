@@ -29,11 +29,11 @@
       }
       #center-box {
         filter: opacity(95%);
-        background-color: rgb(11 23 42);
         width: 800px;
         height: 280px;
       }
       #scoreboard {
+        background-color: rgb(11 23 42);
         width: 100%;
         height: 100%;
         border-collapse: collapse;
