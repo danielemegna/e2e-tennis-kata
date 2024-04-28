@@ -50,8 +50,8 @@
       }
       #scoreboard td.ball-hitter {
         width: 80px;
-        font-size: 120px;
-        line-height: 60px;
+        font-size: 200px;
+        line-height: 0;
         color: rgb(14 164 150);
         font-family: system-ui;
       }
