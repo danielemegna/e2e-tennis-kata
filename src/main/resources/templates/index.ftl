@@ -58,6 +58,7 @@
       #scoreboard td.player-name {
         text-align: left;
         padding-left: 30px;
+        cursor: pointer;
       }
       #scoreboard td.current-set {
         background-color: rgb(14 164 150);
