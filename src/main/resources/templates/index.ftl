@@ -2,11 +2,11 @@
   <head>
     <style>
       @font-face {
-        font-family: 'HighVoltage';
-        src:  url('assets/fonts/HighVoltage.ttf.woff') format('woff'),
-        url('assets/fonts/HighVoltage.ttf.svg#HighVoltage') format('svg'),
-        url('assets/fonts/HighVoltage.ttf.eot'),
-        url('assets/fonts/HighVoltage.eot?#iefix') format('embedded-opentype');
+        font-family: 'GrowlyGrin';
+        src:  url('assets/fonts/GrowlyGrin.ttf.woff') format('woff'),
+        url('assets/fonts/GrowlyGrin.ttf.svg#GrowlyGrin') format('svg'),
+        url('assets/fonts/GrowlyGrin.ttf.eot'),
+        url('assets/fonts/GrowlyGrin.eot?#iefix') format('embedded-opentype');
         font-weight: normal;
         font-style: normal;
       }
@@ -39,9 +39,9 @@
         border-collapse: collapse;
         color: lightgray;
         text-transform: uppercase;
-        font-family: 'HighVoltage';
+        font-family: 'GrowlyGrin';
         font-size: 80px;
-        letter-spacing: 3px;
+        letter-spacing: 6px;
       }
       #scoreboard td {
         vertical-align: middle;
