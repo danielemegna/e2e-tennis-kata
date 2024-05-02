@@ -28,14 +28,14 @@
         filter: blur(14px) brightness(90%);
       }
       #center-box {
-        filter: opacity(95%);
         width: 800px;
         height: 280px;
+        filter: opacity(95%);
       }
       #scoreboard {
-        background-color: rgb(11 23 42);
         width: 100%;
         height: 100%;
+        background-color: rgb(11 23 42);
         border-collapse: collapse;
         color: lightgray;
         text-transform: uppercase;
@@ -46,6 +46,7 @@
       #scoreboard td {
         vertical-align: middle;
         text-align: center;
+        box-sizing: border-box;
       }
       #scoreboard td.ball-hitter {
         width: 80px;
@@ -56,17 +57,17 @@
       }
       #scoreboard td.player-name {
         text-align: left;
-        padding-left: 30px;
+        padding: 0 10px;
         cursor: pointer;
       }
       #scoreboard td.current-set {
+        width: 120px;
         background-color: rgb(14 164 150);
-        width: 110px;
-        border: 4px solid rgb(11 23 42);
+        border: 6px solid rgb(11 23 42);
       }
       #scoreboard td.current-game {
-        background-color: rgb(37 59 80);
         width: 120px;
+        background-color: rgb(37 59 80);
       }
     </style>
   </head>
