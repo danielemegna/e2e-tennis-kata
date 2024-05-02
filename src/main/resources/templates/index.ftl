@@ -56,9 +56,13 @@
         font-family: system-ui;
       }
       #scoreboard td.player-name {
+        max-width: 480px;
         text-align: left;
         padding: 0 10px;
         cursor: pointer;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
       #scoreboard td.current-set {
         width: 120px;
