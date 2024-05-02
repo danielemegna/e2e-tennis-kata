@@ -49,16 +49,17 @@
         box-sizing: border-box;
       }
       #scoreboard td.ball-hitter {
-        width: 80px;
+        width: 90px;
+        letter-spacing: normal;
         font-size: 12rem;
         line-height: 0;
         color: rgb(14 164 150);
         font-family: system-ui;
       }
       #scoreboard td.player-name {
-        max-width: 480px;
+        max-width: 470px;
         text-align: left;
-        padding: 0 10px;
+        padding-right: 0 10px;
         cursor: pointer;
         text-overflow: ellipsis;
         overflow: hidden;
