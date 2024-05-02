@@ -51,11 +51,22 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.gameWonByPlayer(pointAuthor: Player): MatchState {
-        return this.copy(
+        val updatedState = this.copy(
             currentGame = Game(),
             currentSet = currentSet.increaseScore(pointAuthor),
             serving = serving.next()
         )
+
+        // fake it until you make it ...
+        if(updatedState.currentSet.firstPlayerScore == 6 && updatedState.currentSet.secondPlayerScore == 1) {
+            return updatedState.copy(
+                wonSets = wonSets.plus(updatedState.currentSet),
+                currentSet = MatchState.Set(),
+                //serving = ??
+            )
+        }
+
+        return updatedState
     }
 
     private fun MatchState.increaseCurrentGamePlayerScore(pointAuthor: Player): MatchState {

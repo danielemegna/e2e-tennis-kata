@@ -7,8 +7,8 @@ data class MatchState(
     val secondPlayerName: String,
     val serving: Serving,
     val currentGame: Game,
-    val currentSet: Set
-    // list of past sets
+    val currentSet: Set,
+    val wonSets: List<Set>
 ) {
     constructor(firstPlayerName: String, secondPlayerName: String) : this(
         firstPlayerName = firstPlayerName,
@@ -16,6 +16,7 @@ data class MatchState(
         serving = Serving.FIRST_PLAYER,
         currentGame = Game(),
         currentSet = Set(),
+        wonSets = emptyList()
     )
 
     enum class Serving {
