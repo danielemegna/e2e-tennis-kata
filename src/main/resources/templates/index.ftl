@@ -28,12 +28,10 @@
         filter: blur(14px) brightness(90%);
       }
       #center-box {
-        width: 800px;
         height: 280px;
         filter: opacity(95%);
       }
       #scoreboard {
-        width: 100%;
         height: 100%;
         background-color: rgb(11 23 42);
         border-collapse: collapse;
@@ -59,7 +57,7 @@
       #scoreboard td.player-name {
         max-width: 470px;
         text-align: left;
-        padding-right: 0 10px;
+        padding: 0 50px 0 10px;
         cursor: pointer;
         text-overflow: ellipsis;
         overflow: hidden;
