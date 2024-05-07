@@ -7,6 +7,12 @@
     font-weight: normal;
     font-style: normal;
 }
+:root {
+    --main-bg-color: rgb(11 23 42);
+    --light-bg-color: rgb(37 59 80);
+    --main-font-color: lightgray;
+    --highlight-color: rgb(14 164 150);
+}
 body {
     padding: 0;
     margin: 0;
@@ -30,9 +36,9 @@ body {
 }
 #scoreboard {
     height: 100%;
-    background-color: rgb(11 23 42);
+    background-color: var(--main-bg-color);
     border-collapse: collapse;
-    color: lightgray;
+    color: var(--main-font-color);
     text-transform: uppercase;
     font-family: 'GrowlyGrin';
     font-size: 5.5rem;
@@ -48,7 +54,7 @@ body {
     letter-spacing: normal;
     font-size: 12rem;
     line-height: 0;
-    color: rgb(14 164 150);
+    color: var(--highlight-color);
     font-family: system-ui;
 }
 #scoreboard td.player-name {
@@ -62,10 +68,11 @@ body {
 }
 #scoreboard td.current-set {
     width: 120px;
-    background-color: rgb(14 164 150);
-    border: 6px solid rgb(11 23 42);
+    background-color: var(--highlight-color);
+    color: var(--main-bg-color);
+    border: 6px solid var(--main-bg-color);
 }
 #scoreboard td.current-game {
     width: 120px;
-    background-color: rgb(37 59 80);
+    background-color: var(--light-bg-color);
 }
