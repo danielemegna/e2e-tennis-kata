@@ -64,13 +64,13 @@ private fun Application.exceptionHandlingPlugin() {
 }
 
 private fun scoreBoardViewFrom(matchState: MatchState) = ScoreBoardView(
+    isFirstPlayerServing = matchState.serving == Serving.FIRST_PLAYER,
     firstPlayerName = matchState.firstPlayerName,
     secondPlayerName = matchState.secondPlayerName,
-    isFirstPlayerServing = matchState.serving == Serving.FIRST_PLAYER,
+    firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
+    secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore,
     firstPlayerCurrentGameScore = matchState.currentGame.firstPlayerScore.toString(),
     secondPlayerCurrentGameScore = matchState.currentGame.secondPlayerScore.toString(),
-    firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
-    secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore
 )
 
 private fun Application.freeMarkerPlugin() {
