@@ -57,8 +57,7 @@ class MatchStateUpdater {
             serving = serving.next()
         )
 
-        // fake it until you make it ...
-        if(updatedState.currentSet.firstPlayerScore == 6 && updatedState.currentSet.secondPlayerScore == 1) {
+        if(updatedState.currentSet.firstPlayerScore == 6 && updatedState.currentSet.secondPlayerScore < 5) {
             return updatedState.copy(
                 wonSets = wonSets.plus(updatedState.currentSet),
                 currentSet = MatchState.Set(),
