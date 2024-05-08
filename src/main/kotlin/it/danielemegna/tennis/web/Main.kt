@@ -67,7 +67,7 @@ private fun scoreBoardViewFrom(matchState: MatchState) = ScoreBoardView(
     isFirstPlayerServing = matchState.serving == Serving.FIRST_PLAYER,
     firstPlayerName = matchState.firstPlayerName,
     secondPlayerName = matchState.secondPlayerName,
-    finishedSets = emptyList(),
+    finishedSets = matchState.wonSets.map { ScoreBoardView.FinishedSet(it.firstPlayerScore, it.secondPlayerScore) },
     firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
     secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore,
     firstPlayerCurrentGameScore = matchState.currentGame.firstPlayerScore.toString(),
