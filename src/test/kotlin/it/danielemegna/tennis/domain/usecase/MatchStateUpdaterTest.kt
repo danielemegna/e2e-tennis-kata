@@ -246,6 +246,22 @@ class MatchStateUpdaterTest {
             assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
             assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
         }
+
+        @Test
+        fun `second player win the set on six game`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(firstPlayerScore = 4, secondPlayerScore = 5),
+                currentGame = MatchState.Game(FORTY, ADVANTAGE)
+            )
+
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
+
+            val expectedWonSet = MatchState.Set(firstPlayerScore = 4, secondPlayerScore = 6)
+            assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
+            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
+            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
+        }
     }
 
 }

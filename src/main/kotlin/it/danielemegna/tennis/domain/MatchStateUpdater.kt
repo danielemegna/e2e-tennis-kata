@@ -66,6 +66,14 @@ class MatchStateUpdater {
             )
         }
 
+        if(updatedState.currentSet.secondPlayerScore == 6 && updatedState.currentSet.firstPlayerScore < 5) {
+            return updatedState.copy(
+                wonSets = wonSets.plus(updatedState.currentSet),
+                currentSet = MatchState.Set(),
+                //serving = ??
+            )
+        }
+
         return updatedState
     }
 
