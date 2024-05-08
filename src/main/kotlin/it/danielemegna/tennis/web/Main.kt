@@ -28,19 +28,19 @@ fun main() {
             get("/") {
                 val usecase = InitNewGame(matchRepository)
                 val matchState = usecase.run()
-                val scoreBoardView = scoreBoardViewFrom(matchState)
+                val scoreBoardView = ScoreBoardView.from(matchState)
                 call.respond(message = FreeMarkerContent("index.ftl", scoreBoardView), status = HttpStatusCode.Created)
             }
             post("/player/1/point") {
                 val usecase = PlayerPoint(matchRepository)
                 val matchState = usecase.run(PlayerPoint.Player.FIRST)
-                val scoreBoardView = scoreBoardViewFrom(matchState)
+                val scoreBoardView = ScoreBoardView.from(matchState)
                 call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
             }
             post("/player/2/point") {
                 val usecase = PlayerPoint(matchRepository)
                 val matchState = usecase.run(PlayerPoint.Player.SECOND)
-                val scoreBoardView = scoreBoardViewFrom(matchState)
+                val scoreBoardView = ScoreBoardView.from(matchState)
                 call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
             }
             staticResources("/assets", "assets")
@@ -62,17 +62,6 @@ private fun Application.exceptionHandlingPlugin() {
         }
     }
 }
-
-private fun scoreBoardViewFrom(matchState: MatchState) = ScoreBoardView(
-    isFirstPlayerServing = matchState.serving == Serving.FIRST_PLAYER,
-    firstPlayerName = matchState.firstPlayerName,
-    secondPlayerName = matchState.secondPlayerName,
-    finishedSets = matchState.wonSets.map { ScoreBoardView.FinishedSet(it.firstPlayerScore, it.secondPlayerScore) },
-    firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
-    secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore,
-    firstPlayerCurrentGameScore = matchState.currentGame.firstPlayerScore.toString(),
-    secondPlayerCurrentGameScore = matchState.currentGame.secondPlayerScore.toString(),
-)
 
 private fun Application.freeMarkerPlugin() {
     install(FreeMarker) {
