@@ -2,6 +2,8 @@
 
 Develop a scorekeeper for tennis matches.
 
+![App Screenshot](materials/app-screenshot.png)
+
 ## Setup
 
 Build and run via gradle
