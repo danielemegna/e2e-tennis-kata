@@ -61,7 +61,6 @@ class MatchStateUpdater {
             return updatedState.copy(
                 wonSets = wonSets.plus(updatedState.currentSet),
                 currentSet = MatchState.Set(),
-                //serving = ??
             )
         }
 
@@ -69,7 +68,6 @@ class MatchStateUpdater {
             return updatedState.copy(
                 wonSets = wonSets.plus(updatedState.currentSet),
                 currentSet = MatchState.Set(),
-                //serving = ??
             )
         }
 
