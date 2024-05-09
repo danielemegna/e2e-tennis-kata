@@ -8,35 +8,34 @@ import it.danielemegna.tennis.domain.usecase.PlayerPoint.Player
 class MatchStateUpdater {
 
     fun updatedMatch(matchState: MatchState, pointAuthor: Player): MatchState {
-        val currentGame = matchState.currentGame
-
-        if (canceledAdvantagePoint(pointAuthor, currentGame))
+        if (matchState.isCanceledAdvantagePoint(pointAuthor))
             return matchState.setCurrentGameFortyForty()
 
-        if (!isGamePoint(pointAuthor, currentGame))
+        if (!matchState.isGamePoint(pointAuthor))
             return matchState.increaseCurrentGamePlayerScore(pointAuthor)
 
-        if (isSetPoint(pointAuthor, matchState.currentSet))
+        if (matchState.isSetPoint(pointAuthor))
             return matchState.setWonByPlayer(pointAuthor)
 
         return matchState.gameWonByPlayer(pointAuthor)
     }
 
-    private fun isSetPoint(pointAuthor: Player, currentSet: MatchState.Set): Boolean {
+    private fun MatchState.isSetPoint(pointAuthor: Player): Boolean {
         if (pointAuthor == Player.FIRST)
             if (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore < 5) return true
         if (pointAuthor == Player.SECOND)
             if (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore < 5) return true
+
         return false
     }
 
-    private fun canceledAdvantagePoint(pointAuthor: Player, currentGame: Game): Boolean {
+    private fun MatchState.isCanceledAdvantagePoint(pointAuthor: Player): Boolean {
         if (currentGame.firstPlayerScore == ADVANTAGE && pointAuthor == Player.SECOND) return true
         if (currentGame.secondPlayerScore == ADVANTAGE && pointAuthor == Player.FIRST) return true
         return false
     }
 
-    private fun isGamePoint(pointAuthor: Player, currentGame: Game): Boolean {
+    private fun MatchState.isGamePoint(pointAuthor: Player): Boolean {
         if (pointAuthor == Player.FIRST) {
             if (currentGame.firstPlayerScore == ADVANTAGE) return true
             if (currentGame.firstPlayerScore == FORTY && currentGame.secondPlayerScore < FORTY) return true
