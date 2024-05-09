@@ -1,6 +1,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="assets/style.css" />
+    <meta name="viewport" content="user-scalable=0"/>
   </head>
   <body>
     <img id="background-image" src="assets/background.png" />
