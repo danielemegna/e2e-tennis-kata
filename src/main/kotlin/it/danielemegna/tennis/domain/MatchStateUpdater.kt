@@ -20,15 +20,6 @@ class MatchStateUpdater {
         return matchState.gameWonByPlayer(pointAuthor)
     }
 
-    private fun MatchState.isSetPoint(pointAuthor: Player): Boolean {
-        if (pointAuthor == Player.FIRST)
-            if (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore < 5) return true
-        if (pointAuthor == Player.SECOND)
-            if (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore < 5) return true
-
-        return false
-    }
-
     private fun MatchState.isCanceledAdvantagePoint(pointAuthor: Player): Boolean {
         if (currentGame.firstPlayerScore == ADVANTAGE && pointAuthor == Player.SECOND) return true
         if (currentGame.secondPlayerScore == ADVANTAGE && pointAuthor == Player.FIRST) return true
@@ -48,20 +39,21 @@ class MatchStateUpdater {
         return false
     }
 
+    private fun MatchState.isSetPoint(pointAuthor: Player): Boolean {
+        if (pointAuthor == Player.FIRST)
+            if (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore < 5) return true
+        if (pointAuthor == Player.SECOND)
+            if (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore < 5) return true
+
+        return false
+    }
+
     private fun MatchState.setCurrentGameFortyForty(): MatchState {
         return this.copy(
             currentGame = currentGame.copy(
                 firstPlayerScore = FORTY,
                 secondPlayerScore = FORTY
             )
-        )
-    }
-
-    private fun MatchState.gameWonByPlayer(pointAuthor: Player): MatchState {
-        return copy(
-            currentSet = currentSet.increaseScore(pointAuthor),
-            currentGame = Game(),
-            serving = serving.next()
         )
     }
 
@@ -72,6 +64,14 @@ class MatchStateUpdater {
             currentSet = MatchState.Set(),
             currentGame = Game(),
             serving = serving.next(),
+        )
+    }
+
+    private fun MatchState.gameWonByPlayer(pointAuthor: Player): MatchState {
+        return copy(
+            currentSet = currentSet.increaseScore(pointAuthor),
+            currentGame = Game(),
+            serving = serving.next()
         )
     }
 
