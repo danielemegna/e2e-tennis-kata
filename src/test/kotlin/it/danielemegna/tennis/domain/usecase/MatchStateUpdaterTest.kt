@@ -59,6 +59,35 @@ class MatchStateUpdaterTest {
             assertEquals(THIRTY, updatedMatchState.currentGame.firstPlayerScore)
         }
 
+        @Test
+        fun `first player close to set point`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(5, 4),
+                currentGame = MatchState.Game(THIRTY, FIFTEEN)
+            )
+
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
+
+            assertEquals(FORTY, updatedMatchState.currentGame.firstPlayerScore)
+            assertEquals(FIFTEEN, updatedMatchState.currentGame.secondPlayerScore)
+            assertEquals(MatchState.Set(5, 4), updatedMatchState.currentSet)
+            assertEquals(emptyList(), updatedMatchState.wonSets)
+        }
+
+        @Test
+        fun `point to cancel a set point`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(5, 4),
+                currentGame = MatchState.Game(FORTY, FIFTEEN)
+            )
+
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
+
+            assertEquals(FORTY, updatedMatchState.currentGame.firstPlayerScore)
+            assertEquals(THIRTY, updatedMatchState.currentGame.secondPlayerScore)
+            assertEquals(MatchState.Set(5, 4), updatedMatchState.currentSet)
+            assertEquals(emptyList(), updatedMatchState.wonSets)
+        }
     }
 
     @Nested
