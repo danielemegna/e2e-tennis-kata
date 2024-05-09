@@ -13,13 +13,13 @@ class MatchStateUpdater {
         if (untappedAdvantagePoint(pointAuthor, currentGame))
             return matchState.setCurrentGameFortyForty()
 
-        if (gameWon(pointAuthor, currentGame)) {
-            if (setWon(pointAuthor, matchState.currentSet))
-                return matchState.setWonByPlayer(pointAuthor)
-            return matchState.gameWonByPlayer(pointAuthor)
-        }
+        if (!gameWon(pointAuthor, currentGame))
+            return matchState.increaseCurrentGamePlayerScore(pointAuthor)
 
-        return matchState.increaseCurrentGamePlayerScore(pointAuthor)
+        if (setWon(pointAuthor, matchState.currentSet))
+            return matchState.setWonByPlayer(pointAuthor)
+
+        return matchState.gameWonByPlayer(pointAuthor)
     }
 
     private fun setWon(pointAuthor: Player, currentSet: MatchState.Set): Boolean {
