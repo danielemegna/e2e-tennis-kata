@@ -11,13 +11,14 @@ class MatchStateUpdater {
         if (matchState.isCanceledAdvantagePoint(pointAuthor))
             return matchState.setCurrentGameFortyForty()
 
-        if (!matchState.isGamePoint(pointAuthor))
-            return matchState.increaseCurrentGamePlayerScore(pointAuthor)
+        if (matchState.isGamePoint(pointAuthor)) {
+            if (matchState.isSetPoint(pointAuthor))
+                return matchState.setWonByPlayer(pointAuthor)
 
-        if (matchState.isSetPoint(pointAuthor))
-            return matchState.setWonByPlayer(pointAuthor)
+            return matchState.gameWonByPlayer(pointAuthor)
+        }
 
-        return matchState.gameWonByPlayer(pointAuthor)
+        return matchState.increaseCurrentGamePlayerScore(pointAuthor)
     }
 
     private fun MatchState.isCanceledAdvantagePoint(pointAuthor: Player): Boolean {
