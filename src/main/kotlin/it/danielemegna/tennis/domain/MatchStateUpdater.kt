@@ -13,18 +13,26 @@ class MatchStateUpdater {
         if (untappedAdvantagePoint(pointAuthor, currentGame))
             return matchState.setCurrentGameFortyForty()
 
-        if (gameWon(pointAuthor, currentGame))
+        if (gameWon(pointAuthor, currentGame)) {
+            if (setWon(pointAuthor, matchState.currentSet))
+                return matchState.setWonByPlayer(pointAuthor)
             return matchState.gameWonByPlayer(pointAuthor)
+        }
 
         return matchState.increaseCurrentGamePlayerScore(pointAuthor)
     }
 
-    private fun untappedAdvantagePoint(pointAuthor: Player, currentGame: Game): Boolean {
-        if (currentGame.firstPlayerScore == ADVANTAGE && pointAuthor == Player.SECOND)
-            return true;
-        if (currentGame.secondPlayerScore == ADVANTAGE && pointAuthor == Player.FIRST)
-            return true;
+    private fun setWon(pointAuthor: Player, currentSet: MatchState.Set): Boolean {
+        if (pointAuthor == Player.FIRST)
+            if (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore < 5) return true
+        if (pointAuthor == Player.SECOND)
+            if (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore < 5) return true
+        return false
+    }
 
+    private fun untappedAdvantagePoint(pointAuthor: Player, currentGame: Game): Boolean {
+        if (currentGame.firstPlayerScore == ADVANTAGE && pointAuthor == Player.SECOND) return true
+        if (currentGame.secondPlayerScore == ADVANTAGE && pointAuthor == Player.FIRST) return true
         return false
     }
 
@@ -51,27 +59,21 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.gameWonByPlayer(pointAuthor: Player): MatchState {
-        val updatedState = this.copy(
-            currentGame = Game(),
+        return copy(
             currentSet = currentSet.increaseScore(pointAuthor),
+            currentGame = Game(),
             serving = serving.next()
         )
+    }
 
-        if(updatedState.currentSet.firstPlayerScore == 6 && updatedState.currentSet.secondPlayerScore < 5) {
-            return updatedState.copy(
-                wonSets = wonSets.plus(updatedState.currentSet),
-                currentSet = MatchState.Set(),
-            )
-        }
-
-        if(updatedState.currentSet.secondPlayerScore == 6 && updatedState.currentSet.firstPlayerScore < 5) {
-            return updatedState.copy(
-                wonSets = wonSets.plus(updatedState.currentSet),
-                currentSet = MatchState.Set(),
-            )
-        }
-
-        return updatedState
+    private fun MatchState.setWonByPlayer(pointAuthor: Player): MatchState {
+        val wonSet = currentSet.increaseScore(pointAuthor)
+        return this.copy(
+            wonSets = wonSets.plus(wonSet),
+            currentSet = MatchState.Set(),
+            currentGame = Game(),
+            serving = serving.next(),
+        )
     }
 
     private fun MatchState.increaseCurrentGamePlayerScore(pointAuthor: Player): MatchState {
@@ -79,3 +81,4 @@ class MatchStateUpdater {
     }
 
 }
+
