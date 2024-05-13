@@ -45,6 +45,7 @@ body {
     font-family: 'GrowlyGrin';
     font-size: 5.5rem;
     letter-spacing: 6px;
+    user-select: none;
 }
 #scoreboard td {
     vertical-align: middle;
