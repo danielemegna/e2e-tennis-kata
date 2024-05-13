@@ -41,10 +41,14 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.isSetPoint(pointAuthor: Player): Boolean {
-        if (pointAuthor == Player.FIRST)
+        if (pointAuthor == Player.FIRST) {
             if (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore < 5) return true
-        if (pointAuthor == Player.SECOND)
+            if (currentSet.firstPlayerScore == 6 && currentSet.secondPlayerScore == 5) return true
+        }
+        if (pointAuthor == Player.SECOND) {
             if (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore < 5) return true
+            if (currentSet.secondPlayerScore == 6 && currentSet.firstPlayerScore == 5) return true
+        }
 
         return false
     }
