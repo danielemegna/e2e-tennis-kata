@@ -4,6 +4,7 @@ import it.danielemegna.tennis.domain.MatchState
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
 import it.danielemegna.tennis.domain.MatchState.Serving
 import it.danielemegna.tennis.domain.MatchStateUpdater
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -346,6 +347,27 @@ class MatchStateUpdaterTest {
             assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
         }
+    }
+
+    @Nested
+    inner class TieBreak {
+
+        @Test
+        fun `still not tiebreak on six-five`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(firstPlayerScore = 5, secondPlayerScore = 5),
+                currentGame = MatchState.Game(FORTY, THIRTY),
+            )
+            assertNull(matchState.currentTieBreak)
+
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
+
+            assertNull(matchState.currentTieBreak)
+            assertEquals(6, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(5, updatedMatchState.currentSet.secondPlayerScore)
+            assertEquals(emptyList(), updatedMatchState.wonSets)
+        }
+
     }
 
 }

@@ -8,14 +8,17 @@ data class MatchState(
     val serving: Serving,
     val currentGame: Game,
     val currentSet: Set,
-    val wonSets: List<Set>
+    val currentTieBreak: TieBreak?,
+    val wonSets: List<Set>,
 ) {
+
     constructor(firstPlayerName: String, secondPlayerName: String) : this(
         firstPlayerName = firstPlayerName,
         secondPlayerName = secondPlayerName,
         serving = Serving.FIRST_PLAYER,
         currentGame = Game(),
         currentSet = Set(),
+        currentTieBreak = null,
         wonSets = emptyList()
     )
 
@@ -61,4 +64,18 @@ data class MatchState(
             }
         }
     }
+
+    // is this a bad duplication ? or not ?
+    data class TieBreak(
+        val firstPlayerScore: Int = 0,
+        val secondPlayerScore: Int = 0
+    ) {
+        fun increaseScore(pointAuthor: PlayerPoint.Player): TieBreak {
+            return when (pointAuthor) {
+                PlayerPoint.Player.FIRST -> this.copy(firstPlayerScore = firstPlayerScore + 1)
+                PlayerPoint.Player.SECOND -> this.copy(secondPlayerScore = secondPlayerScore + 1)
+            }
+        }
+    }
+
 }
