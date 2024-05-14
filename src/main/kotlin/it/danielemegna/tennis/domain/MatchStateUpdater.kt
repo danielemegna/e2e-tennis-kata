@@ -14,6 +14,8 @@ class MatchStateUpdater {
         if (matchState.isGamePoint(pointAuthor)) {
             if (matchState.isSetPoint(pointAuthor))
                 return matchState.setWonByPlayer(pointAuthor)
+            if (matchState.needTieBreak(pointAuthor))
+                return matchState.startTieBreak(pointAuthor)
 
             return matchState.gameWonByPlayer(pointAuthor)
         }
@@ -53,6 +55,13 @@ class MatchStateUpdater {
         return false
     }
 
+    private fun MatchState.needTieBreak(pointAuthor: Player): Boolean {
+        return when (pointAuthor) {
+            Player.FIRST -> (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore == 6)
+            Player.SECOND -> (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore == 6)
+        }
+    }
+
     private fun MatchState.setCurrentGameFortyForty(): MatchState {
         return this.copy(
             currentGame = currentGame.copy(
@@ -69,6 +78,13 @@ class MatchStateUpdater {
             currentSet = MatchState.Set(),
             currentGame = Game(),
             serving = serving.next(),
+        )
+    }
+
+    private fun MatchState.startTieBreak(pointAuthor: Player): MatchState {
+        val newState = this.gameWonByPlayer(pointAuthor)
+        return newState.copy(
+            currentTieBreak = MatchState.TieBreak()
         )
     }
 

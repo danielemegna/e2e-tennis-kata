@@ -368,6 +368,25 @@ class MatchStateUpdaterTest {
             assertEquals(emptyList(), updatedMatchState.wonSets)
         }
 
+        @Test
+        fun `it starts on six-all`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(firstPlayerScore = 6, secondPlayerScore = 5),
+                currentGame = MatchState.Game(FIFTEEN, FORTY),
+                serving = Serving.SECOND_PLAYER
+            )
+            assertNull(matchState.currentTieBreak)
+
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
+
+            assertEquals(MatchState.TieBreak(0, 0), updatedMatchState.currentTieBreak)
+            assertEquals(6, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(6, updatedMatchState.currentSet.secondPlayerScore)
+            assertEquals(emptyList(), updatedMatchState.wonSets)
+            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
+            assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
+        }
+
     }
 
 }
