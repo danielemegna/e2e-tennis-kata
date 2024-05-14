@@ -26,7 +26,14 @@ data class MatchState(
 
     enum class Serving {
         FIRST_PLAYER, SECOND_PLAYER;
+
         fun next() = entries[(this.ordinal + 1) % entries.size]
+
+        fun nextFor(tieBreak: TieBreak): Serving {
+            val totalTieBreakPoints = tieBreak.let { it.firstPlayerScore + it.secondPlayerScore }
+            if (totalTieBreakPoints % 2 == 0) return this
+            return next()
+        }
     }
 
     data class Game(

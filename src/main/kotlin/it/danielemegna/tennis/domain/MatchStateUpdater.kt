@@ -3,7 +3,6 @@ package it.danielemegna.tennis.domain
 import it.danielemegna.tennis.domain.MatchState.Game
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.ADVANTAGE
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.FORTY
-import it.danielemegna.tennis.domain.usecase.PlayerPoint
 import it.danielemegna.tennis.domain.usecase.PlayerPoint.Player
 
 class MatchStateUpdater {
@@ -104,14 +103,10 @@ class MatchStateUpdater {
         if (currentTieBreak == null)
             throw RuntimeException("Cannot increase tie break score: tie break never started!")
 
-        val updatedTieBreakScore = currentTieBreak.increaseScore(pointAuthor)
-
-        val totalTieBreakPoints = updatedTieBreakScore.let { it.firstPlayerScore + it.secondPlayerScore }
-        val updatedServing = if (totalTieBreakPoints % 2 == 1) serving.next() else serving
-
+        val newTieBreakScore = currentTieBreak.increaseScore(pointAuthor)
         return this.copy(
-            currentTieBreak = updatedTieBreakScore,
-            serving = updatedServing
+            currentTieBreak = newTieBreakScore,
+            serving = serving.nextFor(newTieBreakScore)
         )
     }
 
