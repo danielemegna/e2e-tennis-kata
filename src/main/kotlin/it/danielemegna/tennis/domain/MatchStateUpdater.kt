@@ -3,6 +3,7 @@ package it.danielemegna.tennis.domain
 import it.danielemegna.tennis.domain.MatchState.Game
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.ADVANTAGE
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.FORTY
+import it.danielemegna.tennis.domain.usecase.PlayerPoint
 import it.danielemegna.tennis.domain.usecase.PlayerPoint.Player
 
 class MatchStateUpdater {
@@ -10,6 +11,9 @@ class MatchStateUpdater {
     fun updatedMatch(matchState: MatchState, pointAuthor: Player): MatchState {
         if (matchState.isCanceledAdvantagePoint(pointAuthor))
             return matchState.setCurrentGameFortyForty()
+
+        if (matchState.tieBreakInProgress())
+            return matchState.increaseTieBreakPlayerScore(pointAuthor)
 
         if (matchState.isGamePoint(pointAuthor)) {
             if (matchState.isSetPoint(pointAuthor))
@@ -96,9 +100,15 @@ class MatchStateUpdater {
         )
     }
 
+    private fun MatchState.increaseTieBreakPlayerScore(pointAuthor: Player): MatchState {
+        return this.copy(
+            currentTieBreak = currentTieBreak!!.increaseScore(pointAuthor),
+            serving = serving.next()
+        )
+    }
+
     private fun MatchState.increaseCurrentGamePlayerScore(pointAuthor: Player): MatchState {
         return this.copy(currentGame = currentGame.increaseScore(pointAuthor))
     }
 
 }
-

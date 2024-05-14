@@ -22,6 +22,8 @@ data class MatchState(
         wonSets = emptyList()
     )
 
+    fun tieBreakInProgress() = currentTieBreak != null
+
     enum class Serving {
         FIRST_PLAYER, SECOND_PLAYER;
         fun next() = entries[(this.ordinal + 1) % entries.size]
