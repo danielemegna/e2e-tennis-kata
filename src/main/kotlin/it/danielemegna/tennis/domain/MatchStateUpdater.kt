@@ -101,9 +101,17 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.increaseTieBreakPlayerScore(pointAuthor: Player): MatchState {
+        if (currentTieBreak == null)
+            throw RuntimeException("Cannot increase tie break score: tie break never started!")
+
+        val updatedTieBreakScore = currentTieBreak.increaseScore(pointAuthor)
+
+        val totalTieBreakPoints = updatedTieBreakScore.let { it.firstPlayerScore + it.secondPlayerScore }
+        val updatedServing = if (totalTieBreakPoints % 2 == 1) serving.next() else serving
+
         return this.copy(
-            currentTieBreak = currentTieBreak!!.increaseScore(pointAuthor),
-            serving = serving.next()
+            currentTieBreak = updatedTieBreakScore,
+            serving = updatedServing
         )
     }
 

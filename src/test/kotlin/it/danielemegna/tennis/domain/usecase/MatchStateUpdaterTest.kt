@@ -405,6 +405,21 @@ class MatchStateUpdaterTest {
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
         }
 
+        @Test
+        fun `after first point the serving is changed every two point`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(6, 6),
+                currentTieBreak = MatchState.TieBreak(firstPlayerScore = 1, secondPlayerScore = 0),
+                currentGame = MatchState.Game(ZERO, ZERO),
+                serving = Serving.SECOND_PLAYER
+            )
+
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
+
+            assertEquals(MatchState.TieBreak(1, 1), updatedMatchState.currentTieBreak)
+            assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
+        }
+
     }
 
 }
