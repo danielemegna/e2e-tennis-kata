@@ -16,7 +16,10 @@ data class ScoreBoardView(
         val firstPlayerScore: Int,
         val secondPlayerScore: Int
     ) {
-        val wonByFirstPlayer = firstPlayerScore > secondPlayerScore
+        @Suppress("unused", "used by freemarker view template")
+        val firstPlayerCssClass = if(firstPlayerScore > secondPlayerScore) "won" else "lost"
+        @Suppress("unused", "used by freemarker view template")
+        val secondPlayerCssClass = if(secondPlayerScore > firstPlayerScore) "won" else "lost"
     }
 
     companion object {

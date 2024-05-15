@@ -3,7 +3,7 @@
     <td class="ball-hitter"><#if isFirstPlayerServing()>&centerdot;</#if></td>
     <td class="player-name" hx-post="/player/1/point" hx-trigger="click" hx-target="#scoreboard">${firstPlayerName}</td>
     <#list finishedSets as finishedSet>
-      <td class="finished-set ${finishedSet.wonByFirstPlayer ? then('won','lost')}">
+      <td class="finished-set ${finishedSet.firstPlayerCssClass}">
         ${finishedSet.firstPlayerScore}
       </td>
     </#list>
@@ -14,7 +14,7 @@
     <td class="ball-hitter"><#if !isFirstPlayerServing()>&centerdot;</#if></td>
     <td class="player-name" hx-post="/player/2/point" hx-trigger="click" hx-target="#scoreboard">${secondPlayerName}</td>
     <#list finishedSets as finishedSet>
-      <td class="finished-set ${finishedSet.wonByFirstPlayer ? then('lost','won')}">
+      <td class="finished-set ${finishedSet.secondPlayerCssClass}">
         ${finishedSet.secondPlayerScore}
       </td>
     </#list>
