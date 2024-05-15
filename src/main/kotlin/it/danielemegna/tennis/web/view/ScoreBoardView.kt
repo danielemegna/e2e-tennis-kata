@@ -27,8 +27,22 @@ data class ScoreBoardView(
             finishedSets = matchState.wonSets.map { FinishedSet(it.firstPlayerScore, it.secondPlayerScore) },
             firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
             secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore,
-            firstPlayerCurrentGameScore = matchState.currentGame.firstPlayerScore.toString(),
-            secondPlayerCurrentGameScore = matchState.currentGame.secondPlayerScore.toString(),
+            firstPlayerCurrentGameScore = matchState.firstPlayerCurrentGameScore(),
+            secondPlayerCurrentGameScore = matchState.secondPlayerCurrentGameScore(),
         )
+
+        private fun MatchState.firstPlayerCurrentGameScore(): String {
+            if (this.currentTieBreak != null)
+                return this.currentTieBreak.firstPlayerScore.toString()
+
+            return this.currentGame.firstPlayerScore.toString()
+        }
+
+        private fun MatchState.secondPlayerCurrentGameScore(): String {
+            if (this.currentTieBreak != null)
+                return this.currentTieBreak.secondPlayerScore.toString()
+
+            return this.currentGame.secondPlayerScore.toString()
+        }
     }
 }
