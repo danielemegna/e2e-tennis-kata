@@ -11,8 +11,11 @@ class MatchStateUpdater {
         if (matchState.isCanceledAdvantagePoint(pointAuthor))
             return matchState.setCurrentGameFortyForty()
 
-        if (matchState.tieBreakInProgress())
+        if (matchState.tieBreakInProgress()) {
+            if(matchState.tieBreakWonByPlayer())
+                return matchState.setWonByPlayer(pointAuthor)
             return matchState.increaseTieBreakPlayerScore(pointAuthor)
+        }
 
         if (matchState.isGamePoint(pointAuthor)) {
             if (matchState.isSetPoint(pointAuthor))
@@ -24,6 +27,10 @@ class MatchStateUpdater {
         }
 
         return matchState.increaseCurrentGamePlayerScore(pointAuthor)
+    }
+
+    private fun MatchState.tieBreakWonByPlayer(): Boolean {
+        return currentTieBreak!!.firstPlayerScore == 6
     }
 
     private fun MatchState.isCanceledAdvantagePoint(pointAuthor: Player): Boolean {
@@ -80,6 +87,7 @@ class MatchStateUpdater {
             wonSets = wonSets.plus(wonSet),
             currentSet = MatchState.Set(),
             currentGame = Game(),
+            currentTieBreak = null,
             serving = serving.next(),
         )
     }
