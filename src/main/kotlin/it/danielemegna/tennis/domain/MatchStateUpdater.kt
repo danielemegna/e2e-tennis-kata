@@ -32,20 +32,13 @@ class MatchStateUpdater {
     private fun MatchState.tieBreakWonByPlayer(pointAuthor: Player): Boolean {
         if (currentTieBreak == null) return false;
 
-        if (pointAuthor == Player.FIRST) {
-            return (
-                currentTieBreak.firstPlayerScore >= 6 &&
-                    currentTieBreak.secondPlayerScore < currentTieBreak.firstPlayerScore
-                )
-        }
-        if (pointAuthor == Player.SECOND) {
-            return (
-                currentTieBreak.secondPlayerScore >= 6 &&
-                    currentTieBreak.firstPlayerScore < currentTieBreak.secondPlayerScore
-                )
-        }
+        return when (pointAuthor) {
+            Player.FIRST ->
+                currentTieBreak.firstPlayerScore >= 6 && currentTieBreak.secondPlayerScore < currentTieBreak.firstPlayerScore
 
-        return false
+            Player.SECOND ->
+                currentTieBreak.secondPlayerScore >= 6 && currentTieBreak.firstPlayerScore < currentTieBreak.secondPlayerScore
+        }
     }
 
     private fun MatchState.isCanceledAdvantagePoint(pointAuthor: Player): Boolean {
@@ -68,16 +61,13 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.isSetPoint(pointAuthor: Player): Boolean {
-        if (pointAuthor == Player.FIRST) {
-            if (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore < 5) return true
-            if (currentSet.firstPlayerScore == 6 && currentSet.secondPlayerScore == 5) return true
-        }
-        if (pointAuthor == Player.SECOND) {
-            if (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore < 5) return true
-            if (currentSet.secondPlayerScore == 6 && currentSet.firstPlayerScore == 5) return true
-        }
+        return when (pointAuthor) {
+            Player.FIRST ->
+                currentSet.firstPlayerScore >= 5 && currentSet.secondPlayerScore < currentSet.firstPlayerScore
 
-        return false
+            Player.SECOND ->
+                currentSet.secondPlayerScore >= 5 && currentSet.firstPlayerScore < currentSet.secondPlayerScore
+        }
     }
 
     private fun MatchState.needTieBreak(pointAuthor: Player): Boolean {
