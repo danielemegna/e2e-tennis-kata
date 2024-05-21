@@ -5,6 +5,8 @@ import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
 import it.danielemegna.tennis.domain.MatchState.Serving
 import it.danielemegna.tennis.domain.MatchStateUpdater
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -350,6 +352,65 @@ class MatchStateUpdaterTest {
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
         }
 
+        @Nested
+        @DisplayName("when tie-break ends the next game is served by player who did not started the tie-break")
+        inner class TieBreakEnd {
+
+            @Disabled("tie break end serving to be fixed!")
+            @Test
+            fun `1st player started tie-break - 2nd player ends tie-break - 2nd player start next game`() {
+                val matchState = MatchState("p1", "p2").copy(
+                    currentSet = MatchState.Set(6, 6),
+                    currentTieBreak = MatchState.TieBreak(firstPlayerScore = 6, secondPlayerScore = 4),
+                    serving = Serving.SECOND_PLAYER // this means first player started the tie-break
+                )
+
+                val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
+
+                assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
+            }
+
+            @Test
+            fun `1st player started tie-break - 1st player ends tie-break - 2nd player start next game`() {
+                val matchState = MatchState("p1", "p2").copy(
+                    currentSet = MatchState.Set(6, 6),
+                    currentTieBreak = MatchState.TieBreak(firstPlayerScore = 7, secondPlayerScore = 8),
+                    serving = Serving.FIRST_PLAYER // this means first player started the tie-break
+                )
+
+                val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
+
+                assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
+            }
+
+            @Disabled("tie break end serving to be fixed!")
+            @Test
+            fun `2nd player started tie-break - 1st player ends tie-break - 1st player start next game`() {
+                val matchState = MatchState("p1", "p2").copy(
+                    currentSet = MatchState.Set(6, 6),
+                    currentTieBreak = MatchState.TieBreak(firstPlayerScore = 6, secondPlayerScore = 3),
+                    serving = Serving.FIRST_PLAYER // this means second player started the tie-break
+                )
+
+                val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
+
+                assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
+            }
+
+            @Test
+            fun `2nd player started tie-break - 2nd player ends tie-break - 1st player start next game`() {
+                val matchState = MatchState("p1", "p2").copy(
+                    currentSet = MatchState.Set(6, 6),
+                    currentTieBreak = MatchState.TieBreak(firstPlayerScore = 9, secondPlayerScore = 10),
+                    serving = Serving.SECOND_PLAYER // this means second player started the tie-break
+                )
+
+                val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
+
+                assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
+            }
+
+        }
     }
 
     @Nested
