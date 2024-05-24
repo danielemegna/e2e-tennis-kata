@@ -65,4 +65,59 @@ class TieBreakTest {
 
     }
 
+    @Nested
+    inner class InferPlayerWillServeInTheNextGame {
+
+        @Test
+        fun `on zero total points serving changes (the serving after the first point changes)`() {
+            val newTieBreak = MatchState.TieBreak(firstPlayerScore = 0, secondPlayerScore = 0)
+            assertEquals(FIRST_PLAYER, newTieBreak.nextServing(currentServing = SECOND_PLAYER))
+            assertEquals(SECOND_PLAYER, newTieBreak.nextServing(currentServing = FIRST_PLAYER))
+        }
+
+        @Test
+        fun `on one total points serving does not change (the serving after the second point does not change)`() {
+            var tieBreak = MatchState.TieBreak(firstPlayerScore = 1, secondPlayerScore = 0)
+            assertEquals(FIRST_PLAYER, tieBreak.nextServing(currentServing = FIRST_PLAYER))
+            tieBreak = MatchState.TieBreak(firstPlayerScore = 0, secondPlayerScore = 1)
+            assertEquals(SECOND_PLAYER, tieBreak.nextServing(currentServing = SECOND_PLAYER))
+        }
+
+        @Test
+        fun `on two total points serving changes (the serving after the third point changes)`() {
+            var tieBreak = MatchState.TieBreak(firstPlayerScore = 1, secondPlayerScore = 1)
+            assertEquals(FIRST_PLAYER, tieBreak.nextServing(currentServing = SECOND_PLAYER))
+            tieBreak = MatchState.TieBreak(firstPlayerScore = 0, secondPlayerScore = 2)
+            assertEquals(SECOND_PLAYER, tieBreak.nextServing(currentServing = FIRST_PLAYER))
+        }
+
+        @Test
+        fun `on ten total points serving changes (the serving after odd total points changes)`() {
+            var tieBreak = MatchState.TieBreak(firstPlayerScore = 6, secondPlayerScore = 4)
+            assertEquals(FIRST_PLAYER, tieBreak.nextServing(currentServing = SECOND_PLAYER))
+            tieBreak = MatchState.TieBreak(firstPlayerScore = 5, secondPlayerScore = 5)
+            assertEquals(SECOND_PLAYER, tieBreak.nextServing(currentServing = FIRST_PLAYER))
+        }
+
+        @Test
+        fun `on seven total points serving does not change (the serving after even total points does not change)`() {
+            var tieBreak = MatchState.TieBreak(firstPlayerScore = 5, secondPlayerScore = 2)
+            assertEquals(FIRST_PLAYER, tieBreak.nextServing(currentServing = FIRST_PLAYER))
+            tieBreak = MatchState.TieBreak(firstPlayerScore = 1, secondPlayerScore = 6)
+            assertEquals(SECOND_PLAYER, tieBreak.nextServing(currentServing = SECOND_PLAYER))
+        }
+
+        @Test
+        fun `on sixteen total points serving changes (the serving after odd total points changes)`() {
+            val tieBreak = MatchState.TieBreak(firstPlayerScore = 8, secondPlayerScore = 8)
+            assertEquals(FIRST_PLAYER, tieBreak.nextServing(currentServing = SECOND_PLAYER))
+        }
+
+        @Test
+        fun `on nineteen total points serving does not change (the serving after even total points does not change)`() {
+            val tieBreak = MatchState.TieBreak(firstPlayerScore = 10, secondPlayerScore = 9)
+            assertEquals(FIRST_PLAYER, tieBreak.nextServing(currentServing = FIRST_PLAYER))
+        }
+    }
+
 }

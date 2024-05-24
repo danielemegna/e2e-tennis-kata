@@ -94,6 +94,12 @@ data class MatchState(
 
             return currentServing.next()
         }
+
+        fun nextServing(currentServing: Serving): Serving {
+            val totalTieBreakPoints = firstPlayerScore + secondPlayerScore
+            if (totalTieBreakPoints % 2 == 0) return currentServing.next()
+            return currentServing
+        }
     }
 
 }
