@@ -29,6 +29,13 @@ class MatchStateUpdater {
         return matchState.increaseCurrentGamePlayerScore(pointAuthor)
     }
 
+    private fun MatchState.isCanceledAdvantagePoint(pointAuthor: Player): Boolean {
+        return when (pointAuthor) {
+            Player.FIRST -> currentGame.secondPlayerScore == ADVANTAGE
+            Player.SECOND -> currentGame.firstPlayerScore == ADVANTAGE
+        }
+    }
+
     private fun MatchState.tieBreakWonByPlayer(pointAuthor: Player): Boolean {
         if (currentTieBreak == null) return false;
 
@@ -38,13 +45,6 @@ class MatchStateUpdater {
 
             Player.SECOND ->
                 currentTieBreak.secondPlayerScore >= 6 && currentTieBreak.firstPlayerScore < currentTieBreak.secondPlayerScore
-        }
-    }
-
-    private fun MatchState.isCanceledAdvantagePoint(pointAuthor: Player): Boolean {
-        return when (pointAuthor) {
-            Player.FIRST -> currentGame.secondPlayerScore == ADVANTAGE
-            Player.SECOND -> currentGame.firstPlayerScore == ADVANTAGE
         }
     }
 
