@@ -35,12 +35,6 @@ data class MatchState(
             if (totalTieBreakPoints % 2 == 0) return this
             return next()
         }
-
-        fun playerStartedTheTieBreak(tieBreak: TieBreak): Serving {
-            val totalTieBreakPoints = tieBreak.let { it.firstPlayerScore + it.secondPlayerScore }
-            val totalPointsParity = (ceil(totalTieBreakPoints / 2.0).toInt()) % 2
-            return if (totalPointsParity == 0) this else next()
-        }
     }
 
     data class Game(
