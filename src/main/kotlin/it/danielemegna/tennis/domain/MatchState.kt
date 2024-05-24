@@ -1,6 +1,7 @@
 package it.danielemegna.tennis.domain
 
 import it.danielemegna.tennis.domain.usecase.PlayerPoint
+import kotlin.math.ceil
 
 data class MatchState(
     val firstPlayerName: String,
@@ -33,6 +34,12 @@ data class MatchState(
             val totalTieBreakPoints = tieBreak.let { it.firstPlayerScore + it.secondPlayerScore }
             if (totalTieBreakPoints % 2 == 0) return this
             return next()
+        }
+
+        fun playerStartedTheTieBreak(tieBreak: TieBreak): Serving {
+            val totalTieBreakPoints = tieBreak.let { it.firstPlayerScore + it.secondPlayerScore }
+            val totalPointsParity = (ceil(totalTieBreakPoints / 2.0).toInt()) % 2
+            return if (totalPointsParity == 0) this else next()
         }
     }
 

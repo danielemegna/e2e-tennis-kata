@@ -4,8 +4,7 @@ import it.danielemegna.tennis.domain.MatchState
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
 import it.danielemegna.tennis.domain.MatchState.Serving
 import it.danielemegna.tennis.domain.MatchStateUpdater
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -356,7 +355,6 @@ class MatchStateUpdaterTest {
         @DisplayName("when tie-break ends the next game is served by player who did not started the tie-break")
         inner class TieBreakEnd {
 
-            @Disabled("tie break end serving to be fixed!")
             @Test
             fun `1st player started tie-break - 2nd player ends tie-break - 2nd player start next game`() {
                 val matchState = MatchState("p1", "p2").copy(
@@ -383,7 +381,6 @@ class MatchStateUpdaterTest {
                 assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
             }
 
-            @Disabled("tie break end serving to be fixed!")
             @Test
             fun `2nd player started tie-break - 1st player ends tie-break - 1st player start next game`() {
                 val matchState = MatchState("p1", "p2").copy(

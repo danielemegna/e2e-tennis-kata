@@ -12,8 +12,8 @@ class MatchStateUpdater {
             return matchState.setCurrentGameFortyForty()
 
         if (matchState.tieBreakInProgress()) {
-            if (matchState.tieBreakWonByPlayer(pointAuthor))
-                return matchState.setWonByPlayer(pointAuthor)
+            if (matchState.isTieBreakWinningPoint(pointAuthor))
+                return matchState.tieBreakWonByPlayer(pointAuthor)
             return matchState.increaseTieBreakPlayerScore(pointAuthor)
         }
 
@@ -36,7 +36,7 @@ class MatchStateUpdater {
         }
     }
 
-    private fun MatchState.tieBreakWonByPlayer(pointAuthor: Player): Boolean {
+    private fun MatchState.isTieBreakWinningPoint(pointAuthor: Player): Boolean {
         if (currentTieBreak == null) return false;
 
         return when (pointAuthor) {
@@ -84,6 +84,16 @@ class MatchStateUpdater {
                 firstPlayerScore = FORTY,
                 secondPlayerScore = FORTY
             )
+        )
+    }
+
+    private fun MatchState.tieBreakWonByPlayer(pointAuthor: Player): MatchState {
+        if (currentTieBreak == null)
+            throw RuntimeException("Tie break won by player never started!")
+
+        val playerStartedTheTieBreak = this.serving.playerStartedTheTieBreak(currentTieBreak)
+        return setWonByPlayer(pointAuthor).copy(
+            serving = playerStartedTheTieBreak.next()
         )
     }
 
