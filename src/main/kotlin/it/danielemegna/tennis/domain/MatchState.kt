@@ -81,7 +81,6 @@ data class MatchState(
         }
     }
 
-    // is this a bad duplication ? or not ?
     data class TieBreak(
         val firstPlayerScore: Int = 0,
         val secondPlayerScore: Int = 0
@@ -91,6 +90,15 @@ data class MatchState(
                 PlayerPoint.Player.FIRST -> this.copy(firstPlayerScore = firstPlayerScore + 1)
                 PlayerPoint.Player.SECOND -> this.copy(secondPlayerScore = secondPlayerScore + 1)
             }
+        }
+
+        fun playerStartedTheTieBreak(currentServing: Serving): Serving {
+            val totalPoints = firstPlayerScore + secondPlayerScore
+            val totalPointsParity = (ceil(totalPoints / 2.0).toInt()) % 2
+            if (totalPointsParity == 0)
+                return currentServing
+
+            return currentServing.next()
         }
     }
 
