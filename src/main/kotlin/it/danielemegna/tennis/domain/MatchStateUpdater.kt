@@ -42,9 +42,10 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.isCanceledAdvantagePoint(pointAuthor: Player): Boolean {
-        if (currentGame.firstPlayerScore == ADVANTAGE && pointAuthor == Player.SECOND) return true
-        if (currentGame.secondPlayerScore == ADVANTAGE && pointAuthor == Player.FIRST) return true
-        return false
+        return when (pointAuthor) {
+            Player.FIRST -> currentGame.secondPlayerScore == ADVANTAGE
+            Player.SECOND -> currentGame.firstPlayerScore == ADVANTAGE
+        }
     }
 
     private fun MatchState.isGamePoint(pointAuthor: Player): Boolean {
