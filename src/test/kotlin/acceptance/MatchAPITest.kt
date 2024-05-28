@@ -4,10 +4,12 @@ import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.jsoup.Connection.Method
 import org.jsoup.Jsoup
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class MatchAPITest {
+
+    // a running instance available on localhost:8080
+    // is needed to run this tests !
 
     @Test
     fun `init new match on root path`(): Unit = runBlocking {
