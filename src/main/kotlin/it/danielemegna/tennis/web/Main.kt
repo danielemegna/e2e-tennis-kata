@@ -19,7 +19,11 @@ import it.danielemegna.tennis.domain.usecase.PlayerPoint
 import it.danielemegna.tennis.web.view.ScoreBoardView
 
 fun main() {
-    embeddedServer(Jetty, port = 8080) {
+    setupJettyApplicationEngine(8080).start(wait = true)
+}
+
+fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
+    return embeddedServer(Jetty, port = port) {
         freeMarkerPlugin()
         exceptionHandlingPlugin()
         val matchRepository = InMemoryMatchRepository()
@@ -45,7 +49,7 @@ fun main() {
             }
             staticResources("/assets", "assets")
         }
-    }.start(wait = true)
+    }
 }
 
 private fun Application.exceptionHandlingPlugin() {

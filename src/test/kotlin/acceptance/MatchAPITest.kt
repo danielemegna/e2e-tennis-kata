@@ -1,15 +1,29 @@
 package acceptance
 
+import it.danielemegna.tennis.web.setupJettyApplicationEngine
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.jsoup.Connection.Method
 import org.jsoup.Jsoup
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchAPITest {
 
-    // a running instance available on localhost:8080
-    // is needed to run this tests !
+    private val jettyApplicationEngine = setupJettyApplicationEngine(port = 8080)
+
+    @BeforeAll
+    fun beforeAll() {
+        jettyApplicationEngine.start()
+    }
+
+    @AfterAll
+    fun afterAll() {
+        jettyApplicationEngine.stop()
+    }
 
     @Test
     fun `init new match on root path`(): Unit = runBlocking {

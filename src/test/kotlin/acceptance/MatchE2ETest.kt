@@ -6,6 +6,9 @@ import com.microsoft.playwright.Page
 import com.microsoft.playwright.Playwright
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import com.microsoft.playwright.options.AriaRole.TABLE
+import it.danielemegna.tennis.web.setupJettyApplicationEngine
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -13,13 +16,22 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchE2ETest {
 
-    // a running instance available on localhost:8080
-    // is needed to run this tests !
+    private val jettyApplicationEngine = setupJettyApplicationEngine(port = 8080)
 
     private val playwright = Playwright.create()
     private val browser: Browser = playwright.chromium().launch()
     private lateinit var context: BrowserContext
     private lateinit var page: Page
+
+    @BeforeAll
+    fun beforeAll() {
+        jettyApplicationEngine.start()
+    }
+
+    @AfterAll
+    fun afterAll() {
+        jettyApplicationEngine.stop()
+    }
 
     @BeforeEach
     fun setUp() {
