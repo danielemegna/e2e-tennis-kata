@@ -5,12 +5,10 @@ import com.microsoft.playwright.BrowserContext
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Playwright
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
-import com.microsoft.playwright.options.AriaRole.*
+import com.microsoft.playwright.options.AriaRole.TABLE
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import java.util.regex.Pattern
-import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchE2ETest {
@@ -43,32 +41,16 @@ class MatchE2ETest {
     fun `render the new match scoreboard`() {
         page.navigate(HOST_UNDER_TEST)
 
-        // main single table visible
-        val scoreboardTable = page.getByRole(TABLE)
-        assertEquals(1, scoreboardTable.count())
-        assertThat(scoreboardTable).isVisible()
+        val scoreboardTable = ScoreboardPlaywrightTable(page.getByRole(TABLE))
 
-        // scoreboard table has two rows
-        val tableRows = scoreboardTable.getByRole(ROW)
-        assertEquals(2, tableRows.count())
+        assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
+        assertThat(scoreboardTable.secondPlayer.servingCell).not().haveServingIndicator()
 
-        // scoreboard rows cells are four on match start
-        val firstPlayerRowCells = tableRows.nth(0).getByRole(CELL)
-        assertEquals(4, firstPlayerRowCells.count())
-        val secondPlayerRowCells = tableRows.nth(1).getByRole(CELL)
-        assertEquals(4, firstPlayerRowCells.count())
+        assertThat(scoreboardTable.firstPlayer.currentSet).hasScore(0)
+        assertThat(scoreboardTable.secondPlayer.currentSet).hasScore(0)
 
-        // check serving indicator: first player starts
-        assertThat(firstPlayerRowCells.nth(0)).containsText(Pattern.compile("^·$"))
-        assertThat(secondPlayerRowCells.nth(0)).containsText(Pattern.compile("^$"))
-
-        // check set scoring to zero
-        assertThat(firstPlayerRowCells.nth(2)).containsText("0")
-        assertThat(secondPlayerRowCells.nth(2)).containsText("0")
-
-        // check game scoring to zero
-        assertThat(firstPlayerRowCells.nth(3)).containsText("0")
-        assertThat(secondPlayerRowCells.nth(3)).containsText("0")
+        assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(0)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
     }
 
     companion object {
