@@ -60,6 +60,31 @@ class MatchE2ETest {
         assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
     }
 
+    @Test
+    fun `score some points by click should update table`() {
+        page.navigate(HOST_UNDER_TEST)
+        val scoreboardTable = ScoreboardPlaywrightTable.from(page)
+
+        scoreboardTable.firstPlayer.playerName.click()
+        assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(15)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
+        assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
+
+        scoreboardTable.firstPlayer.playerName.click()
+        assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(30)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
+        assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
+
+        scoreboardTable.firstPlayer.playerName.click()
+        scoreboardTable.firstPlayer.playerName.click()
+        assertThat(scoreboardTable.firstPlayer.currentSet).hasScore(1)
+        assertThat(scoreboardTable.secondPlayer.currentSet).hasScore(0)
+        assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(0)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
+        assertThat(scoreboardTable.secondPlayer.servingCell).haveServingIndicator()
+        assertThat(scoreboardTable.firstPlayer.servingCell).not().haveServingIndicator()
+    }
+
     companion object {
         private const val HOST_UNDER_TEST = "http://localhost:8080"
     }
