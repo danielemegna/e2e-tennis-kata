@@ -5,13 +5,8 @@ import com.microsoft.playwright.BrowserContext
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Playwright
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
-import com.microsoft.playwright.options.AriaRole.TABLE
 import it.danielemegna.tennis.web.setupJettyApplicationEngine
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchE2ETest {
@@ -53,7 +48,7 @@ class MatchE2ETest {
     fun `render the new match scoreboard`() {
         page.navigate(HOST_UNDER_TEST)
 
-        val scoreboardTable = ScoreboardPlaywrightTable(page.getByRole(TABLE))
+        val scoreboardTable = ScoreboardPlaywrightTable.from(page)
 
         assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
         assertThat(scoreboardTable.secondPlayer.servingCell).not().haveServingIndicator()

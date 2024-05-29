@@ -1,26 +1,33 @@
 package acceptance
 
 import com.microsoft.playwright.Locator
+import com.microsoft.playwright.Page
 import com.microsoft.playwright.assertions.LocatorAssertions
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
-import com.microsoft.playwright.options.AriaRole.CELL
-import com.microsoft.playwright.options.AriaRole.ROW
+import com.microsoft.playwright.options.AriaRole.*
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.util.regex.Pattern
 import kotlin.test.assertEquals
 
-class ScoreboardPlaywrightTable(scoreboardTable: Locator) {
+class ScoreboardPlaywrightTable private constructor(scoreboardTable: Locator) {
 
     val firstPlayer: ScoreboardPlaywrightPlayerRow
     val secondPlayer: ScoreboardPlaywrightPlayerRow
 
     init {
-        assertEquals(1, scoreboardTable.count())
-        assertThat(scoreboardTable).isVisible()
         val tableRows = scoreboardTable.getByRole(ROW)
         assertEquals(2, tableRows.count(), "Unexpected table rows count: ${tableRows.count()}")
         firstPlayer = ScoreboardPlaywrightPlayerRow(tableRows.nth(0))
         secondPlayer = ScoreboardPlaywrightPlayerRow(tableRows.nth(1))
+    }
+
+    companion object {
+        fun from(page: Page): ScoreboardPlaywrightTable {
+            val scoreboardTable = page.getByRole(TABLE)
+            assertEquals(1, scoreboardTable.count())
+            assertThat(scoreboardTable).isVisible()
+            return ScoreboardPlaywrightTable(scoreboardTable.first())
+        }
     }
 
 }
