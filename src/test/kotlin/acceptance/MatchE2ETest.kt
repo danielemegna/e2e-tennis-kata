@@ -75,8 +75,9 @@ class MatchE2ETest {
         assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
 
         scoreboardTable.firstPlayer.playerName.click()
+        scoreboardTable.secondPlayer.playerName.click()
         assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(30)
-        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(15)
         assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
 
         scoreboardTable.firstPlayer.playerName.click()
