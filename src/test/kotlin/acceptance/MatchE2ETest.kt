@@ -93,6 +93,49 @@ class MatchE2ETest {
         assertEquals(0, scoreboardTable.secondPlayer.wonSets.size)
     }
 
+    @Test
+    fun `three set match`() {
+        page.navigate(HOST_UNDER_TEST)
+        val table = ScoreboardPlaywrightTable.from(page)
+
+        repeat(4) { table.firstPlayerPoint() }
+        repeat(4) { table.secondPlayerPoint() }
+        assertThat(table.firstPlayer.currentSet).hasScore(1)
+        assertThat(table.secondPlayer.currentSet).hasScore(1)
+        repeat(8) { table.firstPlayerPoint() }
+        repeat(8) { table.secondPlayerPoint() }
+        assertThat(table.firstPlayer.currentSet).hasScore(3)
+        assertThat(table.secondPlayer.currentSet).hasScore(3)
+        repeat(8) { table.firstPlayerPoint() }
+        repeat(4) { table.secondPlayerPoint() }
+        assertThat(table.firstPlayer.currentSet).hasScore(5)
+        assertThat(table.secondPlayer.currentSet).hasScore(4)
+        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
+        assertThat(table.firstPlayer.servingCell).not().haveServingIndicator()
+
+        repeat(3) { table.firstPlayerPoint() }
+        repeat(3) { table.secondPlayerPoint() }
+        assertThat(table.firstPlayer.currentGame).hasScore(40)
+        assertThat(table.secondPlayer.currentGame).hasScore(40)
+        table.firstPlayerPoint()
+        assertThat(table.firstPlayer.currentGame).hasAdvantageScore()
+        assertThat(table.secondPlayer.currentGame).hasScore(40)
+        table.secondPlayerPoint()
+        assertThat(table.firstPlayer.currentGame).hasScore(40)
+        assertThat(table.secondPlayer.currentGame).hasScore(40)
+        repeat(2) { table.firstPlayerPoint() }
+
+        //assertEquals(1, table.firstPlayer.wonSets.size)
+        //assertThat(table.firstPlayer.wonSets[0]).hasScore(6)
+        //assertThat(table.secondPlayer.wonSets[0]).hasScore(4)
+        assertThat(table.firstPlayer.currentSet).hasScore(0)
+        assertThat(table.secondPlayer.currentSet).hasScore(0)
+        assertThat(table.firstPlayer.currentGame).hasScore(0)
+        assertThat(table.secondPlayer.currentGame).hasScore(0)
+
+        // continue ...
+    }
+
     companion object {
         private const val HOST_UNDER_TEST = "http://localhost:8080"
     }

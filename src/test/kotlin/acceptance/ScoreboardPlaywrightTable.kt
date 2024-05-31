@@ -66,3 +66,7 @@ fun LocatorAssertions.haveServingIndicator() {
 fun LocatorAssertions.hasScore(score: Int) {
     this.hasText(score.toString())
 }
+
+fun LocatorAssertions.hasAdvantageScore() {
+    this.hasText("A")
+}
