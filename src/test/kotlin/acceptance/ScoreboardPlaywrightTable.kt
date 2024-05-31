@@ -24,7 +24,7 @@ class ScoreboardPlaywrightTable private constructor(scoreboardTable: Locator) {
     companion object {
         fun from(page: Page): ScoreboardPlaywrightTable {
             val scoreboardTable = page.getByRole(TABLE)
-            assertEquals(1, scoreboardTable.count())
+            assertEquals(1, scoreboardTable.count(), "Unexpected table count: ${scoreboardTable.count()}")
             assertThat(scoreboardTable).isVisible()
             return ScoreboardPlaywrightTable(scoreboardTable.first())
         }
