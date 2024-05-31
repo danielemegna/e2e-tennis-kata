@@ -21,6 +21,9 @@ class ScoreboardPlaywrightTable private constructor(scoreboardTable: Locator) {
         secondPlayer = ScoreboardPlaywrightPlayerRow(tableRows.nth(1))
     }
 
+    fun firstPlayerPoint() = this.firstPlayer.playerName.click()
+    fun secondPlayerPoint() = this.secondPlayer.playerName.click()
+
     companion object {
         fun from(page: Page): ScoreboardPlaywrightTable {
             val scoreboardTable = page.getByRole(TABLE)
