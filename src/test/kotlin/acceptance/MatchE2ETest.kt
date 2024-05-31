@@ -7,6 +7,7 @@ import com.microsoft.playwright.Playwright
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import it.danielemegna.tennis.web.setupJettyApplicationEngine
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchE2ETest {
@@ -58,6 +59,9 @@ class MatchE2ETest {
 
         assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(0)
         assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
+
+        assertEquals(0, scoreboardTable.firstPlayer.wonSets.size)
+        assertEquals(0, scoreboardTable.secondPlayer.wonSets.size)
     }
 
     @Test
@@ -83,6 +87,9 @@ class MatchE2ETest {
         assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
         assertThat(scoreboardTable.secondPlayer.servingCell).haveServingIndicator()
         assertThat(scoreboardTable.firstPlayer.servingCell).not().haveServingIndicator()
+
+        assertEquals(0, scoreboardTable.firstPlayer.wonSets.size)
+        assertEquals(0, scoreboardTable.secondPlayer.wonSets.size)
     }
 
     companion object {

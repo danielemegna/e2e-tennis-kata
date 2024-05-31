@@ -36,6 +36,7 @@ class ScoreboardPlaywrightPlayerRow(playerRow: Locator) {
 
     val servingCell: Locator
     val playerName: Locator
+    val wonSets: List<Locator>
     val currentSet: Locator
     val currentGame: Locator
 
@@ -45,8 +46,13 @@ class ScoreboardPlaywrightPlayerRow(playerRow: Locator) {
         assertTrue(rowCells.count() >= 4, "Unexpected player row cells count: ${rowCells.count()}")
         servingCell = rowCells.nth(0)
         playerName = rowCells.nth(1)
+        wonSets = extractWonSets()
         currentSet = rowCells.nth(-2)
         currentGame = rowCells.nth(-1)
+    }
+
+    private fun extractWonSets(): List<Locator> {
+        return emptyList()
     }
 }
 
