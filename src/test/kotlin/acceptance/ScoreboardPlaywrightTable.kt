@@ -37,25 +37,18 @@ class ScoreboardPlaywrightTable private constructor(scoreboardTable: Locator) {
 
 class ScoreboardPlaywrightPlayerRow(playerRow: Locator) {
 
-    val servingCell: Locator
-    val playerName: Locator
-    val wonSets: List<Locator>
-    val currentSet: Locator
-    val currentGame: Locator
+    private val tableRowCells: Locator
+
+    val servingCell: Locator get() = tableRowCells.nth(0)
+    val playerName: Locator get() = tableRowCells.nth(1)
+    val wonSets: List<Locator> get() = emptyList()
+    val currentSet: Locator get() = tableRowCells.nth(-2)
+    val currentGame: Locator get() = tableRowCells.nth(-1)
 
     init {
         assertThat(playerRow).isVisible()
-        val rowCells = playerRow.getByRole(CELL)
-        assertTrue(rowCells.count() >= 4, "Unexpected player row cells count: ${rowCells.count()}")
-        servingCell = rowCells.nth(0)
-        playerName = rowCells.nth(1)
-        wonSets = extractWonSets()
-        currentSet = rowCells.nth(-2)
-        currentGame = rowCells.nth(-1)
-    }
-
-    private fun extractWonSets(): List<Locator> {
-        return emptyList()
+        tableRowCells = playerRow.getByRole(CELL)
+        assertTrue(tableRowCells.count() >= 4, "Unexpected player row cells count: ${tableRowCells.count()}")
     }
 }
 
