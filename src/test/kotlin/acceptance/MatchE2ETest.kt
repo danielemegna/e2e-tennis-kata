@@ -51,6 +51,9 @@ class MatchE2ETest {
 
         val scoreboardTable = ScoreboardPlaywrightTable.from(page)
 
+        assertThat(scoreboardTable.firstPlayer.allCells).hasCount(4)
+        assertThat(scoreboardTable.firstPlayer.allCells).hasCount(4)
+
         assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
         assertThat(scoreboardTable.secondPlayer.servingCell).not().haveServingIndicator()
 
@@ -125,9 +128,10 @@ class MatchE2ETest {
         assertThat(table.secondPlayer.currentGame).hasScore(40)
         repeat(2) { table.firstPlayerPoint() }
 
-        //assertEquals(1, table.firstPlayer.wonSets.size)
-        //assertThat(table.firstPlayer.wonSets[0]).hasScore(6)
-        //assertThat(table.secondPlayer.wonSets[0]).hasScore(4)
+        assertThat(table.firstPlayer.allCells).hasCount(5)
+        assertEquals(1, table.firstPlayer.wonSets.size)
+        assertThat(table.firstPlayer.wonSets.first()).hasScore(6)
+        assertThat(table.secondPlayer.wonSets.first()).hasScore(4)
         assertThat(table.firstPlayer.currentSet).hasScore(0)
         assertThat(table.secondPlayer.currentSet).hasScore(0)
         assertThat(table.firstPlayer.currentGame).hasScore(0)
