@@ -101,21 +101,23 @@ class MatchE2ETest {
         page.navigate(HOST_UNDER_TEST)
         val table = ScoreboardPlaywrightTable.from(page)
 
+        // first set goes 5 - 4
         repeat(4) { table.firstPlayerPoint() }
         repeat(4) { table.secondPlayerPoint() }
         assertThat(table.firstPlayer.currentSet).hasScore(1)
         assertThat(table.secondPlayer.currentSet).hasScore(1)
-        repeat(8) { table.firstPlayerPoint() }
-        repeat(8) { table.secondPlayerPoint() }
+        repeat(4 * 2) { table.firstPlayerPoint() }
+        repeat(4 * 2) { table.secondPlayerPoint() }
         assertThat(table.firstPlayer.currentSet).hasScore(3)
         assertThat(table.secondPlayer.currentSet).hasScore(3)
-        repeat(8) { table.firstPlayerPoint() }
+        repeat(4 * 2) { table.firstPlayerPoint() }
         repeat(4) { table.secondPlayerPoint() }
         assertThat(table.firstPlayer.currentSet).hasScore(5)
         assertThat(table.secondPlayer.currentSet).hasScore(4)
         assertThat(table.secondPlayer.servingCell).haveServingIndicator()
         assertThat(table.firstPlayer.servingCell).not().haveServingIndicator()
 
+        // first player miss set point advantage
         repeat(3) { table.firstPlayerPoint() }
         repeat(3) { table.secondPlayerPoint() }
         assertThat(table.firstPlayer.currentGame).hasScore(40)
@@ -126,10 +128,13 @@ class MatchE2ETest {
         table.secondPlayerPoint()
         assertThat(table.firstPlayer.currentGame).hasScore(40)
         assertThat(table.secondPlayer.currentGame).hasScore(40)
-        repeat(2) { table.firstPlayerPoint() }
 
-        table.firstPlayer.shouldHaveColumnsCount(5)
+        // first player win first set
+        repeat(2) { table.firstPlayerPoint() }
+        table.firstPlayer.shouldHaveColumnsCount(5) // important to wait table update
+        table.secondPlayer.shouldHaveColumnsCount(5) // important to wait table update
         assertEquals(1, table.firstPlayer.wonSets.size)
+        assertEquals(1, table.secondPlayer.wonSets.size)
         assertThat(table.firstPlayer.wonSets.first()).hasScore(6)
         assertThat(table.secondPlayer.wonSets.first()).hasScore(4)
         assertThat(table.firstPlayer.currentSet).hasScore(0)
@@ -137,7 +142,46 @@ class MatchE2ETest {
         assertThat(table.firstPlayer.currentGame).hasScore(0)
         assertThat(table.secondPlayer.currentGame).hasScore(0)
 
-        // continue ...
+        // second player win second set
+        repeat(4 * 5) { table.firstPlayerPoint() }
+        repeat(4 * 5) { table.secondPlayerPoint() }
+        assertThat(table.firstPlayer.currentSet).hasScore(5)
+        assertThat(table.secondPlayer.currentSet).hasScore(5)
+        repeat(4 * 2) { table.secondPlayerPoint() }
+        table.firstPlayer.shouldHaveColumnsCount(6) // important to wait table update
+        table.secondPlayer.shouldHaveColumnsCount(6) // important to wait table update
+        assertThat(table.firstPlayer.wonSets[1]).hasScore(5)
+        assertThat(table.secondPlayer.wonSets[1]).hasScore(7)
+        assertThat(table.firstPlayer.wonSets[0]).hasScore(6)
+        assertThat(table.secondPlayer.wonSets[0]).hasScore(4)
+
+        // first player win third set with tiebreak
+        repeat(4 * 5) { table.firstPlayerPoint() }
+        repeat(4 * 5) { table.secondPlayerPoint() }
+        repeat(4) { table.firstPlayerPoint() }
+        repeat(4) { table.secondPlayerPoint() }
+        assertThat(table.firstPlayer.currentSet).hasScore(6)
+        assertThat(table.secondPlayer.currentSet).hasScore(6)
+        repeat(6) { table.firstPlayerPoint() }
+        repeat(3) { table.secondPlayerPoint() }
+        table.firstPlayer.shouldHaveColumnsCount(6)
+        assertThat(table.firstPlayer.currentGame).hasScore(6)
+        assertThat(table.secondPlayer.currentGame).hasScore(3)
+        assertThat(table.firstPlayer.currentSet).hasScore(6)
+        assertThat(table.secondPlayer.currentSet).hasScore(6)
+        table.firstPlayerPoint()
+        table.firstPlayer.shouldHaveColumnsCount(7) // important to wait table update
+        table.secondPlayer.shouldHaveColumnsCount(7) // important to wait table update
+        assertThat(table.firstPlayer.wonSets[2]).hasScore(7)
+        assertThat(table.secondPlayer.wonSets[2]).hasScore(6)
+        assertThat(table.firstPlayer.wonSets[1]).hasScore(5)
+        assertThat(table.secondPlayer.wonSets[1]).hasScore(7)
+        assertThat(table.firstPlayer.wonSets[0]).hasScore(6)
+        assertThat(table.secondPlayer.wonSets[0]).hasScore(4)
+        assertThat(table.firstPlayer.currentGame).hasScore(0)
+        assertThat(table.secondPlayer.currentGame).hasScore(0)
+        assertThat(table.firstPlayer.currentSet).hasScore(0)
+        assertThat(table.secondPlayer.currentSet).hasScore(0)
     }
 
     companion object {
