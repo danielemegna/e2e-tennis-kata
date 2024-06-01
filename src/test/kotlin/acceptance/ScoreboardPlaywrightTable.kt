@@ -5,7 +5,6 @@ import com.microsoft.playwright.Page
 import com.microsoft.playwright.assertions.LocatorAssertions
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import com.microsoft.playwright.options.AriaRole.*
-import org.junit.jupiter.api.Assertions.assertTrue
 import java.util.regex.Pattern
 import kotlin.test.assertEquals
 
@@ -37,17 +36,20 @@ class ScoreboardPlaywrightTable private constructor(scoreboardTable: Locator) {
 
 class ScoreboardPlaywrightPlayerRow(playerRow: Locator) {
 
-    val allCells: Locator = playerRow.getByRole(CELL)
+    private val rowCells: Locator = playerRow.getByRole(CELL)
 
-    val servingCell: Locator get() = allCells.nth(0)
-    val playerName: Locator get() = allCells.nth(1)
-    val wonSets: List<Locator> get() = allCells.all().drop(2).dropLast(2)
-    val currentSet: Locator get() = allCells.nth(-2)
-    val currentGame: Locator get() = allCells.nth(-1)
+    val servingCell: Locator get() = rowCells.nth(0)
+    val playerName: Locator get() = rowCells.nth(1)
+    val wonSets: List<Locator> get() = rowCells.all().drop(2).dropLast(2)
+    val currentSet: Locator get() = rowCells.nth(-2)
+    val currentGame: Locator get() = rowCells.nth(-1)
 
     init {
-        assertThat(playerRow).isVisible()
-        assertTrue(allCells.count() >= 4, "Unexpected player row cells count: ${allCells.count()}")
+        assertTrue(rowCells.count() >= 4, "Unexpected player row cells count: ${rowCells.count()}")
+    }
+
+    fun shouldHaveColumnsCount(count: Int) {
+        assertThat(this.rowCells).hasCount(count)
     }
 }
 
