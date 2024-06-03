@@ -122,12 +122,15 @@ class MatchE2ETest {
         repeat(3) { table.secondPlayerPoint() }
         assertThat(table.firstPlayer.currentGame).hasScore(40)
         assertThat(table.secondPlayer.currentGame).hasScore(40)
+        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
         table.firstPlayerPoint()
         assertThat(table.firstPlayer.currentGame).hasAdvantageScore()
         assertThat(table.secondPlayer.currentGame).hasScore(40)
+        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
         table.secondPlayerPoint()
         assertThat(table.firstPlayer.currentGame).hasScore(40)
         assertThat(table.secondPlayer.currentGame).hasScore(40)
+        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
 
         // first player win first set
         repeat(2) { table.firstPlayerPoint() }
@@ -141,6 +144,7 @@ class MatchE2ETest {
         assertThat(table.secondPlayer.currentSet).hasScore(0)
         assertThat(table.firstPlayer.currentGame).hasScore(0)
         assertThat(table.secondPlayer.currentGame).hasScore(0)
+        assertThat(table.firstPlayer.servingCell).haveServingIndicator()
 
         // second player win second set
         repeat(4 * 5) { table.firstPlayerPoint() }
@@ -154,6 +158,7 @@ class MatchE2ETest {
         assertThat(table.secondPlayer.wonSets[1]).hasScore(7)
         assertThat(table.firstPlayer.wonSets[0]).hasScore(6)
         assertThat(table.secondPlayer.wonSets[0]).hasScore(4)
+        assertThat(table.firstPlayer.servingCell).haveServingIndicator()
 
         // first player win third set with tiebreak
         repeat(4 * 5) { table.firstPlayerPoint() }
@@ -162,13 +167,16 @@ class MatchE2ETest {
         repeat(4) { table.secondPlayerPoint() }
         assertThat(table.firstPlayer.currentSet).hasScore(6)
         assertThat(table.secondPlayer.currentSet).hasScore(6)
+        assertThat(table.firstPlayer.servingCell).haveServingIndicator()
         repeat(6) { table.firstPlayerPoint() }
+        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
         repeat(3) { table.secondPlayerPoint() }
         table.firstPlayer.shouldHaveColumnsCount(6)
         assertThat(table.firstPlayer.currentGame).hasScore(6)
         assertThat(table.secondPlayer.currentGame).hasScore(3)
         assertThat(table.firstPlayer.currentSet).hasScore(6)
         assertThat(table.secondPlayer.currentSet).hasScore(6)
+        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
         table.firstPlayerPoint()
         table.firstPlayer.shouldHaveColumnsCount(7) // important to wait table update
         table.secondPlayer.shouldHaveColumnsCount(7) // important to wait table update
@@ -182,6 +190,8 @@ class MatchE2ETest {
         assertThat(table.secondPlayer.currentGame).hasScore(0)
         assertThat(table.firstPlayer.currentSet).hasScore(0)
         assertThat(table.secondPlayer.currentSet).hasScore(0)
+        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
+        assertThat(table.firstPlayer.servingCell).not().haveServingIndicator()
     }
 
     companion object {
