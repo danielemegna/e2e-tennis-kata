@@ -11,8 +11,8 @@
     --main-bg-color: rgb(11 23 42);
     --dark-bg-color: rgb(10 20 35);
     --light-bg-color: rgb(37 59 80);
-    --main-font-color: lightgray;
-    --faint-font-color: rgb(127 134 148);
+    --main-font-color: rgb(230, 230, 230);
+    --faint-font-color: rgb(150 155 170);
     --highlight-color: rgb(14 164 150);
 }
 body {
