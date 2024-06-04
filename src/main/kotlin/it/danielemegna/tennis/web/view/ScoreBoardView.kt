@@ -14,7 +14,9 @@ data class ScoreBoardView(
 ) {
     data class FinishedSet(
         val firstPlayerScore: Int,
-        val secondPlayerScore: Int
+        val secondPlayerScore: Int,
+        val firstPlayerTieBreakScore: Int?,
+        val secondPlayerTieBreakScore: Int?
     ) {
         @Suppress("unused", "used by freemarker view template")
         val firstPlayerCssClass = if(firstPlayerScore > secondPlayerScore) "won" else "lost"
@@ -27,7 +29,14 @@ data class ScoreBoardView(
             isFirstPlayerServing = matchState.serving == MatchState.Serving.FIRST_PLAYER,
             firstPlayerName = matchState.firstPlayerName,
             secondPlayerName = matchState.secondPlayerName,
-            finishedSets = matchState.wonSets.map { FinishedSet(it.firstPlayerScore, it.secondPlayerScore) },
+            finishedSets = matchState.wonSets.map {
+                FinishedSet(
+                    firstPlayerScore = it.firstPlayerScore,
+                    secondPlayerScore = it.secondPlayerScore,
+                    firstPlayerTieBreakScore = null,
+                    secondPlayerTieBreakScore = null
+                )
+            },
             firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
             secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore,
             firstPlayerCurrentGameScore = matchState.firstPlayerCurrentGameScore(),

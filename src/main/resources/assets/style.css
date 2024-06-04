@@ -79,6 +79,11 @@ body {
         color: var(--faint-font-color);
         background-color: var(--dark-bg-color);
     }
+    .tie-break-score {
+        font-size:3.5rem;
+        position:absolute;
+        letter-spacing: normal;
+    }
 }
 #scoreboard td.current-set {
     width: 120px;

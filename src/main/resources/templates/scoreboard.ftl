@@ -4,7 +4,8 @@
     <td class="player-name" hx-post="/player/1/point" hx-trigger="click" hx-target="#scoreboard">${firstPlayerName}</td>
     <#list finishedSets as finishedSet>
       <td class="finished-set ${finishedSet.firstPlayerCssClass}">
-        ${finishedSet.firstPlayerScore}
+        <span>${finishedSet.firstPlayerScore}</span>
+        <span class="tie-break-score">${(finishedSet.firstPlayerTieBreakScore)!}</span>
       </td>
     </#list>
     <td class="current-set">${firstPlayerCurrentSetScore}</td>
@@ -15,7 +16,8 @@
     <td class="player-name" hx-post="/player/2/point" hx-trigger="click" hx-target="#scoreboard">${secondPlayerName}</td>
     <#list finishedSets as finishedSet>
       <td class="finished-set ${finishedSet.secondPlayerCssClass}">
-        ${finishedSet.secondPlayerScore}
+        <span>${finishedSet.secondPlayerScore}</span>
+        <span class="tie-break-score">${(finishedSet.secondPlayerTieBreakScore)!}</span>
       </td>
     </#list>
     <td class="current-set">${secondPlayerCurrentSetScore}</td>
