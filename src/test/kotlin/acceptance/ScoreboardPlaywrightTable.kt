@@ -34,7 +34,7 @@ class ScoreboardPlaywrightPlayerRow(playerRow: Locator) {
 
     val servingCell: Locator get() = rowCells.nth(0)
     val playerName: Locator get() = rowCells.nth(1)
-    val finishedSets: List<Locator> get() = rowCells.all().drop(2).dropLast(2)
+    val finishedSets: List<FinishedSet> get() = rowCells.all().drop(2).dropLast(2).map { FinishedSet.from(it) }
     val currentSet: Locator get() = rowCells.nth(-2)
     val currentGame: Locator get() = rowCells.nth(-1)
 
@@ -44,6 +44,21 @@ class ScoreboardPlaywrightPlayerRow(playerRow: Locator) {
 
     fun shouldHaveColumnsCount(count: Int) {
         assertThat(this.rowCells).hasCount(count)
+    }
+
+    data class FinishedSet(
+       val setScore: Locator,
+       val tieBreakScore: Locator,
+    ) {
+        companion object {
+            fun from(finishedSetCell: Locator): FinishedSet {
+                val childSpan = finishedSetCell.locator("span") // to be improved... AriaRole.GENERIC won't work !
+                return FinishedSet(
+                    setScore = childSpan.nth(0),
+                    tieBreakScore = childSpan.nth(1)
+                )
+            }
+        }
     }
 }
 

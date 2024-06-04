@@ -1,9 +1,7 @@
 package acceptance
 
-import com.microsoft.playwright.Browser
-import com.microsoft.playwright.BrowserContext
-import com.microsoft.playwright.Page
-import com.microsoft.playwright.Playwright
+import com.microsoft.playwright.*
+import com.microsoft.playwright.assertions.LocatorAssertions
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import it.danielemegna.tennis.web.setupJettyApplicationEngine
 import org.junit.jupiter.api.*
@@ -138,8 +136,10 @@ class MatchE2ETest {
         table.secondPlayer.shouldHaveColumnsCount(5) // important to wait table update
         assertEquals(1, table.firstPlayer.finishedSets.size)
         assertEquals(1, table.secondPlayer.finishedSets.size)
-        assertThat(table.firstPlayer.finishedSets.first()).hasScore(6)
-        assertThat(table.secondPlayer.finishedSets.first()).hasScore(4)
+        assertThat(table.firstPlayer.finishedSets.first().setScore).hasScore(6)
+        assertThat(table.secondPlayer.finishedSets.first().setScore).hasScore(4)
+        assertThat(table.firstPlayer.finishedSets.first().tieBreakScore).isEmpty()
+        assertThat(table.secondPlayer.finishedSets.first().tieBreakScore).isEmpty()
         assertThat(table.firstPlayer.currentSet).hasScore(0)
         assertThat(table.secondPlayer.currentSet).hasScore(0)
         assertThat(table.firstPlayer.currentGame).hasScore(0)
@@ -154,10 +154,10 @@ class MatchE2ETest {
         repeat(4 * 2) { table.secondPlayerPoint() }
         table.firstPlayer.shouldHaveColumnsCount(6) // important to wait table update
         table.secondPlayer.shouldHaveColumnsCount(6) // important to wait table update
-        assertThat(table.firstPlayer.finishedSets[1]).hasScore(5)
-        assertThat(table.secondPlayer.finishedSets[1]).hasScore(7)
-        assertThat(table.firstPlayer.finishedSets[0]).hasScore(6)
-        assertThat(table.secondPlayer.finishedSets[0]).hasScore(4)
+        assertThat(table.firstPlayer.finishedSets[1].setScore).hasScore(5)
+        assertThat(table.secondPlayer.finishedSets[1].setScore).hasScore(7)
+        assertThat(table.firstPlayer.finishedSets[0].setScore).hasScore(6)
+        assertThat(table.secondPlayer.finishedSets[0].setScore).hasScore(4)
         assertThat(table.firstPlayer.servingCell).haveServingIndicator()
 
         // first player win third set with tiebreak
@@ -180,12 +180,12 @@ class MatchE2ETest {
         table.firstPlayerPoint()
         table.firstPlayer.shouldHaveColumnsCount(7) // important to wait table update
         table.secondPlayer.shouldHaveColumnsCount(7) // important to wait table update
-        assertThat(table.firstPlayer.finishedSets[2]).hasScore(7)
-        assertThat(table.secondPlayer.finishedSets[2]).hasScore(6)
-        assertThat(table.firstPlayer.finishedSets[1]).hasScore(5)
-        assertThat(table.secondPlayer.finishedSets[1]).hasScore(7)
-        assertThat(table.firstPlayer.finishedSets[0]).hasScore(6)
-        assertThat(table.secondPlayer.finishedSets[0]).hasScore(4)
+        assertThat(table.firstPlayer.finishedSets[2].setScore).hasScore(7)
+        assertThat(table.secondPlayer.finishedSets[2].setScore).hasScore(6)
+        assertThat(table.firstPlayer.finishedSets[1].setScore).hasScore(5)
+        assertThat(table.secondPlayer.finishedSets[1].setScore).hasScore(7)
+        assertThat(table.firstPlayer.finishedSets[0].setScore).hasScore(6)
+        assertThat(table.secondPlayer.finishedSets[0].setScore).hasScore(4)
         assertThat(table.firstPlayer.currentGame).hasScore(0)
         assertThat(table.secondPlayer.currentGame).hasScore(0)
         assertThat(table.firstPlayer.currentSet).hasScore(0)
