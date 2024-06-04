@@ -63,8 +63,8 @@ class MatchE2ETest {
         assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(0)
         assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
 
-        assertEquals(0, scoreboardTable.firstPlayer.wonSets.size)
-        assertEquals(0, scoreboardTable.secondPlayer.wonSets.size)
+        assertEquals(0, scoreboardTable.firstPlayer.finishedSets.size)
+        assertEquals(0, scoreboardTable.secondPlayer.finishedSets.size)
     }
 
     @Test
@@ -92,8 +92,8 @@ class MatchE2ETest {
         assertThat(scoreboardTable.secondPlayer.servingCell).haveServingIndicator()
         assertThat(scoreboardTable.firstPlayer.servingCell).not().haveServingIndicator()
 
-        assertEquals(0, scoreboardTable.firstPlayer.wonSets.size)
-        assertEquals(0, scoreboardTable.secondPlayer.wonSets.size)
+        assertEquals(0, scoreboardTable.firstPlayer.finishedSets.size)
+        assertEquals(0, scoreboardTable.secondPlayer.finishedSets.size)
     }
 
     @Test
@@ -136,10 +136,10 @@ class MatchE2ETest {
         repeat(2) { table.firstPlayerPoint() }
         table.firstPlayer.shouldHaveColumnsCount(5) // important to wait table update
         table.secondPlayer.shouldHaveColumnsCount(5) // important to wait table update
-        assertEquals(1, table.firstPlayer.wonSets.size)
-        assertEquals(1, table.secondPlayer.wonSets.size)
-        assertThat(table.firstPlayer.wonSets.first()).hasScore(6)
-        assertThat(table.secondPlayer.wonSets.first()).hasScore(4)
+        assertEquals(1, table.firstPlayer.finishedSets.size)
+        assertEquals(1, table.secondPlayer.finishedSets.size)
+        assertThat(table.firstPlayer.finishedSets.first()).hasScore(6)
+        assertThat(table.secondPlayer.finishedSets.first()).hasScore(4)
         assertThat(table.firstPlayer.currentSet).hasScore(0)
         assertThat(table.secondPlayer.currentSet).hasScore(0)
         assertThat(table.firstPlayer.currentGame).hasScore(0)
@@ -154,10 +154,10 @@ class MatchE2ETest {
         repeat(4 * 2) { table.secondPlayerPoint() }
         table.firstPlayer.shouldHaveColumnsCount(6) // important to wait table update
         table.secondPlayer.shouldHaveColumnsCount(6) // important to wait table update
-        assertThat(table.firstPlayer.wonSets[1]).hasScore(5)
-        assertThat(table.secondPlayer.wonSets[1]).hasScore(7)
-        assertThat(table.firstPlayer.wonSets[0]).hasScore(6)
-        assertThat(table.secondPlayer.wonSets[0]).hasScore(4)
+        assertThat(table.firstPlayer.finishedSets[1]).hasScore(5)
+        assertThat(table.secondPlayer.finishedSets[1]).hasScore(7)
+        assertThat(table.firstPlayer.finishedSets[0]).hasScore(6)
+        assertThat(table.secondPlayer.finishedSets[0]).hasScore(4)
         assertThat(table.firstPlayer.servingCell).haveServingIndicator()
 
         // first player win third set with tiebreak
@@ -180,12 +180,12 @@ class MatchE2ETest {
         table.firstPlayerPoint()
         table.firstPlayer.shouldHaveColumnsCount(7) // important to wait table update
         table.secondPlayer.shouldHaveColumnsCount(7) // important to wait table update
-        assertThat(table.firstPlayer.wonSets[2]).hasScore(7)
-        assertThat(table.secondPlayer.wonSets[2]).hasScore(6)
-        assertThat(table.firstPlayer.wonSets[1]).hasScore(5)
-        assertThat(table.secondPlayer.wonSets[1]).hasScore(7)
-        assertThat(table.firstPlayer.wonSets[0]).hasScore(6)
-        assertThat(table.secondPlayer.wonSets[0]).hasScore(4)
+        assertThat(table.firstPlayer.finishedSets[2]).hasScore(7)
+        assertThat(table.secondPlayer.finishedSets[2]).hasScore(6)
+        assertThat(table.firstPlayer.finishedSets[1]).hasScore(5)
+        assertThat(table.secondPlayer.finishedSets[1]).hasScore(7)
+        assertThat(table.firstPlayer.finishedSets[0]).hasScore(6)
+        assertThat(table.secondPlayer.finishedSets[0]).hasScore(4)
         assertThat(table.firstPlayer.currentGame).hasScore(0)
         assertThat(table.secondPlayer.currentGame).hasScore(0)
         assertThat(table.firstPlayer.currentSet).hasScore(0)

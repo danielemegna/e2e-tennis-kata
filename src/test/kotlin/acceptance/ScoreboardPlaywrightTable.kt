@@ -34,7 +34,7 @@ class ScoreboardPlaywrightPlayerRow(playerRow: Locator) {
 
     val servingCell: Locator get() = rowCells.nth(0)
     val playerName: Locator get() = rowCells.nth(1)
-    val wonSets: List<Locator> get() = rowCells.all().drop(2).dropLast(2)
+    val finishedSets: List<Locator> get() = rowCells.all().drop(2).dropLast(2)
     val currentSet: Locator get() = rowCells.nth(-2)
     val currentGame: Locator get() = rowCells.nth(-1)
 
