@@ -1,7 +1,9 @@
 package acceptance
 
-import com.microsoft.playwright.*
-import com.microsoft.playwright.assertions.LocatorAssertions
+import com.microsoft.playwright.Browser
+import com.microsoft.playwright.BrowserContext
+import com.microsoft.playwright.Page
+import com.microsoft.playwright.Playwright
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import it.danielemegna.tennis.web.setupJettyApplicationEngine
 import org.junit.jupiter.api.*
@@ -156,6 +158,8 @@ class MatchE2ETest {
         table.secondPlayer.shouldHaveColumnsCount(6) // important to wait table update
         assertThat(table.firstPlayer.finishedSets[1].setScore).hasScore(5)
         assertThat(table.secondPlayer.finishedSets[1].setScore).hasScore(7)
+        assertThat(table.firstPlayer.finishedSets[1].tieBreakScore).isEmpty()
+        assertThat(table.secondPlayer.finishedSets[1].tieBreakScore).isEmpty()
         assertThat(table.firstPlayer.finishedSets[0].setScore).hasScore(6)
         assertThat(table.secondPlayer.finishedSets[0].setScore).hasScore(4)
         assertThat(table.firstPlayer.servingCell).haveServingIndicator()
@@ -182,8 +186,12 @@ class MatchE2ETest {
         table.secondPlayer.shouldHaveColumnsCount(7) // important to wait table update
         assertThat(table.firstPlayer.finishedSets[2].setScore).hasScore(7)
         assertThat(table.secondPlayer.finishedSets[2].setScore).hasScore(6)
+        assertThat(table.firstPlayer.finishedSets[2].tieBreakScore).isEmpty()
+        //assertThat(table.secondPlayer.finishedSets[2].tieBreakScore).hasScore(3)  // TODO
         assertThat(table.firstPlayer.finishedSets[1].setScore).hasScore(5)
         assertThat(table.secondPlayer.finishedSets[1].setScore).hasScore(7)
+        assertThat(table.firstPlayer.finishedSets[1].tieBreakScore).isEmpty()
+        assertThat(table.secondPlayer.finishedSets[1].tieBreakScore).isEmpty()
         assertThat(table.firstPlayer.finishedSets[0].setScore).hasScore(6)
         assertThat(table.secondPlayer.finishedSets[0].setScore).hasScore(4)
         assertThat(table.firstPlayer.currentGame).hasScore(0)
