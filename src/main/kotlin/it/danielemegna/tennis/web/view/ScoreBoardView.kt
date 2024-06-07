@@ -33,7 +33,7 @@ data class ScoreBoardView(
                 FinishedSet(
                     firstPlayerScore = it.firstPlayerScore,
                     secondPlayerScore = it.secondPlayerScore,
-                    firstPlayerTieBreakScore = it.firstPlayerTieBreakScore,
+                    firstPlayerTieBreakScore = hideSeven(it.firstPlayerTieBreakScore),
                     secondPlayerTieBreakScore = it.secondPlayerTieBreakScore
                 )
             },
@@ -42,6 +42,11 @@ data class ScoreBoardView(
             firstPlayerCurrentGameScore = matchState.firstPlayerCurrentGameScore(),
             secondPlayerCurrentGameScore = matchState.secondPlayerCurrentGameScore(),
         )
+
+        private fun hideSeven(tieBreakScore: Int?): Int? {
+            if (tieBreakScore == 7) return null
+            return tieBreakScore
+        }
 
         private fun MatchState.firstPlayerCurrentGameScore(): String {
             if (this.currentTieBreak != null)

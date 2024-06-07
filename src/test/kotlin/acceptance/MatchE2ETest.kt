@@ -186,7 +186,7 @@ class MatchE2ETest {
         table.secondPlayer.shouldHaveColumnsCount(7) // important to wait table update
         assertThat(table.firstPlayer.finishedSets[2].setScore).hasScore(7)
         assertThat(table.secondPlayer.finishedSets[2].setScore).hasScore(6)
-        //assertThat(table.firstPlayer.finishedSets[2].tieBreakScore).isEmpty()   // TODO
+        assertThat(table.firstPlayer.finishedSets[2].tieBreakScore).isEmpty()
         assertThat(table.secondPlayer.finishedSets[2].tieBreakScore).hasScore(3)
         assertThat(table.firstPlayer.finishedSets[1].setScore).hasScore(5)
         assertThat(table.secondPlayer.finishedSets[1].setScore).hasScore(7)
