@@ -242,7 +242,7 @@ class MatchE2ETest {
         assertThat(table.firstPlayer.finishedSets[1].setScore).hasScore(7)
         assertThat(table.secondPlayer.finishedSets[1].setScore).hasScore(6)
         assertThat(table.firstPlayer.finishedSets[1].tieBreakScore).isEmpty()
-        //assertThat(table.secondPlayer.finishedSets[1].tieBreakScore).isEmpty() // TODO hide zero tie-break score
+        assertThat(table.secondPlayer.finishedSets[1].tieBreakScore).isEmpty()
         assertThat(table.firstPlayer.finishedSets[0].setScore).hasScore(6)
         assertThat(table.secondPlayer.finishedSets[0].setScore).hasScore(7)
 

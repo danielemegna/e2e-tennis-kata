@@ -19,9 +19,10 @@ data class ScoreBoardView(
         val secondPlayerTieBreakScore: Int?
     ) {
         @Suppress("unused", "used by freemarker view template")
-        val firstPlayerCssClass = if(firstPlayerScore > secondPlayerScore) "won" else "lost"
+        val firstPlayerCssClass = if (firstPlayerScore > secondPlayerScore) "won" else "lost"
+
         @Suppress("unused", "used by freemarker view template")
-        val secondPlayerCssClass = if(secondPlayerScore > firstPlayerScore) "won" else "lost"
+        val secondPlayerCssClass = if (secondPlayerScore > firstPlayerScore) "won" else "lost"
     }
 
     companion object {
@@ -33,8 +34,8 @@ data class ScoreBoardView(
                 FinishedSet(
                     firstPlayerScore = it.firstPlayerScore,
                     secondPlayerScore = it.secondPlayerScore,
-                    firstPlayerTieBreakScore = hideSeven(it.firstPlayerTieBreakScore),
-                    secondPlayerTieBreakScore = hideSeven(it.secondPlayerTieBreakScore)
+                    firstPlayerTieBreakScore = hideSevenAndZero(it.firstPlayerTieBreakScore),
+                    secondPlayerTieBreakScore = hideSevenAndZero(it.secondPlayerTieBreakScore)
                 )
             },
             firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
@@ -43,8 +44,8 @@ data class ScoreBoardView(
             secondPlayerCurrentGameScore = matchState.secondPlayerCurrentGameScore(),
         )
 
-        private fun hideSeven(tieBreakScore: Int?): Int? {
-            if (tieBreakScore == 7) return null
+        private fun hideSevenAndZero(tieBreakScore: Int?): Int? {
+            if (tieBreakScore == 7 || tieBreakScore == 0) return null
             return tieBreakScore
         }
 
