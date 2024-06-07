@@ -91,9 +91,17 @@ class MatchStateUpdater {
         if (currentTieBreak == null)
             throw RuntimeException("Tie break won by player never started!")
 
-        val playerStartedTheTieBreak = currentTieBreak.playerStartedTheTieBreak
-        return setWonByPlayer(pointAuthor).copy(
-            serving = playerStartedTheTieBreak.next()
+        val wonTieBreak = currentTieBreak.increaseScore(pointAuthor)
+        val wonSet = currentSet.increaseScore(pointAuthor).copy(
+            firstPlayerTieBreakScore = wonTieBreak.firstPlayerScore,
+            secondPlayerTieBreakScore = wonTieBreak.secondPlayerScore,
+        )
+        return this.copy(
+            wonSets = wonSets.plus(wonSet),
+            currentSet = MatchState.Set(),
+            currentGame = Game(),
+            currentTieBreak = null,
+            serving = wonTieBreak.playerStartedTheTieBreak.next()
         )
     }
 

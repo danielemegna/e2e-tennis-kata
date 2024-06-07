@@ -616,7 +616,12 @@ class MatchStateUpdaterTest {
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertNull(updatedMatchState.currentTieBreak)
-            val expectedWonSet = MatchState.Set(firstPlayerScore = 7, secondPlayerScore = 6)
+            val expectedWonSet = MatchState.Set(
+                firstPlayerScore = 7,
+                secondPlayerScore = 6,
+                firstPlayerTieBreakScore = 7,
+                secondPlayerTieBreakScore = 2,
+            )
             assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
             assertEquals(MatchState.Set(0, 0), updatedMatchState.currentSet)
             assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
@@ -639,7 +644,12 @@ class MatchStateUpdaterTest {
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
             assertNull(updatedMatchState.currentTieBreak)
-            val expectedWonSet = MatchState.Set(firstPlayerScore = 6, secondPlayerScore = 7)
+            val expectedWonSet = MatchState.Set(
+                firstPlayerScore = 6,
+                secondPlayerScore = 7,
+                firstPlayerTieBreakScore = 5,
+                secondPlayerTieBreakScore = 7,
+            )
             assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
             assertEquals(MatchState.Set(0, 0), updatedMatchState.currentSet)
             assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
@@ -704,7 +714,12 @@ class MatchStateUpdaterTest {
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertNull(updatedMatchState.currentTieBreak)
-            val expectedWonSet = MatchState.Set(firstPlayerScore = 7, secondPlayerScore = 6)
+            val expectedWonSet = MatchState.Set(
+                firstPlayerScore = 7,
+                secondPlayerScore = 6,
+                firstPlayerTieBreakScore = 10,
+                secondPlayerTieBreakScore = 8,
+            )
             assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
             assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
         }
@@ -725,7 +740,12 @@ class MatchStateUpdaterTest {
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
             assertNull(updatedMatchState.currentTieBreak)
-            val expectedWonSet = MatchState.Set(firstPlayerScore = 6, secondPlayerScore = 7)
+            val expectedWonSet = MatchState.Set(
+                firstPlayerScore = 6,
+                secondPlayerScore = 7,
+                firstPlayerTieBreakScore = 14,
+                secondPlayerTieBreakScore = 16,
+            )
             assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
         }
