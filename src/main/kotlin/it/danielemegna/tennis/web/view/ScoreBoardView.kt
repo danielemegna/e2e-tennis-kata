@@ -33,8 +33,8 @@ data class ScoreBoardView(
                 FinishedSet(
                     firstPlayerScore = it.firstPlayerScore,
                     secondPlayerScore = it.secondPlayerScore,
-                    firstPlayerTieBreakScore = null,
-                    secondPlayerTieBreakScore = null
+                    firstPlayerTieBreakScore = it.firstPlayerTieBreakScore,
+                    secondPlayerTieBreakScore = it.secondPlayerTieBreakScore
                 )
             },
             firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
