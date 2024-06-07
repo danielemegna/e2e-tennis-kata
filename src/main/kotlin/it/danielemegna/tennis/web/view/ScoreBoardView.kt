@@ -34,7 +34,7 @@ data class ScoreBoardView(
                     firstPlayerScore = it.firstPlayerScore,
                     secondPlayerScore = it.secondPlayerScore,
                     firstPlayerTieBreakScore = hideSeven(it.firstPlayerTieBreakScore),
-                    secondPlayerTieBreakScore = it.secondPlayerTieBreakScore
+                    secondPlayerTieBreakScore = hideSeven(it.secondPlayerTieBreakScore)
                 )
             },
             firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
