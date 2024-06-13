@@ -207,7 +207,7 @@ class MatchE2ETest {
         page.navigate(HOST_UNDER_TEST)
         val table = ScoreboardPlaywrightTable.from(page)
 
-        // first tie-break: 4-7
+        // first tie-break: 6-8 (do not show 6)
         assertThat(table.firstPlayer.servingCell).haveServingIndicator()
         repeat(4 * 5) { table.firstPlayerPoint() }
         repeat(4 * 5) { table.secondPlayerPoint() }
@@ -216,20 +216,20 @@ class MatchE2ETest {
         assertThat(table.firstPlayer.currentSet).hasScore(6)
         assertThat(table.secondPlayer.currentSet).hasScore(6)
         assertThat(table.firstPlayer.servingCell).haveServingIndicator()
-        repeat(4) { table.firstPlayerPoint() }
-        repeat(7) { table.secondPlayerPoint() }
+        repeat(6) { table.firstPlayerPoint() }
+        repeat(8) { table.secondPlayerPoint() }
         table.firstPlayer.shouldHaveColumnsCount(5) // important to wait table update
         assertEquals(1, table.firstPlayer.finishedSets.size)
         assertThat(table.firstPlayer.finishedSets[0].setScore).hasScore(6)
         assertThat(table.secondPlayer.finishedSets[0].setScore).hasScore(7)
-        assertThat(table.firstPlayer.finishedSets[0].tieBreakScore).hasScore(4)
-        assertThat(table.secondPlayer.finishedSets[0].tieBreakScore).isEmpty()
+        assertThat(table.firstPlayer.finishedSets[0].tieBreakScore).isEmpty()
+        assertThat(table.secondPlayer.finishedSets[0].tieBreakScore).hasScore(8)
         assertThat(table.firstPlayer.currentGame).hasScore(0)
         assertThat(table.secondPlayer.currentGame).hasScore(0)
         assertThat(table.firstPlayer.currentSet).hasScore(0)
         assertThat(table.secondPlayer.currentSet).hasScore(0)
 
-        // second tie-break: 7-0
+        // second tie-break: 7-0 (do not show both)
         assertThat(table.secondPlayer.servingCell).haveServingIndicator()
         repeat(4 * 5) { table.firstPlayerPoint() }
         repeat(4 * 5) { table.secondPlayerPoint() }
@@ -245,38 +245,54 @@ class MatchE2ETest {
         assertThat(table.secondPlayer.finishedSets[1].tieBreakScore).isEmpty()
         assertThat(table.firstPlayer.finishedSets[0].setScore).hasScore(6)
         assertThat(table.secondPlayer.finishedSets[0].setScore).hasScore(7)
+        assertThat(table.firstPlayer.finishedSets[0].tieBreakScore).isEmpty()
+        assertThat(table.secondPlayer.finishedSets[0].tieBreakScore).hasScore(8)
 
-        // third tie-break: 19-17
+        // third tie-break: 7-9 (show both)
         assertThat(table.firstPlayer.servingCell).haveServingIndicator()
         repeat(4 * 5) { table.firstPlayerPoint() }
         repeat(4 * 5) { table.secondPlayerPoint() }
         repeat(4) { table.firstPlayerPoint() }
         repeat(4) { table.secondPlayerPoint() }
         assertThat(table.firstPlayer.servingCell).haveServingIndicator()
+        repeat(6) { table.firstPlayerPoint() }
+        repeat(7) { table.secondPlayerPoint() }
+        repeat(1) { table.firstPlayerPoint() }
+        repeat(2) { table.secondPlayerPoint() }
+        table.firstPlayer.shouldHaveColumnsCount(7) // important to wait table update
+        assertEquals(3, table.firstPlayer.finishedSets.size)
+        assertThat(table.firstPlayer.finishedSets[2].setScore).hasScore(6)
+        assertThat(table.secondPlayer.finishedSets[2].setScore).hasScore(7)
+        assertThat(table.firstPlayer.finishedSets[2].tieBreakScore).hasScore(7)
+        assertThat(table.secondPlayer.finishedSets[2].tieBreakScore).hasScore(9)
+
+        // fourth tie-break: 19-17 (show both)
+        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
+        repeat(4 * 5) { table.firstPlayerPoint() }
+        repeat(4 * 5) { table.secondPlayerPoint() }
+        repeat(4) { table.firstPlayerPoint() }
+        repeat(4) { table.secondPlayerPoint() }
+        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
         repeat(17) {
             table.firstPlayerPoint()
             table.secondPlayerPoint()
         }
-        table.firstPlayer.shouldHaveColumnsCount(6) // tie-break not finished yet
+        table.firstPlayer.shouldHaveColumnsCount(7) // tie-break not finished yet
         assertThat(table.firstPlayer.currentGame).hasScore(17)
         assertThat(table.secondPlayer.currentGame).hasScore(17)
         assertThat(table.firstPlayer.currentSet).hasScore(6)
         assertThat(table.secondPlayer.currentSet).hasScore(6)
-        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
+        assertThat(table.firstPlayer.servingCell).haveServingIndicator()
         repeat(2) { table.firstPlayerPoint() }
-        table.firstPlayer.shouldHaveColumnsCount(7) // important to wait table update
-        assertEquals(3, table.firstPlayer.finishedSets.size)
-        assertThat(table.firstPlayer.finishedSets[2].setScore).hasScore(7)
-        assertThat(table.secondPlayer.finishedSets[2].setScore).hasScore(6)
-        assertThat(table.firstPlayer.finishedSets[2].tieBreakScore).hasScore(19)
-        assertThat(table.secondPlayer.finishedSets[2].tieBreakScore).hasScore(17)
-        assertThat(table.firstPlayer.finishedSets[1].setScore).hasScore(7)
-        assertThat(table.secondPlayer.finishedSets[1].setScore).hasScore(6)
-        assertThat(table.firstPlayer.finishedSets[0].setScore).hasScore(6)
-        assertThat(table.secondPlayer.finishedSets[0].setScore).hasScore(7)
+        table.firstPlayer.shouldHaveColumnsCount(8) // important to wait table update
+        assertEquals(4, table.firstPlayer.finishedSets.size)
+        assertThat(table.firstPlayer.finishedSets[3].setScore).hasScore(7)
+        assertThat(table.secondPlayer.finishedSets[3].setScore).hasScore(6)
+        assertThat(table.firstPlayer.finishedSets[3].tieBreakScore).hasScore(19)
+        assertThat(table.secondPlayer.finishedSets[3].tieBreakScore).hasScore(17)
 
-        // forth set ?
-        assertThat(table.secondPlayer.servingCell).haveServingIndicator()
+        // another ?
+        assertThat(table.firstPlayer.servingCell).haveServingIndicator()
     }
 
     companion object {
