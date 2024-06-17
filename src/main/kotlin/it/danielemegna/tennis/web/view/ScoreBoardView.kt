@@ -34,8 +34,8 @@ data class ScoreBoardView(
                 FinishedSet(
                     firstPlayerScore = it.firstPlayerScore,
                     secondPlayerScore = it.secondPlayerScore,
-                    firstPlayerTieBreakScore = hideWhenEqualsOrZero(it.firstPlayerTieBreakScore, it.firstPlayerScore),
-                    secondPlayerTieBreakScore = hideWhenEqualsOrZero(it.secondPlayerTieBreakScore, it.secondPlayerScore)
+                    firstPlayerTieBreakScore = onlyIfSmaller(it.firstPlayerTieBreakScore, it.secondPlayerTieBreakScore),
+                    secondPlayerTieBreakScore = onlyIfSmaller(it.secondPlayerTieBreakScore, it.firstPlayerTieBreakScore)
                 )
             },
             firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
@@ -44,9 +44,10 @@ data class ScoreBoardView(
             secondPlayerCurrentGameScore = matchState.secondPlayerCurrentGameScore(),
         )
 
-        private fun hideWhenEqualsOrZero(tieBreakScore: Int?, setScore: Int): Int? {
-            if (tieBreakScore == 0 || tieBreakScore == setScore) return null
-            return tieBreakScore
+        private fun onlyIfSmaller(aTieBreakScore: Int?, otherTieBreakScore: Int?): Int? {
+            if(aTieBreakScore == null || otherTieBreakScore == null) return null
+            if(aTieBreakScore > otherTieBreakScore) return null
+            return aTieBreakScore
         }
 
         private fun MatchState.firstPlayerCurrentGameScore(): String {
