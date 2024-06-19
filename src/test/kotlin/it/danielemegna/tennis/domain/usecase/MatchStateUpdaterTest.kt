@@ -304,7 +304,7 @@ class MatchStateUpdaterTest {
                 firstPlayerScore = 0,
                 secondPlayerScore = 0
             )
-            assertEquals(expectedTieBreak, updatedMatchState.currentTieBreak)
+            assertEquals(expectedTieBreak, updatedMatchState.currentSet.tieBreak)
             assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
         }
 
@@ -324,18 +324,17 @@ class MatchStateUpdaterTest {
                 firstPlayerScore = 0,
                 secondPlayerScore = 0
             )
-            assertEquals(expectedTieBreak, updatedMatchState.currentTieBreak)
+            assertEquals(expectedTieBreak, updatedMatchState.currentSet.tieBreak)
             assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
         }
 
         @Test
         fun `during tie-break serving is immediately changed after the first point`() {
             val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(6, 6),
-                currentTieBreak = MatchState.TieBreak(
-                    playerStartedTheTieBreak = Serving.FIRST_PLAYER,
-                    firstPlayerScore = 0,
-                    secondPlayerScore = 0
+                currentSet = MatchState.Set(
+                    firstPlayerScore = 6,
+                    secondPlayerScore = 6,
+                    tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 0, 0)
                 ),
                 currentGame = MatchState.Game(ZERO, ZERO),
                 serving = Serving.FIRST_PLAYER
@@ -344,17 +343,16 @@ class MatchStateUpdaterTest {
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
-            assertEquals(MatchState.TieBreak(Serving.FIRST_PLAYER, 1, 0), updatedMatchState.currentTieBreak)
+            assertEquals(MatchState.TieBreak(Serving.FIRST_PLAYER, 1, 0), updatedMatchState.currentSet.tieBreak)
         }
 
         @Test
         fun `during tie-break serving is changed every two point`() {
             val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(6, 6),
-                currentTieBreak = MatchState.TieBreak(
-                    playerStartedTheTieBreak = Serving.FIRST_PLAYER,
-                    firstPlayerScore = 1,
-                    secondPlayerScore = 0
+                currentSet = MatchState.Set(
+                    firstPlayerScore = 6,
+                    secondPlayerScore = 6,
+                    tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 1, 0)
                 ),
                 serving = Serving.SECOND_PLAYER
             )
@@ -376,11 +374,14 @@ class MatchStateUpdaterTest {
             @Test
             fun `1st player started tie-break - 2nd player ends tie-break - 2nd player start next game`() {
                 val matchState = MatchState("p1", "p2").copy(
-                    currentSet = MatchState.Set(6, 6),
-                    currentTieBreak = MatchState.TieBreak(
-                        playerStartedTheTieBreak = Serving.FIRST_PLAYER,
+                    currentSet = MatchState.Set(
                         firstPlayerScore = 6,
-                        secondPlayerScore = 4
+                        secondPlayerScore = 6,
+                        tieBreak = MatchState.TieBreak(
+                            playerStartedTheTieBreak = Serving.FIRST_PLAYER,
+                            firstPlayerScore = 6,
+                            secondPlayerScore = 4
+                        )
                     ),
                     serving = Serving.SECOND_PLAYER
                 )
@@ -393,11 +394,14 @@ class MatchStateUpdaterTest {
             @Test
             fun `1st player started tie-break - 1st player ends tie-break - 2nd player start next game`() {
                 val matchState = MatchState("p1", "p2").copy(
-                    currentSet = MatchState.Set(6, 6),
-                    currentTieBreak = MatchState.TieBreak(
-                        playerStartedTheTieBreak = Serving.FIRST_PLAYER,
-                        firstPlayerScore = 7,
-                        secondPlayerScore = 8
+                    currentSet = MatchState.Set(
+                        firstPlayerScore = 6,
+                        secondPlayerScore = 6,
+                        tieBreak = MatchState.TieBreak(
+                            playerStartedTheTieBreak = Serving.FIRST_PLAYER,
+                            firstPlayerScore = 7,
+                            secondPlayerScore = 8
+                        )
                     ),
                     serving = Serving.FIRST_PLAYER
                 )
@@ -410,11 +414,14 @@ class MatchStateUpdaterTest {
             @Test
             fun `2nd player started tie-break - 1st player ends tie-break - 1st player start next game`() {
                 val matchState = MatchState("p1", "p2").copy(
-                    currentSet = MatchState.Set(6, 6),
-                    currentTieBreak = MatchState.TieBreak(
-                        playerStartedTheTieBreak = Serving.SECOND_PLAYER,
+                    currentSet = MatchState.Set(
                         firstPlayerScore = 6,
-                        secondPlayerScore = 3
+                        secondPlayerScore = 6,
+                        tieBreak = MatchState.TieBreak(
+                            playerStartedTheTieBreak = Serving.SECOND_PLAYER,
+                            firstPlayerScore = 6,
+                            secondPlayerScore = 3
+                        )
                     ),
                     serving = Serving.FIRST_PLAYER
                 )
@@ -427,11 +434,14 @@ class MatchStateUpdaterTest {
             @Test
             fun `2nd player started tie-break - 2nd player ends tie-break - 1st player start next game`() {
                 val matchState = MatchState("p1", "p2").copy(
-                    currentSet = MatchState.Set(6, 6),
-                    currentTieBreak = MatchState.TieBreak(
-                        playerStartedTheTieBreak = Serving.SECOND_PLAYER,
-                        firstPlayerScore = 9,
-                        secondPlayerScore = 10
+                    currentSet = MatchState.Set(
+                        firstPlayerScore = 6,
+                        secondPlayerScore = 6,
+                        tieBreak = MatchState.TieBreak(
+                            playerStartedTheTieBreak = Serving.SECOND_PLAYER,
+                            firstPlayerScore = 9,
+                            secondPlayerScore = 10
+                        )
                     ),
                     serving = Serving.SECOND_PLAYER
                 )
@@ -544,11 +554,11 @@ class MatchStateUpdaterTest {
                 currentSet = MatchState.Set(firstPlayerScore = 5, secondPlayerScore = 5),
                 currentGame = MatchState.Game(FORTY, THIRTY),
             )
-            assertNull(matchState.currentTieBreak)
+            assertNull(matchState.currentSet.tieBreak)
 
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
-            assertNull(matchState.currentTieBreak)
+            assertNull(matchState.currentSet.tieBreak)
             assertEquals(6, updatedMatchState.currentSet.firstPlayerScore)
             assertEquals(5, updatedMatchState.currentSet.secondPlayerScore)
             assertEquals(emptyList(), updatedMatchState.wonSets)
@@ -561,7 +571,7 @@ class MatchStateUpdaterTest {
                 currentGame = MatchState.Game(FIFTEEN, FORTY),
                 serving = Serving.SECOND_PLAYER
             )
-            assertNull(matchState.currentTieBreak)
+            assertNull(matchState.currentSet.tieBreak)
 
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
@@ -570,7 +580,7 @@ class MatchStateUpdaterTest {
                 firstPlayerScore = 0,
                 secondPlayerScore = 0
             )
-            assertEquals(expectedTieBreak, updatedMatchState.currentTieBreak)
+            assertEquals(expectedTieBreak, updatedMatchState.currentSet.tieBreak)
             assertEquals(6, updatedMatchState.currentSet.firstPlayerScore)
             assertEquals(6, updatedMatchState.currentSet.secondPlayerScore)
             assertEquals(emptyList(), updatedMatchState.wonSets)
@@ -581,11 +591,10 @@ class MatchStateUpdaterTest {
         @Test
         fun `during tie break points increase tie-break score instead of game score`() {
             val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(6, 6),
-                currentTieBreak = MatchState.TieBreak(
-                    playerStartedTheTieBreak = Serving.FIRST_PLAYER,
-                    firstPlayerScore = 0,
-                    secondPlayerScore = 0
+                currentSet = MatchState.Set(
+                    firstPlayerScore = 6,
+                    secondPlayerScore = 6,
+                    tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 0, 0)
                 ),
                 currentGame = MatchState.Game(ZERO, ZERO),
                 serving = Serving.FIRST_PLAYER
@@ -593,9 +602,10 @@ class MatchStateUpdaterTest {
 
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
-            assertEquals(MatchState.TieBreak(Serving.FIRST_PLAYER, 1, 0), updatedMatchState.currentTieBreak)
+            assertEquals(MatchState.TieBreak(Serving.FIRST_PLAYER, 1, 0), updatedMatchState.currentSet.tieBreak)
             assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
-            assertEquals(MatchState.Set(6, 6), updatedMatchState.currentSet)
+            assertEquals(6, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(6, updatedMatchState.currentSet.secondPlayerScore)
             assertEquals(emptyList(), updatedMatchState.wonSets)
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
         }
@@ -603,11 +613,10 @@ class MatchStateUpdaterTest {
         @Test
         fun `first player wins tie-break on seven points`() {
             val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(6, 6),
-                currentTieBreak = MatchState.TieBreak(
-                    playerStartedTheTieBreak = Serving.FIRST_PLAYER,
+                currentSet = MatchState.Set(
                     firstPlayerScore = 6,
-                    secondPlayerScore = 2
+                    secondPlayerScore = 6,
+                    tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 6, 2)
                 ),
                 currentGame = MatchState.Game(ZERO, ZERO),
                 serving = Serving.FIRST_PLAYER
@@ -615,12 +624,11 @@ class MatchStateUpdaterTest {
 
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
-            assertNull(updatedMatchState.currentTieBreak)
+            assertNull(updatedMatchState.currentSet.tieBreak)
             val expectedWonSet = MatchState.Set(
                 firstPlayerScore = 7,
                 secondPlayerScore = 6,
-                firstPlayerTieBreakScore = 7,
-                secondPlayerTieBreakScore = 2,
+                tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 7, 2)
             )
             assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
             assertEquals(MatchState.Set(0, 0), updatedMatchState.currentSet)
@@ -631,11 +639,10 @@ class MatchStateUpdaterTest {
         @Test
         fun `second player wins tie-break on seven points`() {
             val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(6, 6),
-                currentTieBreak = MatchState.TieBreak(
-                    playerStartedTheTieBreak = Serving.FIRST_PLAYER,
-                    firstPlayerScore = 5,
-                    secondPlayerScore = 6
+                currentSet = MatchState.Set(
+                    firstPlayerScore = 6,
+                    secondPlayerScore = 6,
+                    tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 5, 6)
                 ),
                 currentGame = MatchState.Game(ZERO, ZERO),
                 serving = Serving.FIRST_PLAYER
@@ -643,12 +650,11 @@ class MatchStateUpdaterTest {
 
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
-            assertNull(updatedMatchState.currentTieBreak)
+            assertNull(updatedMatchState.currentSet.tieBreak)
             val expectedWonSet = MatchState.Set(
                 firstPlayerScore = 6,
                 secondPlayerScore = 7,
-                firstPlayerTieBreakScore = 5,
-                secondPlayerTieBreakScore = 7,
+                tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 5, 7)
             )
             assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
             assertEquals(MatchState.Set(0, 0), updatedMatchState.currentSet)
@@ -659,11 +665,10 @@ class MatchStateUpdaterTest {
         @Test
         fun `tie-break continues on seven-six`() {
             val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(6, 6),
-                currentTieBreak = MatchState.TieBreak(
-                    playerStartedTheTieBreak = Serving.FIRST_PLAYER,
+                currentSet = MatchState.Set(
                     firstPlayerScore = 6,
-                    secondPlayerScore = 6
+                    secondPlayerScore = 6,
+                    tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 6, 6)
                 ),
                 currentGame = MatchState.Game(ZERO, ZERO),
                 serving = Serving.FIRST_PLAYER
@@ -671,8 +676,9 @@ class MatchStateUpdaterTest {
 
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
-            assertEquals(MatchState.TieBreak(Serving.FIRST_PLAYER, 7, 6), updatedMatchState.currentTieBreak)
-            assertEquals(MatchState.Set(6, 6), updatedMatchState.currentSet)
+            assertEquals(MatchState.TieBreak(Serving.FIRST_PLAYER, 7, 6), updatedMatchState.currentSet.tieBreak)
+            assertEquals(6, updatedMatchState.currentSet.firstPlayerScore)
+            assertEquals(6, updatedMatchState.currentSet.secondPlayerScore)
             assertEquals(emptyList(), updatedMatchState.wonSets)
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
         }
@@ -680,11 +686,10 @@ class MatchStateUpdaterTest {
         @Test
         fun `tie-break continues indefinitely on one-point score gap`() {
             val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(6, 6),
-                currentTieBreak = MatchState.TieBreak(
-                    playerStartedTheTieBreak = Serving.FIRST_PLAYER,
-                    firstPlayerScore = 13,
-                    secondPlayerScore = 13
+                currentSet = MatchState.Set(
+                    firstPlayerScore = 6,
+                    secondPlayerScore = 6,
+                    tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 13, 13)
                 ),
                 currentGame = MatchState.Game(ZERO, ZERO),
                 serving = Serving.SECOND_PLAYER
@@ -692,8 +697,12 @@ class MatchStateUpdaterTest {
 
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
-            assertEquals(MatchState.TieBreak(Serving.FIRST_PLAYER, 13, 14), updatedMatchState.currentTieBreak)
-            assertEquals(MatchState.Set(6, 6), updatedMatchState.currentSet)
+            val expectedSet = MatchState.Set(
+                firstPlayerScore = 6,
+                secondPlayerScore = 6,
+                tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 13, 14)
+            )
+            assertEquals(expectedSet, updatedMatchState.currentSet)
             assertEquals(emptyList(), updatedMatchState.wonSets)
             assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
         }
@@ -701,11 +710,10 @@ class MatchStateUpdaterTest {
         @Test
         fun `first player wins tie-break on two-point score gap`() {
             val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(6, 6),
-                currentTieBreak = MatchState.TieBreak(
-                    playerStartedTheTieBreak = Serving.SECOND_PLAYER,
-                    firstPlayerScore = 9,
-                    secondPlayerScore = 8
+                currentSet = MatchState.Set(
+                    firstPlayerScore = 6,
+                    secondPlayerScore = 6,
+                    tieBreak = MatchState.TieBreak(Serving.SECOND_PLAYER, 9, 8)
                 ),
                 currentGame = MatchState.Game(ZERO, ZERO),
                 serving = Serving.FIRST_PLAYER
@@ -713,12 +721,11 @@ class MatchStateUpdaterTest {
 
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.FIRST)
 
-            assertNull(updatedMatchState.currentTieBreak)
+            assertNull(updatedMatchState.currentSet.tieBreak)
             val expectedWonSet = MatchState.Set(
                 firstPlayerScore = 7,
                 secondPlayerScore = 6,
-                firstPlayerTieBreakScore = 10,
-                secondPlayerTieBreakScore = 8,
+                tieBreak = MatchState.TieBreak(Serving.SECOND_PLAYER, 10, 8),
             )
             assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
             assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
@@ -727,11 +734,10 @@ class MatchStateUpdaterTest {
         @Test
         fun `second player wins tie-break on two-point score gap`() {
             val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(6, 6),
-                currentTieBreak = MatchState.TieBreak(
-                    playerStartedTheTieBreak = Serving.FIRST_PLAYER,
-                    firstPlayerScore = 14,
-                    secondPlayerScore = 15
+                currentSet = MatchState.Set(
+                    firstPlayerScore = 6,
+                    secondPlayerScore = 6,
+                    tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 14, 15)
                 ),
                 currentGame = MatchState.Game(ZERO, ZERO),
                 serving = Serving.SECOND_PLAYER
@@ -739,12 +745,11 @@ class MatchStateUpdaterTest {
 
             val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
 
-            assertNull(updatedMatchState.currentTieBreak)
+            assertNull(updatedMatchState.currentSet.tieBreak)
             val expectedWonSet = MatchState.Set(
                 firstPlayerScore = 6,
                 secondPlayerScore = 7,
-                firstPlayerTieBreakScore = 14,
-                secondPlayerTieBreakScore = 16,
+                tieBreak = MatchState.TieBreak(Serving.FIRST_PLAYER, 14, 16)
             )
             assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)

@@ -37,7 +37,7 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.isTieBreakWinningPoint(pointAuthor: Player): Boolean {
-        if (currentTieBreak == null) return false;
+        val currentTieBreak = currentSet.tieBreak ?: return false
 
         return when (pointAuthor) {
             Player.FIRST ->
@@ -88,19 +88,15 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.tieBreakWonByPlayer(pointAuthor: Player): MatchState {
-        if (currentTieBreak == null)
-            throw RuntimeException("Tie break won by player never started!")
+        val currentTieBreak = currentSet.tieBreak
+            ?: throw RuntimeException("Tie break won by player never started!")
 
         val wonTieBreak = currentTieBreak.increaseScore(pointAuthor)
-        val wonSet = currentSet.increaseScore(pointAuthor).copy(
-            firstPlayerTieBreakScore = wonTieBreak.firstPlayerScore,
-            secondPlayerTieBreakScore = wonTieBreak.secondPlayerScore,
-        )
+        val wonSet = currentSet.increaseScore(pointAuthor).copy(tieBreak = wonTieBreak)
         return this.copy(
             wonSets = wonSets.plus(wonSet),
             currentSet = MatchState.Set(),
             currentGame = Game(),
-            currentTieBreak = null,
             serving = wonTieBreak.playerStartedTheTieBreak.next()
         )
     }
@@ -111,16 +107,16 @@ class MatchStateUpdater {
             wonSets = wonSets.plus(wonSet),
             currentSet = MatchState.Set(),
             currentGame = Game(),
-            currentTieBreak = null,
             serving = serving.next(),
         )
     }
 
     private fun MatchState.startTieBreak(pointAuthor: Player): MatchState {
         val newState = this.gameWonByPlayer(pointAuthor)
-        return newState.copy(
-            currentTieBreak = MatchState.TieBreak(newState.serving)
+        val setWithTieBreak = newState.currentSet.copy(
+            tieBreak = MatchState.TieBreak(newState.serving)
         )
+        return newState.copy(currentSet = setWithTieBreak)
     }
 
     private fun MatchState.gameWonByPlayer(pointAuthor: Player): MatchState {
@@ -132,13 +128,15 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.increaseTieBreakPlayerScore(pointAuthor: Player): MatchState {
-        if (currentTieBreak == null)
-            throw RuntimeException("Cannot increase tie break score: tie break never started!")
+        val currentTieBreak = currentSet.tieBreak
+            ?: throw RuntimeException("Cannot increase tie break score: tie break never started!")
 
         val updatedTieBreak = currentTieBreak.increaseScore(pointAuthor)
+        val updatedSet = this.currentSet.copy(tieBreak = updatedTieBreak)
         val newServing = if (updatedTieBreak.shouldChangeServing()) this.serving.next() else this.serving
+
         return this.copy(
-            currentTieBreak = updatedTieBreak,
+            currentSet = updatedSet,
             serving = newServing
         )
     }

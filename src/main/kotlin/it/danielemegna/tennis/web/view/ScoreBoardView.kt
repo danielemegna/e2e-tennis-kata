@@ -34,8 +34,8 @@ data class ScoreBoardView(
                 FinishedSet(
                     firstPlayerScore = it.firstPlayerScore,
                     secondPlayerScore = it.secondPlayerScore,
-                    firstPlayerTieBreakScore = onlyIfSmaller(it.firstPlayerTieBreakScore, it.secondPlayerTieBreakScore),
-                    secondPlayerTieBreakScore = onlyIfSmaller(it.secondPlayerTieBreakScore, it.firstPlayerTieBreakScore)
+                    firstPlayerTieBreakScore = it.tieBreak.firstPlayerScoreToShow(),
+                    secondPlayerTieBreakScore = it.tieBreak.secondPlayerScoreToShow()
                 )
             },
             firstPlayerCurrentSetScore = matchState.currentSet.firstPlayerScore,
@@ -44,24 +44,35 @@ data class ScoreBoardView(
             secondPlayerCurrentGameScore = matchState.secondPlayerCurrentGameScore(),
         )
 
-        private fun onlyIfSmaller(aTieBreakScore: Int?, otherTieBreakScore: Int?): Int? {
-            if(aTieBreakScore == null || otherTieBreakScore == null) return null
-            if(aTieBreakScore > otherTieBreakScore) return null
-            return aTieBreakScore
-        }
-
         private fun MatchState.firstPlayerCurrentGameScore(): String {
-            if (this.currentTieBreak != null)
-                return this.currentTieBreak.firstPlayerScore.toString()
+            if (this.currentSet.tieBreak != null)
+                return this.currentSet.tieBreak.firstPlayerScore.toString()
 
             return this.currentGame.firstPlayerScore.toString()
         }
 
         private fun MatchState.secondPlayerCurrentGameScore(): String {
-            if (this.currentTieBreak != null)
-                return this.currentTieBreak.secondPlayerScore.toString()
+            if (this.currentSet.tieBreak != null)
+                return this.currentSet.tieBreak.secondPlayerScore.toString()
 
             return this.currentGame.secondPlayerScore.toString()
         }
+
+        private fun MatchState.TieBreak?.firstPlayerScoreToShow(): Int? {
+            if (this == null) return null
+            return onlyIfSmaller(firstPlayerScore, secondPlayerScore)
+        }
+
+        private fun MatchState.TieBreak?.secondPlayerScoreToShow(): Int? {
+            if (this == null) return null
+            return onlyIfSmaller(secondPlayerScore, firstPlayerScore)
+        }
+
+        private fun onlyIfSmaller(aTieBreakScore: Int?, otherTieBreakScore: Int?): Int? {
+            if (aTieBreakScore == null || otherTieBreakScore == null) return null
+            if (aTieBreakScore > otherTieBreakScore) return null
+            return aTieBreakScore
+        }
+
     }
 }

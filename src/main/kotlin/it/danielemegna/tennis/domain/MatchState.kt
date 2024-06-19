@@ -8,7 +8,6 @@ data class MatchState(
     val serving: Serving,
     val currentGame: Game,
     val currentSet: Set,
-    val currentTieBreak: TieBreak?, // TODO remove duplication with currentSet.firstPlayerTieBreakScore
     val wonSets: List<Set>,
 ) {
 
@@ -18,11 +17,10 @@ data class MatchState(
         serving = Serving.FIRST_PLAYER,
         currentGame = Game(),
         currentSet = Set(),
-        currentTieBreak = null,
         wonSets = emptyList()
     )
 
-    fun tieBreakInProgress() = currentTieBreak != null
+    fun tieBreakInProgress() = currentSet.tieBreak != null
 
     enum class Serving {
         FIRST_PLAYER, SECOND_PLAYER;
@@ -58,8 +56,7 @@ data class MatchState(
     data class Set(
         val firstPlayerScore: Int = 0,
         val secondPlayerScore: Int = 0,
-        val firstPlayerTieBreakScore: Int? = null,
-        val secondPlayerTieBreakScore: Int? = null
+        val tieBreak: TieBreak? = null,
     ) {
         fun increaseScore(pointAuthor: PlayerPoint.Player): Set {
             return when (pointAuthor) {
