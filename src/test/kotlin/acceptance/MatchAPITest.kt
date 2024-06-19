@@ -73,6 +73,24 @@ class MatchAPITest {
     }
 
     @Test
+    fun `bad request response on wrong player number point request`(): Unit = runBlocking {
+        initNewMatch()
+
+        postRequest("/player/wrong/point").ignoreHttpErrors(true).execute().let { response ->
+            assertThat(response.statusCode()).isEqualTo(400)
+            assertThat(response.bodyAsBytes()).isEmpty()
+        }
+        postRequest("/player/3/point").ignoreHttpErrors(true).execute().let { response ->
+            assertThat(response.statusCode()).isEqualTo(400)
+            assertThat(response.bodyAsBytes()).isEmpty()
+        }
+        postRequest("/player/0/point").ignoreHttpErrors(true).execute().let { response ->
+            assertThat(response.statusCode()).isEqualTo(400)
+            assertThat(response.bodyAsBytes()).isEmpty()
+        }
+    }
+
+    @Test
     fun `not found response on unexisting route`(): Unit = runBlocking {
         getRequest("/unexisting").ignoreHttpErrors(true).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(404)

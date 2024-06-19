@@ -10,9 +10,6 @@ import io.ktor.server.jetty.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import it.danielemegna.tennis.domain.MatchState
-import it.danielemegna.tennis.domain.MatchState.Game.GameScore
-import it.danielemegna.tennis.domain.MatchState.Serving
 import it.danielemegna.tennis.domain.repository.InMemoryMatchRepository
 import it.danielemegna.tennis.domain.usecase.InitNewGame
 import it.danielemegna.tennis.domain.usecase.PlayerPoint
@@ -35,20 +32,29 @@ fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
                 val scoreBoardView = ScoreBoardView.from(matchState)
                 call.respond(message = FreeMarkerContent("index.ftl", scoreBoardView), status = HttpStatusCode.Created)
             }
-            post("/player/1/point") {
+            post("/player/{playerNumber}/point") {
+                val pointAuthor = playerNumberParameterFrom(call)
+                if(pointAuthor == null) {
+                    call.response.status(HttpStatusCode.BadRequest)
+                    return@post
+                }
+
                 val usecase = PlayerPoint(matchRepository)
-                val matchState = usecase.run(PlayerPoint.Player.FIRST)
-                val scoreBoardView = ScoreBoardView.from(matchState)
-                call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
-            }
-            post("/player/2/point") {
-                val usecase = PlayerPoint(matchRepository)
-                val matchState = usecase.run(PlayerPoint.Player.SECOND)
+                val matchState = usecase.run(pointAuthor)
                 val scoreBoardView = ScoreBoardView.from(matchState)
                 call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
             }
             staticResources("/assets", "assets")
         }
+    }
+}
+
+private fun playerNumberParameterFrom(call: ApplicationCall): PlayerPoint.Player? {
+    val playerNumberParam = call.parameters["playerNumber"]
+    return when (playerNumberParam) {
+        "1" -> PlayerPoint.Player.FIRST
+        "2" -> PlayerPoint.Player.SECOND
+        else -> null
     }
 }
 
