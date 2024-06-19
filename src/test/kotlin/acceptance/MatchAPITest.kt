@@ -3,6 +3,7 @@ package acceptance
 import it.danielemegna.tennis.web.setupJettyApplicationEngine
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
+import org.jsoup.Connection
 import org.jsoup.Connection.Method
 import org.jsoup.Jsoup
 import org.junit.jupiter.api.AfterAll
@@ -27,7 +28,7 @@ class MatchAPITest {
 
     @Test
     fun `init new match on root path`(): Unit = runBlocking {
-        val response = Jsoup.connect("${HOST_UNDER_TEST}/").method(Method.GET).execute()
+        val response = getRequest("/").execute()
 
         assertThat(response.statusCode()).isEqualTo(201)
         val htmlPage = response.parse()
@@ -42,7 +43,7 @@ class MatchAPITest {
     fun `register first player point`(): Unit = runBlocking {
         initNewMatch()
 
-        val response = Jsoup.connect("${HOST_UNDER_TEST}/player/1/point").method(Method.POST).execute()
+        val response = postRequest("/player/1/point").execute()
 
         assertThat(response.statusCode()).isEqualTo(200)
         val htmlPage = response.parse()
@@ -57,10 +58,10 @@ class MatchAPITest {
     fun `register some points in first game`(): Unit = runBlocking {
         initNewMatch()
 
-        Jsoup.connect("${HOST_UNDER_TEST}/player/1/point").method(Method.POST).execute()
-        Jsoup.connect("${HOST_UNDER_TEST}/player/1/point").method(Method.POST).execute()
-        Jsoup.connect("${HOST_UNDER_TEST}/player/2/point").method(Method.POST).execute()
-        Jsoup.connect("${HOST_UNDER_TEST}/player/1/point").method(Method.POST).execute().let { response ->
+        postRequest("/player/1/point").execute()
+        postRequest("/player/1/point").execute()
+        postRequest("/player/2/point").execute()
+        postRequest("/player/1/point").execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(200)
             val htmlPage = response.parse()
             val playersScoreboardRows = htmlPage.select("#scoreboard tr")
@@ -71,8 +72,28 @@ class MatchAPITest {
         }
     }
 
+    @Test
+    fun `not found response on unexisting route`(): Unit = runBlocking {
+        getRequest("/unexisting").ignoreHttpErrors(true).execute().let { response ->
+            assertThat(response.statusCode()).isEqualTo(404)
+            assertThat(response.bodyAsBytes()).isEmpty()
+        }
+        postRequest("/unexisting").ignoreHttpErrors(true).execute().let { response ->
+            assertThat(response.statusCode()).isEqualTo(404)
+            assertThat(response.bodyAsBytes()).isEmpty()
+        }
+    }
+
     private fun initNewMatch() {
-        Jsoup.connect("${HOST_UNDER_TEST}/").method(Method.GET).execute()
+        getRequest("/").execute()
+    }
+
+    private fun postRequest(apiPath: String): Connection {
+        return Jsoup.connect("${HOST_UNDER_TEST}$apiPath").method(Method.POST)
+    }
+
+    private fun getRequest(apiPath: String): Connection {
+        return Jsoup.connect("${HOST_UNDER_TEST}$apiPath").method(Method.GET)
     }
 
     companion object {
