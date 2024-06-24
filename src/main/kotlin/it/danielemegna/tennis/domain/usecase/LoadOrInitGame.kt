@@ -6,9 +6,9 @@ import it.danielemegna.tennis.domain.MatchState.Game
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore
 import it.danielemegna.tennis.domain.MatchState.Serving
 
-class InitNewGame(private val matchRepository: MatchRepository) {
+class LoadOrInitGame(private val matchRepository: MatchRepository) {
 
-    fun run(): MatchState {
+    fun run(matchId: String): MatchState {
         val newMatchState = MatchState(
             firstPlayerName = "Sinner",
             secondPlayerName = "Djokovic",

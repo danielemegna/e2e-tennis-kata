@@ -9,7 +9,7 @@ class PlayerPoint(
     private val matchStateUpdater: MatchStateUpdater = MatchStateUpdater()
 ) {
 
-    fun run(pointAuthor: Player): MatchState {
+    fun run(pointAuthor: Player, matchId: String): MatchState {
         val currentMatchState = matchRepository.getOngoingMatch()
         val newMatchState = matchStateUpdater.updatedMatch(currentMatchState, pointAuthor)
         matchRepository.updateOngoingMatch(newMatchState);

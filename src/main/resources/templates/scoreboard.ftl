@@ -1,7 +1,7 @@
 <table id="scoreboard">
   <tr>
     <td class="ball-hitter"><#if isFirstPlayerServing()>&centerdot;</#if></td>
-    <td class="player-name" hx-post="/player/1/point" hx-trigger="click" hx-target="#scoreboard">${firstPlayerName}</td>
+    <td class="player-name" hx-post="/FIXME/player/1/point" hx-trigger="click" hx-target="#scoreboard">${firstPlayerName}</td>
     <#list finishedSets as finishedSet>
       <td class="finished-set ${finishedSet.firstPlayerCssClass}">
         <span>${finishedSet.firstPlayerScore}</span>
@@ -13,7 +13,7 @@
   </tr>
   <tr>
     <td class="ball-hitter"><#if !isFirstPlayerServing()>&centerdot;</#if></td>
-    <td class="player-name" hx-post="/player/2/point" hx-trigger="click" hx-target="#scoreboard">${secondPlayerName}</td>
+    <td class="player-name" hx-post="/FIXME/player/2/point" hx-trigger="click" hx-target="#scoreboard">${secondPlayerName}</td>
     <#list finishedSets as finishedSet>
       <td class="finished-set ${finishedSet.secondPlayerCssClass}">
         <span>${finishedSet.secondPlayerScore}</span>

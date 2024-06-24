@@ -11,9 +11,10 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import it.danielemegna.tennis.domain.repository.InMemoryMatchRepository
-import it.danielemegna.tennis.domain.usecase.InitNewGame
+import it.danielemegna.tennis.domain.usecase.LoadOrInitGame
 import it.danielemegna.tennis.domain.usecase.PlayerPoint
 import it.danielemegna.tennis.web.view.ScoreBoardView
+import java.util.*
 
 fun main() {
     setupJettyApplicationEngine(8080).start(wait = true)
@@ -27,20 +28,26 @@ fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
 
         routing {
             get("/") {
-                val usecase = InitNewGame(matchRepository)
-                val matchState = usecase.run()
+                val newRandomMatchId = UUID.randomUUID()
+                call.respondRedirect("/$newRandomMatchId", permanent = false)
+            }
+            get("/{matchId}") {
+                val matchId = call.parameters["matchId"]!!
+                val usecase = LoadOrInitGame(matchRepository)
+                val matchState = usecase.run(matchId)
                 val scoreBoardView = ScoreBoardView.from(matchState)
                 call.respond(message = FreeMarkerContent("index.ftl", scoreBoardView), status = HttpStatusCode.Created)
             }
-            post("/player/{playerNumber}/point") {
+            post("/{matchId}/player/{playerNumber}/point") {
+                val matchId = call.parameters["matchId"]!!
                 val pointAuthor = playerNumberParameterFrom(call)
-                if(pointAuthor == null) {
+                if (pointAuthor == null) {
                     call.response.status(HttpStatusCode.BadRequest)
                     return@post
                 }
 
                 val usecase = PlayerPoint(matchRepository)
-                val matchState = usecase.run(pointAuthor)
+                val matchState = usecase.run(pointAuthor, matchId)
                 val scoreBoardView = ScoreBoardView.from(matchState)
                 call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
             }

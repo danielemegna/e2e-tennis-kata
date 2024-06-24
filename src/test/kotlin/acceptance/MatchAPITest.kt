@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import kotlin.test.assertNotNull
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchAPITest {
@@ -27,8 +28,22 @@ class MatchAPITest {
     }
 
     @Test
-    fun `init new match on root path`(): Unit = runBlocking {
+    fun `root path should redirect on a new match with random uuid`(): Unit = runBlocking {
         val response = getRequest("/").execute()
+        assertThat(response.statusCode()).isEqualTo(302)
+        val redirectUrl = response.header("location")
+        assertNotNull(redirectUrl)
+        assertThat(redirectUrl).matches("""^/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$""")
+
+        val redirectTargetResponse = getRequest(redirectUrl).execute()
+        val htmlPage = redirectTargetResponse.parse()
+        val scoreBoardTable = htmlPage.select("table#scoreboard")
+        assertThat(scoreBoardTable.size).isGreaterThan(0)
+    }
+
+    @Test
+    fun `create new match with custom id`(): Unit = runBlocking {
+        val response = getRequest("/custom-id").execute()
 
         assertThat(response.statusCode()).isEqualTo(201)
         val htmlPage = response.parse()
@@ -41,9 +56,9 @@ class MatchAPITest {
 
     @Test
     fun `register first player point`(): Unit = runBlocking {
-        initNewMatch()
+        initNewMatchWith(id = "match-id")
 
-        val response = postRequest("/player/1/point").execute()
+        val response = postRequest("/match-id/player/1/point").execute()
 
         assertThat(response.statusCode()).isEqualTo(200)
         val htmlPage = response.parse()
@@ -56,12 +71,12 @@ class MatchAPITest {
 
     @Test
     fun `register some points in first game`(): Unit = runBlocking {
-        initNewMatch()
+        initNewMatchWith(id = "match-id")
 
-        postRequest("/player/1/point").execute()
-        postRequest("/player/1/point").execute()
-        postRequest("/player/2/point").execute()
-        postRequest("/player/1/point").execute().let { response ->
+        postRequest("/match-id/player/1/point").execute()
+        postRequest("/match-id/player/1/point").execute()
+        postRequest("/match-id/player/2/point").execute()
+        postRequest("/match-id/player/1/point").execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(200)
             val htmlPage = response.parse()
             val playersScoreboardRows = htmlPage.select("#scoreboard tr")
@@ -74,17 +89,17 @@ class MatchAPITest {
 
     @Test
     fun `bad request response on wrong player number point request`(): Unit = runBlocking {
-        initNewMatch()
+        initNewMatchWith(id = "match-id")
 
-        postRequest("/player/wrong/point").ignoreHttpErrors(true).execute().let { response ->
+        postRequest("/match-id/player/wrong/point").ignoreHttpErrors(true).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(400)
             assertThat(response.bodyAsBytes()).isEmpty()
         }
-        postRequest("/player/3/point").ignoreHttpErrors(true).execute().let { response ->
+        postRequest("/match-id/player/3/point").ignoreHttpErrors(true).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(400)
             assertThat(response.bodyAsBytes()).isEmpty()
         }
-        postRequest("/player/0/point").ignoreHttpErrors(true).execute().let { response ->
+        postRequest("/match-id/player/0/point").ignoreHttpErrors(true).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(400)
             assertThat(response.bodyAsBytes()).isEmpty()
         }
@@ -92,26 +107,27 @@ class MatchAPITest {
 
     @Test
     fun `not found response on unexisting route`(): Unit = runBlocking {
-        getRequest("/unexisting").ignoreHttpErrors(true).execute().let { response ->
+        getRequest("/unexisting/route").ignoreHttpErrors(true).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(404)
             assertThat(response.bodyAsBytes()).isEmpty()
         }
-        postRequest("/unexisting").ignoreHttpErrors(true).execute().let { response ->
+        postRequest("/unexisting/route").ignoreHttpErrors(true).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(404)
             assertThat(response.bodyAsBytes()).isEmpty()
         }
     }
 
-    private fun initNewMatch() {
-        getRequest("/").execute()
+    private fun initNewMatchWith(id: String) {
+        val response = getRequest("/$id").execute()
+        assertThat(response.statusCode()).isEqualTo(201)
     }
 
     private fun postRequest(apiPath: String): Connection {
-        return Jsoup.connect("${HOST_UNDER_TEST}$apiPath").method(Method.POST)
+        return Jsoup.connect("${HOST_UNDER_TEST}$apiPath").followRedirects(false).method(Method.POST)
     }
 
     private fun getRequest(apiPath: String): Connection {
-        return Jsoup.connect("${HOST_UNDER_TEST}$apiPath").method(Method.GET)
+        return Jsoup.connect("${HOST_UNDER_TEST}$apiPath").followRedirects(false).method(Method.GET)
     }
 
     companion object {
