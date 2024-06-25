@@ -10,9 +10,11 @@ class PlayerPoint(
 ) {
 
     fun run(pointAuthor: Player, matchId: String): MatchState {
-        val currentMatchState = matchRepository.getOngoingMatch()
+        val currentMatchState = matchRepository.getOngoingMatch(matchId)
+            ?: throw RuntimeException("Cannot find ongoing match with id $matchId")
+
         val newMatchState = matchStateUpdater.updatedMatch(currentMatchState, pointAuthor)
-        matchRepository.updateOngoingMatch(newMatchState);
+        matchRepository.updateOngoingMatch(matchId, newMatchState);
         return newMatchState
     }
 

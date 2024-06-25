@@ -3,19 +3,17 @@ package it.danielemegna.tennis.domain.repository
 import it.danielemegna.tennis.domain.MatchState
 
 class InMemoryMatchRepository : MatchRepository {
-    private var ongoingMatch: MatchState? = null;
+    private val ongoingMatches: MutableMap<String, MatchState> = mutableMapOf()
 
-    override fun storeNewMatch(matchState: MatchState) {
-        ongoingMatch = matchState
+    override fun storeNewMatch(matchId: String, matchState: MatchState) {
+        ongoingMatches[matchId] = matchState;
     }
 
-    override fun getOngoingMatch(): MatchState {
-        if(ongoingMatch == null)
-            throw RuntimeException("Cannot find ongoing match")
-        return ongoingMatch!!
+    override fun getOngoingMatch(matchId: String): MatchState? {
+        return ongoingMatches[matchId]
     }
 
-    override fun updateOngoingMatch(matchState: MatchState) {
-        ongoingMatch = matchState
+    override fun updateOngoingMatch(matchId: String, matchState: MatchState) {
+        ongoingMatches[matchId] = matchState;
     }
 }

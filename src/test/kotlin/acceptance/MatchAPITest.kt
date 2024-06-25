@@ -33,7 +33,7 @@ class MatchAPITest {
         assertThat(response.statusCode()).isEqualTo(302)
         val redirectUrl = response.header("location")
         assertNotNull(redirectUrl)
-        assertThat(redirectUrl).matches("""^/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$""")
+        assertThat(redirectUrl).matches("^/" + UUIDV4_REGEX + "$")
 
         val redirectTargetResponse = getRequest(redirectUrl).execute()
         val htmlPage = redirectTargetResponse.parse()
@@ -71,12 +71,12 @@ class MatchAPITest {
 
     @Test
     fun `register some points in first game`(): Unit = runBlocking {
-        initNewMatchWith(id = "match-id")
+        initNewMatchWith(id = "another-match-id")
 
-        postRequest("/match-id/player/1/point").execute()
-        postRequest("/match-id/player/1/point").execute()
-        postRequest("/match-id/player/2/point").execute()
-        postRequest("/match-id/player/1/point").execute().let { response ->
+        postRequest("/another-match-id/player/1/point").execute()
+        postRequest("/another-match-id/player/1/point").execute()
+        postRequest("/another-match-id/player/2/point").execute()
+        postRequest("/another-match-id/player/1/point").execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(200)
             val htmlPage = response.parse()
             val playersScoreboardRows = htmlPage.select("#scoreboard tr")
@@ -131,6 +131,7 @@ class MatchAPITest {
     }
 
     companion object {
+        private const val UUIDV4_REGEX = "[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
         private const val HOST_UNDER_TEST = "http://localhost:8080"
     }
 }
