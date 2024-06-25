@@ -4,10 +4,12 @@ import com.microsoft.playwright.Browser
 import com.microsoft.playwright.BrowserContext
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.Playwright
+import com.microsoft.playwright.assertions.LocatorAssertions
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
 import it.danielemegna.tennis.web.setupJettyApplicationEngine
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat as assertJ
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MatchE2ETest {
@@ -36,55 +38,43 @@ class MatchE2ETest {
     }
 
     @Test
-    fun `render the scoreboard with player names`() {
+    fun `redirect to match page with random id and render a new scoreboard`() {
         page.navigate(HOST_UNDER_TEST)
-
-        val firstPlayerName = page.getByText("SINNER")
-        assertThat(firstPlayerName).isVisible();
-        val secondPlayerName = page.getByText("DJOKOVIC")
-        assertThat(secondPlayerName).isVisible();
-    }
-
-    @Test
-    fun `render the new match scoreboard`() {
-        page.navigate(HOST_UNDER_TEST)
-
+        assertJ(page.url()).matches(Regex.escape(HOST_UNDER_TEST) + "/" + UUIDV4_REGEX)
         val scoreboardTable = ScoreboardPlaywrightTable.from(page)
 
         scoreboardTable.firstPlayer.shouldHaveColumnsCount(4)
         scoreboardTable.secondPlayer.shouldHaveColumnsCount(4)
-
         assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
         assertThat(scoreboardTable.secondPlayer.servingCell).not().haveServingIndicator()
-
+        assertThat(scoreboardTable.firstPlayer.playerName).hasText("SINNER", IGNORE_CASE)
+        assertThat(scoreboardTable.secondPlayer.playerName).hasText("DJOKOVIC", IGNORE_CASE)
         assertThat(scoreboardTable.firstPlayer.currentSet).hasScore(0)
         assertThat(scoreboardTable.secondPlayer.currentSet).hasScore(0)
-
         assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(0)
         assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
-
         assertEquals(0, scoreboardTable.firstPlayer.finishedSets.size)
         assertEquals(0, scoreboardTable.secondPlayer.finishedSets.size)
     }
 
     @Test
-    fun `score some points by click should update table`() {
+    fun `score some points clicking on player names should update the scoreboard`() {
         page.navigate(HOST_UNDER_TEST)
         val scoreboardTable = ScoreboardPlaywrightTable.from(page)
 
-        scoreboardTable.firstPlayerPoint()
+        scoreboardTable.firstPlayer.playerName.click()
         assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(15)
         assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
         assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
 
-        scoreboardTable.firstPlayerPoint()
-        scoreboardTable.secondPlayerPoint()
+        scoreboardTable.firstPlayer.playerName.click()
+        scoreboardTable.secondPlayer.playerName.click()
         assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(30)
         assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(15)
         assertThat(scoreboardTable.firstPlayer.servingCell).haveServingIndicator()
 
-        scoreboardTable.firstPlayerPoint()
-        scoreboardTable.firstPlayerPoint()
+        scoreboardTable.firstPlayer.playerName.click()
+        scoreboardTable.firstPlayer.playerName.click()
         assertThat(scoreboardTable.firstPlayer.currentSet).hasScore(1)
         assertThat(scoreboardTable.secondPlayer.currentSet).hasScore(0)
         assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(0)
@@ -297,5 +287,7 @@ class MatchE2ETest {
 
     companion object {
         private const val HOST_UNDER_TEST = "http://localhost:8080"
+        private const val UUIDV4_REGEX = "[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
+        private val IGNORE_CASE = LocatorAssertions.HasTextOptions().setIgnoreCase(true)
     }
 }
