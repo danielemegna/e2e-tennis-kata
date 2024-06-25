@@ -3,6 +3,7 @@ package it.danielemegna.tennis.web.view
 import it.danielemegna.tennis.domain.MatchState
 
 data class ScoreBoardView(
+    val matchId: String,
     val isFirstPlayerServing: Boolean,
     val firstPlayerName: String,
     val secondPlayerName: String,
@@ -26,7 +27,8 @@ data class ScoreBoardView(
     }
 
     companion object {
-        fun from(matchState: MatchState): ScoreBoardView = ScoreBoardView(
+        fun from(matchId: String, matchState: MatchState): ScoreBoardView = ScoreBoardView(
+            matchId = matchId,
             isFirstPlayerServing = matchState.serving == MatchState.Serving.FIRST_PLAYER,
             firstPlayerName = matchState.firstPlayerName,
             secondPlayerName = matchState.secondPlayerName,
