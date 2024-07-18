@@ -87,6 +87,35 @@ class MatchAPITest {
     }
 
     @Test
+    fun `play multiple matches with different ids`(): Unit = runBlocking {
+        val firstMatchId = initNewMatch()
+        val secondMatchId = initNewMatch()
+        postRequest("/$firstMatchId/player/1/point").execute()
+        postRequest("/$firstMatchId/player/2/point").execute()
+        postRequest("/$secondMatchId/player/1/point").execute()
+        postRequest("/$secondMatchId/player/1/point").execute()
+        postRequest("/$firstMatchId/player/1/point").execute()
+        postRequest("/$secondMatchId/player/1/point").execute()
+
+        getRequest("/$firstMatchId").execute().let { response ->
+            val htmlPage = response.parse()
+            val playersScoreboardRows = htmlPage.select("#scoreboard tr")
+            assertThat(playersScoreboardRows[0].select("td.current-game").text()).isEqualTo("30")
+            assertThat(playersScoreboardRows[0].select("td.current-set").text()).isEqualTo("0")
+            assertThat(playersScoreboardRows[1].select("td.current-game").text()).isEqualTo("15")
+            assertThat(playersScoreboardRows[1].select("td.current-set").text()).isEqualTo("0")
+        }
+        getRequest("/$secondMatchId").execute().let { response ->
+            val htmlPage = response.parse()
+            val playersScoreboardRows = htmlPage.select("#scoreboard tr")
+            assertThat(playersScoreboardRows[0].select("td.current-game").text()).isEqualTo("40")
+            assertThat(playersScoreboardRows[0].select("td.current-set").text()).isEqualTo("0")
+            assertThat(playersScoreboardRows[1].select("td.current-game").text()).isEqualTo("0")
+            assertThat(playersScoreboardRows[1].select("td.current-set").text()).isEqualTo("0")
+        }
+    }
+
+    @Test
     fun `bad request response on wrong player number point request`(): Unit = runBlocking {
         val matchId = initNewMatch()
         postRequest("/$matchId/player/wrong/point").ignoreHttpErrors(true).execute().let { response ->
