@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import java.util.*
 import kotlin.test.assertNotNull
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -33,7 +34,7 @@ class MatchAPITest {
         assertThat(response.statusCode()).isEqualTo(302)
         val redirectUrl = response.header("location")
         assertNotNull(redirectUrl)
-        assertThat(redirectUrl).matches("^/" + UUIDV4_REGEX + "$")
+        assertThat(redirectUrl).matches("^/$UUIDV4_REGEX$")
 
         val redirectTargetResponse = getRequest(redirectUrl).execute()
         val htmlPage = redirectTargetResponse.parse()
@@ -56,9 +57,8 @@ class MatchAPITest {
 
     @Test
     fun `register first player point`(): Unit = runBlocking {
-        initNewMatchWith(id = "match-id")
-
-        val response = postRequest("/match-id/player/1/point").execute()
+        val matchId = initNewMatch()
+        val response = postRequest("/$matchId/player/1/point").execute()
 
         assertThat(response.statusCode()).isEqualTo(200)
         val htmlPage = response.parse()
@@ -71,12 +71,11 @@ class MatchAPITest {
 
     @Test
     fun `register some points in first game`(): Unit = runBlocking {
-        initNewMatchWith(id = "another-match-id")
-
-        postRequest("/another-match-id/player/1/point").execute()
-        postRequest("/another-match-id/player/1/point").execute()
-        postRequest("/another-match-id/player/2/point").execute()
-        postRequest("/another-match-id/player/1/point").execute().let { response ->
+        val matchId = initNewMatch()
+        postRequest("/$matchId/player/1/point").execute()
+        postRequest("/$matchId/player/1/point").execute()
+        postRequest("/$matchId/player/2/point").execute()
+        postRequest("/$matchId/player/1/point").execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(200)
             val htmlPage = response.parse()
             val playersScoreboardRows = htmlPage.select("#scoreboard tr")
@@ -89,17 +88,16 @@ class MatchAPITest {
 
     @Test
     fun `bad request response on wrong player number point request`(): Unit = runBlocking {
-        initNewMatchWith(id = "match-id")
-
-        postRequest("/match-id/player/wrong/point").ignoreHttpErrors(true).execute().let { response ->
+        val matchId = initNewMatch()
+        postRequest("/$matchId/player/wrong/point").ignoreHttpErrors(true).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(400)
             assertThat(response.bodyAsBytes()).isEmpty()
         }
-        postRequest("/match-id/player/3/point").ignoreHttpErrors(true).execute().let { response ->
+        postRequest("/$matchId/player/3/point").ignoreHttpErrors(true).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(400)
             assertThat(response.bodyAsBytes()).isEmpty()
         }
-        postRequest("/match-id/player/0/point").ignoreHttpErrors(true).execute().let { response ->
+        postRequest("/$matchId/player/0/point").ignoreHttpErrors(true).execute().let { response ->
             assertThat(response.statusCode()).isEqualTo(400)
             assertThat(response.bodyAsBytes()).isEmpty()
         }
@@ -117,9 +115,11 @@ class MatchAPITest {
         }
     }
 
-    private fun initNewMatchWith(id: String) {
-        val response = getRequest("/$id").execute()
+    private fun initNewMatch(): String {
+        val matchId = UUID.randomUUID()
+        val response = getRequest("/$matchId").execute()
         assertThat(response.statusCode()).isEqualTo(201)
+        return matchId.toString()
     }
 
     private fun postRequest(apiPath: String): Connection {
