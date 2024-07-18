@@ -17,7 +17,9 @@ class MatchE2ETest {
     private val jettyApplicationEngine = setupJettyApplicationEngine(port = 8080)
 
     private val playwright = Playwright.create()
-    private val browser: Browser = playwright.chromium().launch()
+    private val browser: Browser = playwright.chromium().launch(
+        //BrowserType.LaunchOptions().setHeadless(false)
+    )
     private lateinit var context: BrowserContext
     private lateinit var page: Page
 
