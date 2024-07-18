@@ -285,6 +285,35 @@ class MatchE2ETest {
         assertThat(table.firstPlayer.servingCell).haveServingIndicator()
     }
 
+    @Test
+    fun `play multiple matches with different ids`() {
+        page.navigate("$HOST_UNDER_TEST/first-match-id")
+        var scoreboardTable = ScoreboardPlaywrightTable.from(page)
+        scoreboardTable.firstPlayerPoint()
+        scoreboardTable.secondPlayerPoint()
+        scoreboardTable.firstPlayerPoint()
+        scoreboardTable.firstPlayerPoint()
+        assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(40)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(15)
+
+        page.navigate("$HOST_UNDER_TEST/second-match-id")
+        scoreboardTable = ScoreboardPlaywrightTable.from(page)
+        assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(0)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(0)
+        scoreboardTable.secondPlayerPoint()
+        scoreboardTable.secondPlayerPoint()
+        assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(0)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(30)
+
+        page.navigate("$HOST_UNDER_TEST/first-match-id")
+        scoreboardTable = ScoreboardPlaywrightTable.from(page)
+        assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(40)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(15)
+        scoreboardTable.secondPlayerPoint()
+        assertThat(scoreboardTable.firstPlayer.currentGame).hasScore(40)
+        assertThat(scoreboardTable.secondPlayer.currentGame).hasScore(30)
+    }
+
     companion object {
         private const val HOST_UNDER_TEST = "http://localhost:8080"
         private const val UUIDV4_REGEX = "[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"
