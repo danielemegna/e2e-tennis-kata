@@ -6,10 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.jsoup.Connection
 import org.jsoup.Connection.Method
 import org.jsoup.Jsoup
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 import java.util.*
 import kotlin.test.assertNotNull
 
@@ -86,6 +83,23 @@ class MatchAPITest {
         }
     }
 
+    @Disabled
+    @Test
+    fun `getting already started match should return 200 ok instead of 201 created`(): Unit = runBlocking {
+        val matchId = initNewMatch()
+        postRequest("/$matchId/player/1/point").execute()
+
+        val response = getRequest("/$matchId").execute()
+
+        assertThat(response.statusCode()).isEqualTo(200)
+        val htmlPage = response.parse()
+        val playersScoreboardRows = htmlPage.select("#scoreboard tr")
+        assertThat(playersScoreboardRows[0].select("td.current-game").text()).isEqualTo("15")
+        assertThat(playersScoreboardRows[0].select("td.current-set").text()).isEqualTo("0")
+        assertThat(playersScoreboardRows[1].select("td.current-game").text()).isEqualTo("0")
+        assertThat(playersScoreboardRows[1].select("td.current-set").text()).isEqualTo("0")
+    }
+
     @Test
     fun `play multiple matches with different ids`(): Unit = runBlocking {
         val firstMatchId = initNewMatch()
@@ -98,6 +112,7 @@ class MatchAPITest {
         postRequest("/$secondMatchId/player/1/point").execute()
 
         getRequest("/$firstMatchId").execute().let { response ->
+            //assertThat(response.statusCode()).isEqualTo(200) // TODO returns 200 on loaded match
             val htmlPage = response.parse()
             val playersScoreboardRows = htmlPage.select("#scoreboard tr")
             assertThat(playersScoreboardRows[0].select("td.current-game").text()).isEqualTo("30")
@@ -106,6 +121,7 @@ class MatchAPITest {
             assertThat(playersScoreboardRows[1].select("td.current-set").text()).isEqualTo("0")
         }
         getRequest("/$secondMatchId").execute().let { response ->
+            //assertThat(response.statusCode()).isEqualTo(200) // TODO returns 200 on loaded match
             val htmlPage = response.parse()
             val playersScoreboardRows = htmlPage.select("#scoreboard tr")
             assertThat(playersScoreboardRows[0].select("td.current-game").text()).isEqualTo("40")
