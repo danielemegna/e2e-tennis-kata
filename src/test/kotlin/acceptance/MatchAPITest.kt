@@ -83,7 +83,6 @@ class MatchAPITest {
         }
     }
 
-    @Disabled
     @Test
     fun `getting already started match should return 200 ok instead of 201 created`(): Unit = runBlocking {
         val matchId = initNewMatch()
@@ -112,7 +111,7 @@ class MatchAPITest {
         postRequest("/$secondMatchId/player/1/point").execute()
 
         getRequest("/$firstMatchId").execute().let { response ->
-            //assertThat(response.statusCode()).isEqualTo(200) // TODO returns 200 on loaded match
+            assertThat(response.statusCode()).isEqualTo(200)
             val htmlPage = response.parse()
             val playersScoreboardRows = htmlPage.select("#scoreboard tr")
             assertThat(playersScoreboardRows[0].select("td.current-game").text()).isEqualTo("30")
@@ -121,7 +120,7 @@ class MatchAPITest {
             assertThat(playersScoreboardRows[1].select("td.current-set").text()).isEqualTo("0")
         }
         getRequest("/$secondMatchId").execute().let { response ->
-            //assertThat(response.statusCode()).isEqualTo(200) // TODO returns 200 on loaded match
+            assertThat(response.statusCode()).isEqualTo(200)
             val htmlPage = response.parse()
             val playersScoreboardRows = htmlPage.select("#scoreboard tr")
             assertThat(playersScoreboardRows[0].select("td.current-game").text()).isEqualTo("40")

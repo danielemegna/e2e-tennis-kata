@@ -12,6 +12,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import it.danielemegna.tennis.domain.repository.InMemoryMatchRepository
 import it.danielemegna.tennis.domain.usecase.LoadOrInitMatch
+import it.danielemegna.tennis.domain.usecase.LoadOrInitMatch.Result.MatchOrigin
 import it.danielemegna.tennis.domain.usecase.PlayerPoint
 import it.danielemegna.tennis.web.view.ScoreBoardView
 import java.util.*
@@ -38,7 +39,11 @@ fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
                 val usecaseResult = usecase.run(matchId)
 
                 val scoreBoardView = ScoreBoardView.from(matchId, usecaseResult.matchState)
-                call.respond(message = FreeMarkerContent("index.ftl", scoreBoardView), status = HttpStatusCode.Created)
+                val httpStatusCode = when (usecaseResult.matchOrigin) {
+                    MatchOrigin.NEW_MATCH -> HttpStatusCode.Created
+                    MatchOrigin.ONGOING_MATCH -> HttpStatusCode.OK
+                }
+                call.respond(message = FreeMarkerContent("index.ftl", scoreBoardView), status = httpStatusCode)
             }
             post("/{matchId}/player/{playerNumber}/point") {
                 val matchId = call.parameters["matchId"]!!
