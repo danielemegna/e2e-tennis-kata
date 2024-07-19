@@ -31,6 +31,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.24.2")
     testImplementation("org.jsoup:jsoup:1.17.1")
     testImplementation("com.microsoft.playwright:playwright:1.44.0")
+    testImplementation("io.mockk:mockk:1.13.12")
 }
 
 tasks.test {
