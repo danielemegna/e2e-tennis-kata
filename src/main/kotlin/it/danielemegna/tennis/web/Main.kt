@@ -11,7 +11,7 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import it.danielemegna.tennis.domain.repository.InMemoryMatchRepository
-import it.danielemegna.tennis.domain.usecase.LoadOrInitGame
+import it.danielemegna.tennis.domain.usecase.LoadOrInitMatch
 import it.danielemegna.tennis.domain.usecase.PlayerPoint
 import it.danielemegna.tennis.web.view.ScoreBoardView
 import java.util.*
@@ -33,7 +33,7 @@ fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
             }
             get("/{matchId}") {
                 val matchId = call.parameters["matchId"]!!
-                val usecase = LoadOrInitGame(matchRepository)
+                val usecase = LoadOrInitMatch(matchRepository)
                 val matchState = usecase.run(matchId)
                 val scoreBoardView = ScoreBoardView.from(matchId, matchState)
                 call.respond(message = FreeMarkerContent("index.ftl", scoreBoardView), status = HttpStatusCode.Created)
