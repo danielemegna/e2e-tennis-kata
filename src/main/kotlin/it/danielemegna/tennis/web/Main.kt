@@ -34,8 +34,10 @@ fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
             get("/{matchId}") {
                 val matchId = call.parameters["matchId"]!!
                 val usecase = LoadOrInitMatch(matchRepository)
-                val matchState = usecase.run(matchId)
-                val scoreBoardView = ScoreBoardView.from(matchId, matchState)
+
+                val usecaseResult = usecase.run(matchId)
+
+                val scoreBoardView = ScoreBoardView.from(matchId, usecaseResult.matchState)
                 call.respond(message = FreeMarkerContent("index.ftl", scoreBoardView), status = HttpStatusCode.Created)
             }
             post("/{matchId}/player/{playerNumber}/point") {

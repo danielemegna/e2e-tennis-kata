@@ -10,8 +10,11 @@ import it.danielemegna.tennis.domain.MatchState.Game.GameScore.FIFTEEN
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.THIRTY
 import it.danielemegna.tennis.domain.MatchState.Serving
 import it.danielemegna.tennis.domain.repository.MatchRepository
+import it.danielemegna.tennis.domain.usecase.LoadOrInitMatch.Result.MatchOrigin.NEW_MATCH
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import it.danielemegna.tennis.domain.usecase.LoadOrInitMatch.Result
+import it.danielemegna.tennis.domain.usecase.LoadOrInitMatch.Result.MatchOrigin.ONGOING_MATCH
 
 class LoadOrInitMatchTest {
 
@@ -25,7 +28,7 @@ class LoadOrInitMatchTest {
 
         val actual = usecase.run("aMatchId")
 
-        assertEquals(actual, initNewMatch())
+        assertEquals(actual, Result(matchState = initNewMatch(), matchOrigin = NEW_MATCH))
     }
 
     @Test
@@ -35,7 +38,7 @@ class LoadOrInitMatchTest {
 
         val actual = usecase.run("ongoing-match-id")
 
-        assertEquals(actual, ongoingMatch)
+        assertEquals(actual, Result(matchState = ongoingMatch, matchOrigin = ONGOING_MATCH))
     }
 
     @Test
