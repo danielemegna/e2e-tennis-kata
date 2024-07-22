@@ -1,6 +1,6 @@
-<#if false>
+<#if infoTooltipText?? && infoTooltipText != "">
   <div id="info-tooltip">
-    3 set points
+    ${infoTooltipText}
   </div>
 </#if>
 <table id="scoreboard">

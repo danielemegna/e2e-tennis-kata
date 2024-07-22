@@ -12,6 +12,7 @@ data class ScoreBoardView(
     val secondPlayerCurrentSetScore: Int,
     val firstPlayerCurrentGameScore: String,
     val secondPlayerCurrentGameScore: String,
+    val infoTooltipText: String?
 ) {
     data class FinishedSet(
         val firstPlayerScore: Int,
@@ -44,6 +45,7 @@ data class ScoreBoardView(
             secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore,
             firstPlayerCurrentGameScore = matchState.firstPlayerCurrentGameScore(),
             secondPlayerCurrentGameScore = matchState.secondPlayerCurrentGameScore(),
+            infoTooltipText = null  //TODO: implement info-tooltip generation
         )
 
         private fun MatchState.firstPlayerCurrentGameScore(): String {
