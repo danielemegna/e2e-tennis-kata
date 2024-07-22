@@ -31,7 +31,7 @@ $ ./build/install/EndToEndTennisKata/bin/EndToEndTennisKata
 To use auto-reload, build with auto-watch
 
 ```
-$ ./gradlew -t build
+$ ./gradlew -t build -x test
 ```
 
 and run the application in another tab with
