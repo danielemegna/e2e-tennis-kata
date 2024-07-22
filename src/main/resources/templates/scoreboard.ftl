@@ -1,3 +1,8 @@
+<#if false>
+  <div id="info-tooltip">
+    3 set points
+  </div>
+</#if>
 <table id="scoreboard">
   <tr>
     <td class="ball-hitter"><#if isFirstPlayerServing()>&centerdot;</#if></td>

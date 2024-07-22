@@ -95,3 +95,29 @@ body {
     width: 120px;
     background-color: var(--light-bg-color);
 }
+#info-tooltip {
+    position:absolute;
+    right:0;
+    z-index: -50;
+    animation: slideUp 0.6s ease-in-out;
+    animation-fill-mode: forwards;
+
+    display: flex;
+    height:90px;
+    align-items: center;
+    justify-content: center;
+
+    background-color: white;
+    color: black;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    text-transform: uppercase;
+    font-family: 'GrowlyGrin';
+    font-size: 4.5rem;
+    letter-spacing: 3px;
+    user-select: none;
+}
+@keyframes slideUp {
+  from { top: 0 }
+  to   { top: -90px }
+}
