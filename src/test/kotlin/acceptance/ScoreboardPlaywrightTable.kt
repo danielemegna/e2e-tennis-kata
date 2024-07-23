@@ -4,13 +4,13 @@ import com.microsoft.playwright.Locator
 import com.microsoft.playwright.Page
 import com.microsoft.playwright.assertions.LocatorAssertions
 import com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat
-import com.microsoft.playwright.options.AriaRole.*
+import com.microsoft.playwright.options.AriaRole
 import org.junit.jupiter.api.Assertions.assertTrue
 import java.util.regex.Pattern
 
 class ScoreboardPlaywrightTable private constructor(scoreboardTable: Locator) {
 
-    private val tableRows: Locator = scoreboardTable.getByRole(ROW)
+    private val tableRows: Locator = scoreboardTable.getByRole(AriaRole.ROW)
 
     val firstPlayer get() = ScoreboardPlaywrightPlayerRow(tableRows.nth(0))
     val secondPlayer get() = ScoreboardPlaywrightPlayerRow(tableRows.nth(1))
@@ -23,14 +23,14 @@ class ScoreboardPlaywrightTable private constructor(scoreboardTable: Locator) {
     fun secondPlayerPoint() = this.secondPlayer.playerName.click()
 
     companion object {
-        fun from(page: Page) = ScoreboardPlaywrightTable(page.getByRole(TABLE))
+        fun from(page: Page) = ScoreboardPlaywrightTable(page.getByRole(AriaRole.TABLE))
     }
 
 }
 
 class ScoreboardPlaywrightPlayerRow(playerRow: Locator) {
 
-    private val rowCells: Locator = playerRow.getByRole(CELL)
+    private val rowCells: Locator = playerRow.getByRole(AriaRole.CELL)
 
     val servingCell: Locator get() = rowCells.nth(0)
     val playerName: Locator get() = rowCells.nth(1)
@@ -47,8 +47,8 @@ class ScoreboardPlaywrightPlayerRow(playerRow: Locator) {
     }
 
     data class FinishedSet(
-       val setScore: Locator,
-       val tieBreakScore: Locator,
+        val setScore: Locator,
+        val tieBreakScore: Locator,
     ) {
         companion object {
             fun from(finishedSetCell: Locator): FinishedSet {
