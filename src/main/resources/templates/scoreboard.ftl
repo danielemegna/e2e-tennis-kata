@@ -10,7 +10,7 @@
       class="player-name"
       hx-post="/${matchId}/player/1/point"
       hx-trigger="click"
-      hx-target="#scoreboard"
+      hx-target="#center-box"
       hx-swap="innerHTML"
     >
       ${firstPlayerName}
@@ -30,7 +30,7 @@
       class="player-name"
       hx-post="/${matchId}/player/2/point"
       hx-trigger="click"
-      hx-target="#scoreboard"
+      hx-target="#center-box"
       hx-swap="innerHTML"
     >
       ${secondPlayerName}
