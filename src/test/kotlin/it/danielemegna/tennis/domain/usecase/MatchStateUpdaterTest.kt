@@ -90,6 +90,23 @@ class MatchStateUpdaterTest {
             assertEquals(MatchState.Set(5, 4), updatedMatchState.currentSet)
             assertEquals(emptyList(), updatedMatchState.wonSets)
         }
+
+        @Test
+        fun `game close to tiebreak`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(firstPlayerScore = 6, secondPlayerScore = 5),
+                currentGame = MatchState.Game(ZERO, THIRTY),
+                serving = Serving.SECOND_PLAYER
+            )
+
+            val updatedMatchState = updater.updatedMatch(matchState, PlayerPoint.Player.SECOND)
+
+            assertEquals(MatchState.Game(ZERO, FORTY), updatedMatchState.currentGame)
+            assertEquals(MatchState.Set(6, 5), updatedMatchState.currentSet)
+            assertEquals(emptyList(), updatedMatchState.wonSets)
+            assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
+            assertNull(matchState.currentSet.tieBreak)
+        }
     }
 
     @Nested
