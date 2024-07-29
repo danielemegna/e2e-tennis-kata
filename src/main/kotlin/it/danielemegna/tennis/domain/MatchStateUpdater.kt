@@ -11,20 +11,20 @@ class MatchStateUpdater {
         if (matchState.isCanceledAdvantagePoint(pointAuthor))
             return matchState.setCurrentGameFortyForty()
 
-        if (matchState.tieBreakInProgress()) {
-            if (matchState.isTieBreakWinningPoint(pointAuthor))
-                return matchState.tieBreakWonByPlayer(pointAuthor)
+        if (matchState.isTieBreakWinningPoint(pointAuthor))
+            return matchState.tieBreakWonByPlayer(pointAuthor)
+
+        if (matchState.tieBreakInProgress())
             return matchState.increaseTieBreakPlayerScore(pointAuthor)
-        }
 
-        if (matchState.isGamePoint(pointAuthor)) {
-            if (matchState.isSetPoint(pointAuthor))
-                return matchState.setWonByPlayer(pointAuthor)
-            if (matchState.needTieBreak(pointAuthor))
-                return matchState.startTieBreak(pointAuthor)
+        if (matchState.needTieBreak(pointAuthor))
+            return matchState.startTieBreak(pointAuthor)
 
+        if (matchState.isSetPoint(pointAuthor))
+            return matchState.setWonByPlayer(pointAuthor)
+
+        if (matchState.isGamePoint(pointAuthor))
             return matchState.gameWonByPlayer(pointAuthor)
-        }
 
         return matchState.increaseCurrentGamePlayerScore(pointAuthor)
     }
@@ -62,6 +62,8 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.isSetPoint(pointAuthor: Player): Boolean {
+        if(!this.isGamePoint(pointAuthor)) return false
+
         return when (pointAuthor) {
             Player.FIRST ->
                 currentSet.firstPlayerScore >= 5 && currentSet.secondPlayerScore < currentSet.firstPlayerScore
@@ -72,6 +74,8 @@ class MatchStateUpdater {
     }
 
     private fun MatchState.needTieBreak(pointAuthor: Player): Boolean {
+        if(!this.isGamePoint(pointAuthor)) return false
+
         return when (pointAuthor) {
             Player.FIRST -> (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore == 6)
             Player.SECOND -> (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore == 6)
