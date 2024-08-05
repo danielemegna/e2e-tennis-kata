@@ -1,7 +1,7 @@
 package it.danielemegna.tennis.domain
 
-import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
-import it.danielemegna.tennis.domain.usecase.PlayerPoint
+import it.danielemegna.tennis.domain.MatchState.Game.GameScore.ADVANTAGE
+import it.danielemegna.tennis.domain.MatchState.Game.GameScore.FORTY
 import it.danielemegna.tennis.domain.usecase.PlayerPoint.Player
 
 class MatchStateScanner {
@@ -19,5 +19,19 @@ class MatchStateScanner {
         }
 
         return false
+    }
+
+    fun wouldBeSetPoint(matchState: MatchState, pointAuthor: Player): Boolean {
+        if(!wouldBeGamePoint(matchState, pointAuthor)) return false
+
+        val currentSet = matchState.currentSet
+        return when (pointAuthor) {
+            Player.FIRST ->
+                currentSet.firstPlayerScore >= 5 && currentSet.secondPlayerScore < currentSet.firstPlayerScore
+
+            Player.SECOND ->
+                currentSet.secondPlayerScore >= 5 && currentSet.firstPlayerScore < currentSet.secondPlayerScore
+        }
+
     }
 }

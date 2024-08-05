@@ -1,24 +1,123 @@
 package it.danielemegna.tennis.domain
 
-import it.danielemegna.tennis.domain.MatchState
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
 import it.danielemegna.tennis.domain.MatchState.Serving
-import it.danielemegna.tennis.domain.usecase.PlayerPoint
 import it.danielemegna.tennis.domain.usecase.PlayerPoint.Player
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
 class MatchStateScannerTest {
 
     private val scanner = MatchStateScanner()
 
+    @Nested
+    inner class GameWinning {
+
+        @Test
+        fun `game won by first player`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(FORTY, FIFTEEN)
+            )
+
+            assertTrue(scanner.wouldBeGamePoint(matchState, Player.FIRST))
+            assertFalse(scanner.wouldBeGamePoint(matchState, Player.SECOND))
+            assertFalse(scanner.wouldBeSetPoint(matchState, Player.FIRST))
+            //assertFalse(scanner.wouldStartTieBreak(matchState, Player.FIRST))
+        }
+
+        @Test
+        fun `game won by second player`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(THIRTY, FORTY)
+            )
+
+            assertTrue(scanner.wouldBeGamePoint(matchState, Player.SECOND))
+            assertFalse(scanner.wouldBeGamePoint(matchState, Player.FIRST))
+            assertFalse(scanner.wouldBeSetPoint(matchState, Player.SECOND))
+            //assertFalse(scanner.wouldStartTieBreak(matchState, Player.SECOND))
+        }
+
+    }
+
+    @Nested
+    inner class SetWinning {
+
+        @Test
+        fun `first player wins the set on six games`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(firstPlayerScore = 5, secondPlayerScore = 1),
+                currentGame = MatchState.Game(FORTY, ZERO),
+                serving = Serving.FIRST_PLAYER
+            )
+
+            assertTrue(scanner.wouldBeSetPoint(matchState, Player.FIRST))
+            assertFalse(scanner.wouldBeSetPoint(matchState, Player.SECOND))
+            assertTrue(scanner.wouldBeGamePoint(matchState, Player.FIRST))
+            //assertFalse(scanner.wouldStartTieBreak(matchState, Player.FIRST))
+        }
+
+        @Test
+        fun `second player wins the set on six games`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(firstPlayerScore = 4, secondPlayerScore = 5),
+                currentGame = MatchState.Game(FORTY, ADVANTAGE),
+                serving = Serving.SECOND_PLAYER
+            )
+
+            assertTrue(scanner.wouldBeSetPoint(matchState, Player.SECOND))
+            assertFalse(scanner.wouldBeSetPoint(matchState, Player.FIRST))
+            assertTrue(scanner.wouldBeGamePoint(matchState, Player.SECOND))
+            //assertFalse(scanner.wouldStartTieBreak(matchState, Player.FIRST))
+        }
+
+        @Test
+        fun `player do not wins the set on six games when five-all`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(firstPlayerScore = 5, secondPlayerScore = 5),
+                currentGame = MatchState.Game(FORTY, FIFTEEN),
+                serving = Serving.FIRST_PLAYER
+            )
+
+            assertFalse(scanner.wouldBeSetPoint(matchState, Player.SECOND))
+            assertFalse(scanner.wouldBeSetPoint(matchState, Player.FIRST))
+            assertTrue(scanner.wouldBeGamePoint(matchState, Player.FIRST))
+            //assertFalse(scanner.wouldStartTieBreak(matchState, Player.FIRST))
+        }
+
+        @Test
+        fun `first player wins the set on seven games when second has five`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(firstPlayerScore = 6, secondPlayerScore = 5),
+                currentGame = MatchState.Game(FORTY, THIRTY),
+                serving = Serving.FIRST_PLAYER
+            )
+
+            assertTrue(scanner.wouldBeSetPoint(matchState, Player.FIRST))
+            assertFalse(scanner.wouldBeSetPoint(matchState, Player.SECOND))
+            assertTrue(scanner.wouldBeGamePoint(matchState, Player.FIRST))
+            //assertFalse(scanner.wouldStartTieBreak(matchState, Player.FIRST))
+        }
+
+        @Test
+        fun `second player wins the set on seven games when first has five`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentSet = MatchState.Set(firstPlayerScore = 5, secondPlayerScore = 6),
+                currentGame = MatchState.Game(FORTY, ADVANTAGE),
+                serving = Serving.FIRST_PLAYER
+            )
+
+            assertTrue(scanner.wouldBeSetPoint(matchState, Player.SECOND))
+            assertFalse(scanner.wouldBeSetPoint(matchState, Player.FIRST))
+            assertTrue(scanner.wouldBeGamePoint(matchState, Player.SECOND))
+            //assertFalse(scanner.wouldStartTieBreak(matchState, Player.FIRST))
+        }
+    }
+
     /*
     @Nested
     inner class GameNormalPoint {
-
 
         @Test
         fun `first player point on new game`() {
@@ -112,38 +211,7 @@ class MatchStateScannerTest {
         }
 
     }
-    */
 
-    @Nested
-    inner class GameWinning {
-
-        @Test
-        fun `game won by first player`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentGame = MatchState.Game(FORTY, FIFTEEN)
-            )
-
-            assertTrue(scanner.wouldBeGamePoint(matchState, Player.FIRST))
-            assertFalse(scanner.wouldBeGamePoint(matchState, Player.SECOND))
-            //assertFalse(scanner.wouldBeSetPoint(matchState, Player.FIRST))
-            //assertFalse(scanner.wouldBeStartTieBreak(matchState, Player.FIRST))
-        }
-
-        @Test
-        fun `game won by second player`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentGame = MatchState.Game(THIRTY, FORTY)
-            )
-
-            assertTrue(scanner.wouldBeGamePoint(matchState, Player.SECOND))
-            assertFalse(scanner.wouldBeGamePoint(matchState, Player.FIRST))
-            //assertFalse(scanner.wouldBeSetPoint(matchState, Player.SECOND))
-            //assertFalse(scanner.wouldBeStartTieBreak(matchState, Player.SECOND))
-        }
-
-    }
-
-    /*
     @Nested
     inner class AdvantagePoints {
 
@@ -471,97 +539,6 @@ class MatchStateScannerTest {
                 assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
             }
 
-        }
-    }
-
-    @Nested
-    inner class SetWinning {
-
-        @Test
-        fun `first player wins the set on six games`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(firstPlayerScore = 5, secondPlayerScore = 1),
-                currentGame = MatchState.Game(FORTY, ZERO),
-                serving = Serving.FIRST_PLAYER
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.FIRST)
-
-            val expectedWonSet = MatchState.Set(firstPlayerScore = 6, secondPlayerScore = 1)
-            assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
-            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
-            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
-            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
-            assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
-        }
-
-        @Test
-        fun `second player wins the set on six games`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(firstPlayerScore = 4, secondPlayerScore = 5),
-                currentGame = MatchState.Game(FORTY, ADVANTAGE),
-                serving = Serving.SECOND_PLAYER
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.SECOND)
-
-            val expectedWonSet = MatchState.Set(firstPlayerScore = 4, secondPlayerScore = 6)
-            assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
-            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
-            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
-            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
-            assertEquals(Serving.FIRST_PLAYER, updatedMatchState.serving)
-        }
-
-        @Test
-        fun `player do not wins the set on six games when five-all`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(firstPlayerScore = 5, secondPlayerScore = 5),
-                currentGame = MatchState.Game(FORTY, FIFTEEN),
-                serving = Serving.FIRST_PLAYER
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.FIRST)
-
-            assertEquals(6, updatedMatchState.currentSet.firstPlayerScore)
-            assertEquals(5, updatedMatchState.currentSet.secondPlayerScore)
-            assertEquals(emptyList(), updatedMatchState.wonSets)
-            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
-            assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
-        }
-
-        @Test
-        fun `first player wins the set on seven games when second has five`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(firstPlayerScore = 6, secondPlayerScore = 5),
-                currentGame = MatchState.Game(FORTY, THIRTY),
-                serving = Serving.FIRST_PLAYER
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.FIRST)
-
-            val expectedWonSet = MatchState.Set(firstPlayerScore = 7, secondPlayerScore = 5)
-            assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
-            assertEquals(MatchState.Set(0, 0), updatedMatchState.currentSet)
-            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
-            assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
-        }
-
-        @Test
-        fun `second player wins the set on seven games when first has five`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentSet = MatchState.Set(firstPlayerScore = 5, secondPlayerScore = 6),
-                currentGame = MatchState.Game(FORTY, ADVANTAGE),
-                serving = Serving.FIRST_PLAYER
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.SECOND)
-
-            val expectedWonSet = MatchState.Set(firstPlayerScore = 5, secondPlayerScore = 7)
-            assertEquals(listOf(expectedWonSet), updatedMatchState.wonSets)
-            assertEquals(MatchState.Set(0, 0), updatedMatchState.currentSet)
-            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
-            assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
         }
     }
 
