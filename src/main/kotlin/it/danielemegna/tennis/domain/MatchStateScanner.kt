@@ -34,4 +34,26 @@ class MatchStateScanner {
         }
 
     }
+
+    fun wouldStartTieBreak(matchState: MatchState, pointAuthor: Player): Boolean {
+        if(!wouldBeGamePoint(matchState, pointAuthor)) return false
+
+        val currentSet = matchState.currentSet
+        return when (pointAuthor) {
+            Player.FIRST -> (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore == 6)
+            Player.SECOND -> (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore == 6)
+        }
+    }
+
+    fun wouldWinTieBreak(matchState: MatchState, pointAuthor: Player): Boolean {
+        val currentTieBreak = matchState.currentSet.tieBreak ?: return false
+
+        return when (pointAuthor) {
+            Player.FIRST ->
+                currentTieBreak.firstPlayerScore >= 6 && currentTieBreak.secondPlayerScore < currentTieBreak.firstPlayerScore
+
+            Player.SECOND ->
+                currentTieBreak.secondPlayerScore >= 6 && currentTieBreak.firstPlayerScore < currentTieBreak.secondPlayerScore
+        }
+    }
 }
