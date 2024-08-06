@@ -22,6 +22,7 @@ class MatchStateScanner {
     }
 
     fun wouldBeSetPoint(matchState: MatchState, pointAuthor: Player): Boolean {
+        if(wouldWinTieBreak(matchState, pointAuthor)) return true
         if(!wouldBeGamePoint(matchState, pointAuthor)) return false
 
         val currentSet = matchState.currentSet
