@@ -22,8 +22,8 @@ class MatchStateScanner {
     }
 
     fun wouldBeSetPoint(matchState: MatchState, pointAuthor: Player): Boolean {
-        if(wouldWinTieBreak(matchState, pointAuthor)) return true
-        if(!wouldBeGamePoint(matchState, pointAuthor)) return false
+        if (wouldWinTieBreak(matchState, pointAuthor)) return true
+        if (!wouldBeGamePoint(matchState, pointAuthor)) return false
 
         val currentSet = matchState.currentSet
         return when (pointAuthor) {
@@ -37,7 +37,7 @@ class MatchStateScanner {
     }
 
     fun wouldStartTieBreak(matchState: MatchState, pointAuthor: Player): Boolean {
-        if(!wouldBeGamePoint(matchState, pointAuthor)) return false
+        if (!wouldBeGamePoint(matchState, pointAuthor)) return false
 
         val currentSet = matchState.currentSet
         return when (pointAuthor) {
@@ -58,7 +58,7 @@ class MatchStateScanner {
         }
     }
 
-   fun wouldCancelTheAdvantagePoint(matchState: MatchState, pointAuthor: Player): Boolean {
+    fun wouldCancelTheAdvantagePoint(matchState: MatchState, pointAuthor: Player): Boolean {
         return when (pointAuthor) {
             Player.FIRST -> matchState.currentGame.secondPlayerScore == ADVANTAGE
             Player.SECOND -> matchState.currentGame.firstPlayerScore == ADVANTAGE
