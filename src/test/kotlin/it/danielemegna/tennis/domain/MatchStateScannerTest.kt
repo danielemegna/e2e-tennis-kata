@@ -250,6 +250,41 @@ class MatchStateScannerTest {
 
     }
 
+    @Nested
+    inner class AdvantagePoints {
+
+        @Test
+        fun `first player goes to advantage on point when forty-forty`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(FORTY, FORTY)
+            )
+
+            assertFalse(scanner.wouldCancelTheAdvantagePoint(matchState, Player.FIRST))
+            assertFalse(scanner.wouldCancelTheAdvantagePoint(matchState, Player.SECOND))
+        }
+
+        @Test
+        fun `players come back forty-forty on second player untapped advantage`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(FORTY, ADVANTAGE)
+            )
+
+            assertTrue(scanner.wouldCancelTheAdvantagePoint(matchState, Player.FIRST))
+            assertFalse(scanner.wouldCancelTheAdvantagePoint(matchState, Player.SECOND))
+        }
+
+        @Test
+        fun `players come back forty-forty on first player untapped advantage`() {
+            val matchState = MatchState("p1", "p2").copy(
+                currentGame = MatchState.Game(ADVANTAGE, FORTY)
+            )
+
+            assertTrue(scanner.wouldCancelTheAdvantagePoint(matchState, Player.SECOND))
+            assertFalse(scanner.wouldCancelTheAdvantagePoint(matchState, Player.FIRST))
+        }
+
+    }
+
     /*
     @Nested
     inner class GameNormalPoint {
@@ -343,89 +378,6 @@ class MatchStateScannerTest {
             assertEquals(emptyList(), updatedMatchState.wonSets)
             assertEquals(Serving.SECOND_PLAYER, updatedMatchState.serving)
             assertNull(matchState.currentSet.tieBreak)
-        }
-
-    }
-
-    @Nested
-    inner class AdvantagePoints {
-
-        @Test
-        fun `first player goes to advantage on point when forty-forty`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentGame = MatchState.Game(FORTY, FORTY)
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.FIRST)
-
-            assertEquals(MatchState.Game(ADVANTAGE, FORTY), updatedMatchState.currentGame)
-            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
-            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
-        }
-
-        @Test
-        fun `second player goes to advantage on point when forty-forty`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentGame = MatchState.Game(FORTY, FORTY)
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.SECOND)
-
-            assertEquals(MatchState.Game(FORTY, ADVANTAGE), updatedMatchState.currentGame)
-            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
-            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
-        }
-
-        @Test
-        fun `players come back forty-forty on first player untapped advantage`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentGame = MatchState.Game(ADVANTAGE, FORTY)
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.SECOND)
-
-            assertEquals(MatchState.Game(FORTY, FORTY), updatedMatchState.currentGame)
-            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
-            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
-        }
-
-        @Test
-        fun `players come back forty-forty on second player untapped advantage`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentGame = MatchState.Game(FORTY, ADVANTAGE)
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.FIRST)
-
-            assertEquals(MatchState.Game(FORTY, FORTY), updatedMatchState.currentGame)
-            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
-            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
-        }
-
-        @Test
-        fun `first player win game after advantage point`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentGame = MatchState.Game(ADVANTAGE, FORTY)
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.FIRST)
-
-            assertEquals(1, updatedMatchState.currentSet.firstPlayerScore)
-            assertEquals(0, updatedMatchState.currentSet.secondPlayerScore)
-            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
-        }
-
-        @Test
-        fun `second player win game after advantage point`() {
-            val matchState = MatchState("p1", "p2").copy(
-                currentGame = MatchState.Game(FORTY, ADVANTAGE)
-            )
-
-            val updatedMatchState = scanner.updatedMatch(matchState, PlayerPoint.Player.SECOND)
-
-            assertEquals(1, updatedMatchState.currentSet.secondPlayerScore)
-            assertEquals(0, updatedMatchState.currentSet.firstPlayerScore)
-            assertEquals(MatchState.Game(ZERO, ZERO), updatedMatchState.currentGame)
         }
 
     }

@@ -57,4 +57,11 @@ class MatchStateScanner {
                 currentTieBreak.secondPlayerScore >= 6 && currentTieBreak.firstPlayerScore < currentTieBreak.secondPlayerScore
         }
     }
+
+   fun wouldCancelTheAdvantagePoint(matchState: MatchState, pointAuthor: Player): Boolean {
+        return when (pointAuthor) {
+            Player.FIRST -> matchState.currentGame.secondPlayerScore == ADVANTAGE
+            Player.SECOND -> matchState.currentGame.firstPlayerScore == ADVANTAGE
+        }
+    }
 }
