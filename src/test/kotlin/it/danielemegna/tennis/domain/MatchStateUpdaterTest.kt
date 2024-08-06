@@ -1,9 +1,8 @@
-package it.danielemegna.tennis.domain.usecase
+package it.danielemegna.tennis.domain
 
-import it.danielemegna.tennis.domain.MatchState
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.*
 import it.danielemegna.tennis.domain.MatchState.Serving
-import it.danielemegna.tennis.domain.MatchStateUpdater
+import it.danielemegna.tennis.domain.usecase.PlayerPoint
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
