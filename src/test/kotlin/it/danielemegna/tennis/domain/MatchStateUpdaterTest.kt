@@ -11,7 +11,10 @@ import kotlin.test.assertEquals
 
 class MatchStateUpdaterTest {
 
-    private val updater = MatchStateUpdater()
+    // "sociable" test: https://martinfowler.com/bliki/UnitTest.html
+    private val updater = MatchStateUpdater(
+        matchStateScanner = MatchStateScanner()
+    )
 
     @Nested
     inner class GameNormalPoint {

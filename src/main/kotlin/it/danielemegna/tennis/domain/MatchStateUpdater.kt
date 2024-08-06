@@ -1,85 +1,33 @@
 package it.danielemegna.tennis.domain
 
 import it.danielemegna.tennis.domain.MatchState.Game
-import it.danielemegna.tennis.domain.MatchState.Game.GameScore.ADVANTAGE
 import it.danielemegna.tennis.domain.MatchState.Game.GameScore.FORTY
 import it.danielemegna.tennis.domain.usecase.PlayerPoint.Player
 
-class MatchStateUpdater {
+class MatchStateUpdater(
+    private val matchStateScanner: MatchStateScanner
+) {
 
     fun updatedMatch(matchState: MatchState, pointAuthor: Player): MatchState {
-        if (matchState.isCanceledAdvantagePoint(pointAuthor))
+        if (matchStateScanner.wouldCancelTheAdvantagePoint(matchState, pointAuthor))
             return matchState.setCurrentGameFortyForty()
 
-        if (matchState.isTieBreakWinningPoint(pointAuthor))
+        if (matchStateScanner.wouldWinTieBreak(matchState, pointAuthor))
             return matchState.tieBreakWonByPlayer(pointAuthor)
+
+        if (matchStateScanner.wouldStartTieBreak(matchState, pointAuthor))
+            return matchState.startTieBreak(pointAuthor)
+
+        if (matchStateScanner.wouldBeSetPoint(matchState, pointAuthor))
+            return matchState.setWonByPlayer(pointAuthor)
+
+        if (matchStateScanner.wouldBeGamePoint(matchState, pointAuthor))
+            return matchState.gameWonByPlayer(pointAuthor)
 
         if (matchState.tieBreakInProgress())
             return matchState.increaseTieBreakPlayerScore(pointAuthor)
 
-        if (matchState.needTieBreak(pointAuthor))
-            return matchState.startTieBreak(pointAuthor)
-
-        if (matchState.isSetPoint(pointAuthor))
-            return matchState.setWonByPlayer(pointAuthor)
-
-        if (matchState.isGamePoint(pointAuthor))
-            return matchState.gameWonByPlayer(pointAuthor)
-
         return matchState.increaseCurrentGamePlayerScore(pointAuthor)
-    }
-
-    private fun MatchState.isCanceledAdvantagePoint(pointAuthor: Player): Boolean {
-        return when (pointAuthor) {
-            Player.FIRST -> currentGame.secondPlayerScore == ADVANTAGE
-            Player.SECOND -> currentGame.firstPlayerScore == ADVANTAGE
-        }
-    }
-
-    private fun MatchState.isTieBreakWinningPoint(pointAuthor: Player): Boolean {
-        val currentTieBreak = currentSet.tieBreak ?: return false
-
-        return when (pointAuthor) {
-            Player.FIRST ->
-                currentTieBreak.firstPlayerScore >= 6 && currentTieBreak.secondPlayerScore < currentTieBreak.firstPlayerScore
-
-            Player.SECOND ->
-                currentTieBreak.secondPlayerScore >= 6 && currentTieBreak.firstPlayerScore < currentTieBreak.secondPlayerScore
-        }
-    }
-
-    private fun MatchState.isGamePoint(pointAuthor: Player): Boolean {
-        if (pointAuthor == Player.FIRST) {
-            if (currentGame.firstPlayerScore == ADVANTAGE) return true
-            if (currentGame.firstPlayerScore == FORTY && currentGame.secondPlayerScore < FORTY) return true
-        }
-        if (pointAuthor == Player.SECOND) {
-            if (currentGame.secondPlayerScore == ADVANTAGE) return true
-            if (currentGame.secondPlayerScore == FORTY && currentGame.firstPlayerScore < FORTY) return true
-        }
-
-        return false
-    }
-
-    private fun MatchState.isSetPoint(pointAuthor: Player): Boolean {
-        if(!this.isGamePoint(pointAuthor)) return false
-
-        return when (pointAuthor) {
-            Player.FIRST ->
-                currentSet.firstPlayerScore >= 5 && currentSet.secondPlayerScore < currentSet.firstPlayerScore
-
-            Player.SECOND ->
-                currentSet.secondPlayerScore >= 5 && currentSet.firstPlayerScore < currentSet.secondPlayerScore
-        }
-    }
-
-    private fun MatchState.needTieBreak(pointAuthor: Player): Boolean {
-        if(!this.isGamePoint(pointAuthor)) return false
-
-        return when (pointAuthor) {
-            Player.FIRST -> (currentSet.firstPlayerScore == 5 && currentSet.secondPlayerScore == 6)
-            Player.SECOND -> (currentSet.secondPlayerScore == 5 && currentSet.firstPlayerScore == 6)
-        }
     }
 
     private fun MatchState.setCurrentGameFortyForty(): MatchState {

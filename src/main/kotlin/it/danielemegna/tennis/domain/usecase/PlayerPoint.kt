@@ -6,7 +6,7 @@ import it.danielemegna.tennis.domain.repository.MatchRepository
 
 class PlayerPoint(
     private val matchRepository: MatchRepository,
-    private val matchStateUpdater: MatchStateUpdater = MatchStateUpdater()
+    private val matchStateUpdater: MatchStateUpdater
 ) {
 
     fun run(pointAuthor: Player, matchId: String): MatchState {
