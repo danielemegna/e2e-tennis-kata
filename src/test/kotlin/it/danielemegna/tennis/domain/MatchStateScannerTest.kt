@@ -314,7 +314,7 @@ class MatchStateScannerTest {
         }
 
         @Test
-        fun `game close to tiebreak`() {
+        fun `set close to tiebreak`() {
             val matchState = MatchState("p1", "p2").copy(
                 currentSet = MatchState.Set(firstPlayerScore = 6, secondPlayerScore = 5),
                 currentGame = MatchState.Game(ZERO, THIRTY),
