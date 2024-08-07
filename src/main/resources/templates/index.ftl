@@ -1,6 +1,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="assets/style.css" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <meta name="viewport" content="user-scalable=0"/>
   </head>
   <body>
