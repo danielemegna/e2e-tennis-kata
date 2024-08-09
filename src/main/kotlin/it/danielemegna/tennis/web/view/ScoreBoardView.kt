@@ -1,5 +1,6 @@
 package it.danielemegna.tennis.web.view
 
+import it.danielemegna.tennis.domain.MatchRelevantMoment
 import it.danielemegna.tennis.domain.MatchState
 
 data class ScoreBoardView(
@@ -28,7 +29,7 @@ data class ScoreBoardView(
     }
 
     companion object {
-        fun from(matchId: String, matchState: MatchState): ScoreBoardView = ScoreBoardView(
+        fun from(matchId: String, matchState: MatchState, matchRelevantMoment: MatchRelevantMoment?): ScoreBoardView = ScoreBoardView(
             matchId = matchId,
             isFirstPlayerServing = matchState.serving == MatchState.Serving.FIRST_PLAYER,
             firstPlayerName = matchState.firstPlayerName,
@@ -45,7 +46,7 @@ data class ScoreBoardView(
             secondPlayerCurrentSetScore = matchState.currentSet.secondPlayerScore,
             firstPlayerCurrentGameScore = matchState.firstPlayerCurrentGameScore(),
             secondPlayerCurrentGameScore = matchState.secondPlayerCurrentGameScore(),
-            infoTooltipText = null  //TODO: implement info-tooltip generation
+            infoTooltipText = matchRelevantMoment.toInfoTooltipText()
         )
 
         private fun MatchState.firstPlayerCurrentGameScore(): String {
@@ -78,5 +79,13 @@ data class ScoreBoardView(
             return aTieBreakScore
         }
 
+        private fun MatchRelevantMoment?.toInfoTooltipText(): String? {
+            if(this == null) return null
+            return when(this.kind) {
+                MatchRelevantMoment.Kind.SET_POINT -> "${this.counter} SET POINTS"
+            }
+        }
+
     }
 }
+

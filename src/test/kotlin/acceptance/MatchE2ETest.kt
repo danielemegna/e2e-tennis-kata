@@ -111,6 +111,7 @@ class MatchE2ETest {
 
         // first player miss set point advantage
         repeat(3) { table.firstPlayerPoint() }
+        assertThat(page.getByText("3 SET POINTS")).isVisible()
         repeat(3) { table.secondPlayerPoint() }
         assertThat(table.firstPlayer.currentGame).hasScore(40)
         assertThat(table.secondPlayer.currentGame).hasScore(40)
@@ -152,8 +153,7 @@ class MatchE2ETest {
         repeat(3) { table.secondPlayerPoint() }
         assertThat(table.firstPlayer.currentGame).hasScore(15)
         assertThat(table.secondPlayer.currentGame).hasScore(40)
-        //TODO info-tooltip text
-        // assertThat(page.getByText("2 set points")).isVisible()
+        assertThat(page.getByText("2 SET POINTS")).isVisible()
         table.secondPlayerPoint()
         table.firstPlayer.shouldHaveColumnsCount(6) // important to wait table update
         table.secondPlayer.shouldHaveColumnsCount(6) // important to wait table update
@@ -182,8 +182,7 @@ class MatchE2ETest {
         assertThat(table.firstPlayer.currentSet).hasScore(6)
         assertThat(table.secondPlayer.currentSet).hasScore(6)
         assertThat(table.secondPlayer.servingCell).haveServingIndicator()
-        //TODO info-tooltip text
-        // assertThat(page.getByText("3 set points")).isVisible()
+        assertThat(page.getByText("3 SET POINTS")).isVisible()
         table.firstPlayerPoint()
         table.firstPlayer.shouldHaveColumnsCount(7) // important to wait table update
         table.secondPlayer.shouldHaveColumnsCount(7) // important to wait table update

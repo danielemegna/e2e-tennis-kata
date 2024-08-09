@@ -40,7 +40,7 @@ fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
 
                 val usecaseResult = usecase.run(matchId)
 
-                val scoreBoardView = ScoreBoardView.from(matchId, usecaseResult.matchState)
+                val scoreBoardView = ScoreBoardView.from(matchId, usecaseResult.matchState, null)
                 val httpStatusCode = when (usecaseResult.matchOrigin) {
                     MatchOrigin.NEW_MATCH -> HttpStatusCode.Created
                     MatchOrigin.ONGOING_MATCH -> HttpStatusCode.OK
