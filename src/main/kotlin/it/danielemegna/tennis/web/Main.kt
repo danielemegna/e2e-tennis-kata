@@ -61,8 +61,9 @@ fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
                         matchStateScanner = MatchStateScanner()
                     )
                 )
-                val matchState = usecase.run(pointAuthor, matchId)
-                val scoreBoardView = ScoreBoardView.from(matchId, matchState)
+                val usecaseResult = usecase.run(pointAuthor, matchId)
+
+                val scoreBoardView = ScoreBoardView.from(matchId, usecaseResult.newMatchState)
                 call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
             }
             staticResources("/assets", "assets")
