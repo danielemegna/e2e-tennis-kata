@@ -40,7 +40,7 @@ fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
 
                 val usecaseResult = usecase.run(matchId)
 
-                val scoreBoardView = ScoreBoardView.from(matchId, usecaseResult.matchState, null)
+                val scoreBoardView = ScoreBoardView.from(matchId, usecaseResult)
                 val httpStatusCode = when (usecaseResult.matchOrigin) {
                     MatchOrigin.NEW_MATCH -> HttpStatusCode.Created
                     MatchOrigin.ONGOING_MATCH -> HttpStatusCode.OK
@@ -63,7 +63,7 @@ fun setupJettyApplicationEngine(port: Int): JettyApplicationEngine {
                 )
                 val usecaseResult = usecase.run(pointAuthor, matchId)
 
-                val scoreBoardView = ScoreBoardView.from(matchId, usecaseResult.newMatchState)
+                val scoreBoardView = ScoreBoardView.from(matchId, usecaseResult)
                 call.respond(message = FreeMarkerContent("scoreboard.ftl", scoreBoardView), status = HttpStatusCode.OK)
             }
             staticResources("/assets", "assets")

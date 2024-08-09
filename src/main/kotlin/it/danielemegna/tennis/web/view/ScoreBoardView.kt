@@ -2,6 +2,8 @@ package it.danielemegna.tennis.web.view
 
 import it.danielemegna.tennis.domain.MatchRelevantMoment
 import it.danielemegna.tennis.domain.MatchState
+import it.danielemegna.tennis.domain.usecase.LoadOrInitMatch
+import it.danielemegna.tennis.domain.usecase.PlayerPoint
 
 data class ScoreBoardView(
     val matchId: String,
@@ -29,7 +31,20 @@ data class ScoreBoardView(
     }
 
     companion object {
-        fun from(matchId: String, matchState: MatchState, matchRelevantMoment: MatchRelevantMoment?): ScoreBoardView = ScoreBoardView(
+
+        fun from(matchId: String, usecaseResult: LoadOrInitMatch.Result): ScoreBoardView {
+            return from(matchId, usecaseResult.matchState, null)
+        }
+
+        fun from(matchId: String, usecaseResult: PlayerPoint.Result): ScoreBoardView {
+            return from(matchId, usecaseResult.newMatchState, usecaseResult.matchRelevantMoment)
+        }
+
+        private fun from(
+            matchId: String,
+            matchState: MatchState,
+            matchRelevantMoment: MatchRelevantMoment?
+        ): ScoreBoardView = ScoreBoardView(
             matchId = matchId,
             isFirstPlayerServing = matchState.serving == MatchState.Serving.FIRST_PLAYER,
             firstPlayerName = matchState.firstPlayerName,
